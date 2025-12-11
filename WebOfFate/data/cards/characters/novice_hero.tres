@@ -5,7 +5,7 @@
 [resource]
 script = ExtResource("1_script")
 id = "novice_hero"
-display_name = "Novice Hero"
+display_name = "CARD_NAME_novice_hero"
 category = 0
 tags = Array[String](["heroic"])
 base_dp = 5

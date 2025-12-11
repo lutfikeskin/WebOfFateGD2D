@@ -8,6 +8,7 @@ var selected: Array[Card]:
 		return _selected.duplicate()
 
 func _handle_clicked_card(card: Card) -> void:
+	AudioManager.play_sfx(AudioManager.Sound.CLICK)
 	toggle_select(card)
 
 func toggle_select(card: Card):
@@ -24,13 +25,18 @@ func select(card: Card):
 	_arrange_cards()
 
 func deselect(card: Card):
+	# Stop any tweens that might be fighting the position reset
+	card.kill_all_tweens()
 	card.position_offset = Vector2.ZERO
 	# Ensure the card is re-arranged to its base position
 	_arrange_cards()
 	
 func sort_by_suit():
 	_cards.sort_custom(func(a: Card, b: Card):
-		return a.card_data.card_suit < b.card_data.card_suit)
+		if a.card_data is CardData and b.card_data is CardData:
+			return a.card_data.card_suit < b.card_data.card_suit
+		return 0
+	)
 	_arrange_cards()
 
 func sort_selected():
@@ -39,13 +45,13 @@ func sort_selected():
 
 func sort_by_value():
 	_cards.sort_custom(func(a: Card, b: Card):
-		return a.card_data.value > b.card_data.value)
+		if a.card_data is CardData and b.card_data is CardData:
+			return a.card_data.value > b.card_data.value
+		return 0
+	)
 	_arrange_cards()
-
-
 
 func clear_selected():
 	for card in _selected:
 		deselect(card)
 	_selected.clear()
-	

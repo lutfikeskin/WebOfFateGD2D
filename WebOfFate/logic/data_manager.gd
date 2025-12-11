@@ -26,6 +26,13 @@ func get_card_data(id: String) -> CardData:
 func get_all_synergies() -> Array[SynergyData]:
 	return _synergies
 
+func get_all_cards_list() -> Array[CardData]:
+	var list: Array[CardData] = []
+	for key in _cards:
+		var card = _cards[key] as CardData
+		list.append(card)
+	return list
+
 func _load_all_data() -> void:
 	print("DataManager: Loading data...")
 	_scan_cards_recursive(CARDS_PATH)

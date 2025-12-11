@@ -9,6 +9,11 @@ signal weaving_completed()
 
 @export var slots: Array[GameSlot] = []
 
+# Preload VFX Scenes
+const VFX_SYNERGY = preload("res://WebOfFate/vfx/synergy_particles.tscn")
+const VFX_DISSOLVE = preload("res://WebOfFate/vfx/dissolve_particles.tscn")
+const VFX_CHAOS = preload("res://WebOfFate/vfx/chaos_particles.tscn")
+
 var _held_card: Card = null
 var _player_hand: PlayerHand = null
 var _synergy_calculator: SynergyCalculator
@@ -63,6 +68,8 @@ func _on_slot_clicked(slot_id: int) -> void:
 	if TurnManager.is_busy:
 		return
 		
+	AudioManager.play_sfx(AudioManager.Sound.CLICK)
+		
 	var slot = _get_slot_by_id(slot_id)
 	if not slot:
 		return
@@ -85,10 +92,11 @@ func _return_card_to_hand(slot: GameSlot) -> void:
 		_player_hand.add_card(card)
 		LoomManager.notify_card_removed(card)
 		_update_visual_feedback()
+		AudioManager.play_sfx(AudioManager.Sound.CARD_PLACE)
 
-func _on_slot_hovered(_slot_id: int, _state: bool) -> void:
-	# Optional: global hover logic
-	pass
+func _on_slot_hovered(_slot_id: int, state: bool) -> void:
+	if state:
+		AudioManager.play_sfx(AudioManager.Sound.HOVER, 1.2)
 
 func _try_place_selected_card_in_slot(slot: GameSlot) -> void:
 	if not _player_hand or _player_hand.selected.is_empty():
@@ -104,9 +112,12 @@ func _try_place_selected_card_in_slot(slot: GameSlot) -> void:
 		slot.place_card(card_to_move)
 		LoomManager.notify_card_placed(card_to_move, slot.slot_id)
 		_update_visual_feedback()
+		AudioManager.play_sfx(AudioManager.Sound.CARD_PLACE)
 
 func _on_holding_card(card: Card) -> void:
 	if TurnManager.is_busy: return
+	
+	AudioManager.play_sfx(AudioManager.Sound.HOVER)
 	
 	_held_card = card
 	# Update highlights for all slots
@@ -117,28 +128,29 @@ func _on_holding_card(card: Card) -> void:
 			slot.set_highlight_state(true, true)
 
 func _process(_delta: float) -> void:
+	var target_slot_id = -1
+	
 	# Check for drag highlight
 	if _held_card:
 		var mouse_pos = get_global_mouse_position()
 		for slot in slots:
 			var hovered = slot.get_global_rect().has_point(mouse_pos)
 			slot.set_highlight_state(true, hovered)
-		return
-
-	# Check for selection highlight (click-to-place mode)
-	if _player_hand and not _player_hand.selected.is_empty():
+			if hovered: target_slot_id = slot.slot_id
+	
+	# Check for selection highlight
+	elif _player_hand and not _player_hand.selected.is_empty():
 		var mouse_pos = get_global_mouse_position()
 		for slot in slots:
-			# Activate highlight mode because we have a selected card ready to place
 			var hovered = slot.get_global_rect().has_point(mouse_pos)
 			slot.set_highlight_state(true, hovered)
-		return
+			if hovered: target_slot_id = slot.slot_id
 	
-	# Default cleanup if nothing happening
-	# (Though GameSlot usually handles its own cleanup on mouse exit, 
-	# this ensures we clear states if selection is cancelled externally)
-	# for slot in slots:
-	# 	slot.set_highlight_state(false, false)
+	# Update Intent Lines
+	if target_slot_id != -1:
+		thread_renderer.show_ghost_connections(target_slot_id)
+	else:
+		thread_renderer.hide_ghost_connections()
 
 func _on_dropped_card() -> void:
 	# Reset highlights
@@ -164,6 +176,7 @@ func _on_dropped_card() -> void:
 				slot.place_card(_held_card)
 				LoomManager.notify_card_placed(_held_card, slot.slot_id)
 				_update_visual_feedback()
+				AudioManager.play_sfx(AudioManager.Sound.CARD_PLACE)
 				break
 	
 	_held_card = null
@@ -192,15 +205,30 @@ func weave_fate() -> void:
 	# Calculate outcome using SynergyCalculator and LoomManager
 	var outcome = _synergy_calculator.calculate_turn_results(LoomManager)
 	
+	# Visual Shake on Synergies
+	if outcome.dp > 20: # Arbitrary threshold for "big hit"
+		var shaker = get_tree().root.find_child("ScreenShaker", true, false) # Ideally access via Controller
+		if shaker and shaker.has_method("add_trauma"):
+			shaker.add_trauma(0.4)
+			
 	# Update resources
 	destiny_points += outcome.dp
 	chaos += outcome.chaos
+	
+	# Chaos VFX if chaos increased significantly
+	if outcome.chaos > 5:
+		_spawn_vfx(VFX_CHAOS, self.get_rect().get_center())
+		AudioManager.play_sfx(AudioManager.Sound.CHAOS_WARNING)
+		
 	chaos = clamp(chaos, 0, MAX_CHAOS)
 	
 	# Emit signal for UI update
 	resources_updated.emit(destiny_points, chaos)
 	if outcome.has("log") and not outcome.log.is_empty():
 		story_updated.emit(outcome.log)
+		# Play synergy sound if log is not empty (meaning something happened)
+		if outcome.log.size() > 0:
+			AudioManager.play_sfx(AudioManager.Sound.SYNERGY_FORMED)
 	
 	# Handle passive effects from cards remaining on the table
 	var passive_results = _synergy_calculator.calculate_passive_effects(LoomManager)
@@ -216,33 +244,65 @@ func weave_fate() -> void:
 	
 	# STICKY WEB: Only remove cards that were part of synergies
 	var cards_removed_count: int = 0
+	
+	# DEBUG: Print outcome
+	print("DEBUG: Weaving Result - DP: %d, Chaos: %d, Cards to Remove: %d" % [outcome.dp, outcome.chaos, outcome.cards_to_remove.size()])
+	
 	for card in outcome.cards_to_remove:
 		var slot = _find_slot_with_card(card)
 		if slot:
+			var slot_center = slot.global_position + slot.size / 2.0
 			var removed_card = slot.remove_card()
 			if removed_card:
 				# Discard the card (add to discard pile)
 				# Notify via signal for manager to handle
 				print("DEBUG: Discarding card from synergy: ", removed_card.card_data.display_name if removed_card.card_data else removed_card.name)
+				
+				# Spawn VFX at card location
+				_spawn_vfx(VFX_SYNERGY, slot_center)
+				_spawn_vfx(VFX_DISSOLVE, slot_center)
+				
+				# Visual Polish: Card Dissolve / Fly away
+				var tween = create_tween()
+				tween.tween_property(removed_card, "scale", Vector2.ZERO, 0.3).set_ease(Tween.EASE_IN).set_trans(Tween.TRANS_BACK)
+				tween.parallel().tween_property(removed_card, "rotation_degrees", 360.0, 0.3)
+				
+				AudioManager.play_sfx(AudioManager.Sound.CARD_DISCARD)
+				
+				await tween.finished
+				
+				# IMPORTANT: Reset properties BEFORE adding to discard pile, or it might be invisible
+				removed_card.scale = Vector2.ONE
+				removed_card.rotation_degrees = 0
+				
+				# Signal for DeckManager to move it to discard pile
+				print("DEBUG: Emitting card_discarded for: ", removed_card.name)
 				card_discarded.emit(removed_card)
+				
 				cards_removed_count += 1
 				LoomManager.notify_card_removed(removed_card)
 	
 	# Check for game over conditions
 	if chaos >= MAX_CHAOS:
 		TurnManager.trigger_game_over("Chaos reached maximum! The Web has snapped under chaos!")
+		AudioManager.play_sfx(AudioManager.Sound.GAME_OVER)
 		_update_visual_feedback()
 		return
 	
 	# TANGLED WEB: Fail state - all slots full AND no cards were removed
 	var all_full = true
+	var cards_remaining = []
 	for slot in slots:
 		if not slot.has_card():
 			all_full = false
-			break
+		else:
+			cards_remaining.append(slot.get_card().name)
+			
+	print("DEBUG: Slot Status - Full: %s, Cards Remaining: %s" % [all_full, cards_remaining])
 	
 	if all_full and cards_removed_count == 0:
 		TurnManager.trigger_game_over("Web Tangled! All slots are full and no synergies were formed!")
+		AudioManager.play_sfx(AudioManager.Sound.GAME_OVER)
 		_update_visual_feedback()
 		return
 	
@@ -280,3 +340,14 @@ func _update_visual_feedback() -> void:
 				active = _synergy_calculator.check_synergy(slot.get_card(), target_slot.get_card())
 			
 			thread_renderer.highlight_connection(slot.slot_id, target_id, active)
+
+func _spawn_vfx(scene: PackedScene, pos: Vector2) -> void:
+	if not scene: return
+	var instance = scene.instantiate()
+	add_child(instance)
+	instance.global_position = pos
+	if instance is CPUParticles2D:
+		instance.emitting = true
+		# Auto-free is not built-in for particles unless we script it, 
+		# so let's add a timer or check if it's one_shot
+		get_tree().create_timer(instance.lifetime + 0.1).timeout.connect(instance.queue_free)

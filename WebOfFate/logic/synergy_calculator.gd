@@ -99,7 +99,7 @@ func _check_complex_synergy(card1: Card, card2: Card, thread_type: int) -> Dicti
 			result.dp_bonus = synergy.result_dp
 			result.chaos_change = synergy.result_chaos
 			result.remove_cards = synergy.remove_cards
-			result.log = synergy.log_message
+			result.log = tr(synergy.log_message)
 			return result
 
 	# --- GENERAL TAG SYNERGIES ---
@@ -110,7 +110,7 @@ func _check_complex_synergy(card1: Card, card2: Card, thread_type: int) -> Dicti
 			result.valid = true
 			result.dp_bonus = 10
 			result.remove_cards = true
-			result.log = "Synergy formed: %s meets %s (%s link). (+10 DP)" % [d1.display_name, d2.display_name, tag.capitalize()]
+			result.log = tr("LOG_SYNERGY_FORMED") % [tr(d1.display_name), tr(d2.display_name), tr(tag.capitalize())]
 			
 			# Thread Modifiers for generic synergy
 			match thread_type:

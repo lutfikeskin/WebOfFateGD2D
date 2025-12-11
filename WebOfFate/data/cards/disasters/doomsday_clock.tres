@@ -5,7 +5,7 @@
 [resource]
 script = ExtResource("1_script")
 id = "doomsday_clock"
-display_name = "Doomsday Clock"
+display_name = "CARD_NAME_doomsday_clock"
 category = 4
 tags = Array[String](["time", "doom"])
 base_dp = 0

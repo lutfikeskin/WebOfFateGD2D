@@ -5,7 +5,7 @@
 [resource]
 script = ExtResource("1_script")
 id = "purification_pool"
-display_name = "Purification Pool"
+display_name = "CARD_NAME_purification_pool"
 category = 3
 tags = Array[String](["holy", "water"])
 base_dp = 0

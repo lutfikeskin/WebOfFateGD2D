@@ -5,7 +5,7 @@
 [resource]
 script = ExtResource("1_script")
 id = "time_gate"
-display_name = "Time Gate"
+display_name = "CARD_NAME_time_gate"
 category = 3
 tags = Array[String](["mystic", "time"])
 base_dp = 20

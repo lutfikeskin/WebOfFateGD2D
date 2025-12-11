@@ -5,6 +5,7 @@ class_name WebOfFateController
 @onready var card_deck_manager: CardDeckManager = $CardDeckManager
 @onready var player_hand: PlayerHand = $PlayerHand
 @onready var game_table: GameTable = $GameTable
+@onready var screen_shaker: ScreenShaker = $Camera2D
 
 @onready var weave_fate_button: Button = %WeaveFateButton
 @onready var story_label: RichTextLabel = %StoryLabel
@@ -21,6 +22,7 @@ class_name WebOfFateController
 @onready var level_complete_panel: PanelContainer = $LevelCompletePanel
 @onready var game_over_panel: PanelContainer = $GameOverPanel
 @onready var chapter_start_panel: PanelContainer = $ChapterStartPanel
+@onready var card_reward_panel: PanelContainer = $CardRewardPanel # New reference
 @onready var next_level_button: Button = %NextLevelButton
 @onready var restart_button: Button = %RestartButton
 @onready var start_chapter_button: Button = %StartButton
@@ -38,6 +40,10 @@ func _ready() -> void:
 	next_level_button.pressed.connect(_on_next_level_pressed)
 	restart_button.pressed.connect(_on_restart_pressed)
 	start_chapter_button.pressed.connect(_on_start_chapter_pressed)
+	
+	# Connect Reward Panel signals
+	card_reward_panel.card_selected.connect(_on_reward_card_selected)
+	card_reward_panel.skipped.connect(_on_reward_skipped)
 	
 	# Connect game table signals
 	game_table.resources_updated.connect(_on_resources_updated)
@@ -89,23 +95,41 @@ func _on_progress_updated(current_dp: int, target_dp: int, turns: int, max_turns
 	if chapter_label:
 		chapter_label.text = GameManager.current_chapter.chapter_name
 	if progress_label:
-		progress_label.text = "Progress: %d / %d DP" % [current_dp, target_dp]
+		progress_label.text = tr("GAME_PROGRESS_LABEL") + ": %d / %d DP" % [current_dp, target_dp]
 	if turn_label:
-		turn_label.text = "Turn: %d / %d" % [turns, max_turns]
+		turn_label.text = tr("GAME_TURN_LABEL") + ": %d / %d" % [turns, max_turns]
 
 func _on_level_complete(_stats: Dictionary) -> void:
 	print("Level Complete!")
-	story_label.append_text("\n[color=green]LEVEL COMPLETE![/color]")
+	story_label.append_text("\n[color=green]GAME_LEVEL_COMPLETE[/color]")
 	weave_fate_button.disabled = true
 	level_complete_panel.visible = true
 
 func _on_tm_game_over(reason: String) -> void:
 	print("Game Over (TM): ", reason)
+	if screen_shaker: screen_shaker.add_trauma(0.8)
+	# Assuming reason is also localized or passed as key if possible, 
+	# but for now let's just show the panel. The label inside is localized.
 	game_over_panel.visible = true
 	weave_fate_button.disabled = true
 
 func _on_next_level_pressed() -> void:
 	level_complete_panel.visible = false
+	
+	# Start drafting phase before moving to next level
+	card_reward_panel.show_rewards(3)
+
+func _on_reward_card_selected(card_data: CardData) -> void:
+	# Add selected card to persistent deck
+	GameManager.add_card_to_deck(card_data)
+	print("Drafted card: ", card_data.display_name)
+	_proceed_to_next_level()
+
+func _on_reward_skipped() -> void:
+	print("Draft skipped.")
+	_proceed_to_next_level()
+
+func _proceed_to_next_level() -> void:
 	GameManager.next_level()
 	# TODO: Implement actual loading of next chapter resource
 	GameManager.restart_level()
@@ -136,7 +160,10 @@ func _reset_game_state() -> void:
 	game_table.destiny_points = 0
 	game_table.chaos = 0
 	
-	# Re-setup deck from initial resource
+	# Re-setup deck from initial resource (actually, use the Deck Manager's CURRENT state which is persistent now via GameManager)
+	# But for now, we want to ensure deck is refreshed from GameManager's list
+	var current_deck = GameManager.get_current_deck_resource()
+	card_deck_manager.starting_deck = current_deck
 	card_deck_manager.setup()
 	
 	deal()
@@ -178,8 +205,8 @@ func _on_card_discarded(card: Card) -> void:
 	card_deck_manager.add_card_to_discard_pile(card)
 
 func _update_resource_ui() -> void:
-	destiny_points_label.text = "Destiny Points: " + str(game_table.destiny_points)
-	chaos_label.text = "Chaos: " + str(game_table.chaos) + "/" + str(game_table.MAX_CHAOS)
+	destiny_points_label.text = tr("GAME_DP_LABEL") + ": " + str(game_table.destiny_points)
+	chaos_label.text = tr("GAME_CHAOS_LABEL") + ": " + str(game_table.chaos) + "/" + str(game_table.MAX_CHAOS)
 	chaos_progress_bar.value = game_table.chaos
 
 ## Draw up to hand_size (5) cards, respecting current hand size

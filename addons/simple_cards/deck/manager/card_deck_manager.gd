@@ -45,10 +45,40 @@ func initialize_from_deck(deck: CardDeck) -> void:
 	
 	for card_resource in deck.cards:
 		var card = Card.new(card_resource)
+		_connect_card_signals(card)
 		add_card_to_draw_pile(card)
 	
 	_update_card_visibility()
 
+func _connect_card_signals(card: Card) -> void:
+	# Use gui_input to detect right clicks
+	if not card.gui_input.is_connected(_on_card_gui_input):
+		card.gui_input.connect(func(event): _on_card_gui_input(card, event))
+	
+	# Only use mouse_entered for Audio, NOT tooltip
+	if not card.mouse_entered.is_connected(_on_card_mouse_entered):
+		card.mouse_entered.connect(func(): _on_card_mouse_entered(card))
+	if not card.mouse_exited.is_connected(_on_card_mouse_exited):
+		card.mouse_exited.connect(func(): _on_card_mouse_exited(card))
+
+func _on_card_gui_input(card: Card, event: InputEvent) -> void:
+	if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_RIGHT:
+		# Toggle Tooltip
+		if has_node("/root/TooltipManager"):
+			var tm = get_node("/root/TooltipManager")
+			# If this card is already showing tooltip, hide it
+			if tm._active_card == card:
+				tm.request_hide()
+			else:
+				tm.request_show(card)
+
+func _on_card_mouse_entered(card: Card) -> void:
+	if has_node("/root/AudioManager"):
+		get_node("/root/AudioManager").play_sfx(1) # 1 is HOVER
+
+func _on_card_mouse_exited(card: Card) -> void:
+	# Don't hide tooltip on mouse exit anymore, require explicit toggle or clicking elsewhere
+	pass
 
 ##Adds a card to the draw pile. [br]If the card is already a child [CardHand] the [member CardHand.remove_card] is used to reparent the card.
 func add_card_to_draw_pile(card: Card) -> void:
@@ -92,23 +122,26 @@ func _handle_card_reparanting(card: Card, des_position: Vector2 = Vector2.ZERO):
 
 ##Draws a card from the top of the draw pile. Returns null if draw pile is empty.
 func draw_card() -> Card:
-	if draw_pile.get_child_count() == 0:
-		return null
-	
-	var card = draw_pile.get_child(draw_pile.get_child_count() - 1)
-	# Store global position before removing
-	var stored_global_pos = card.global_position if card is Control else Vector2.ZERO
-	
-	draw_pile.remove_child(card)
-	
-	# Restore global position after removing
-	if card is Control:
-		card.global_position = stored_global_pos
-	
-	card.visible = true
-	card.disabled = false
-	card.is_front_face = true
-	return card
+	# Find the last child that is a Card
+	var count = draw_pile.get_child_count()
+	for i in range(count - 1, -1, -1):
+		var child = draw_pile.get_child(i)
+		if child is Card:
+			# Store global position before removing
+			var stored_global_pos = child.global_position if child is Control else Vector2.ZERO
+			
+			draw_pile.remove_child(child)
+			
+			# Restore global position after removing
+			if child is Control:
+				child.global_position = stored_global_pos
+			
+			child.visible = true
+			child.disabled = false
+			child.is_front_face = true
+			return child
+			
+	return null
 
 
 ##Draws multiple cards from the draw pile. Returns an array of cards.
@@ -133,7 +166,9 @@ func shuffle() -> void:
 		if child is Card:
 			cards_array.append(child)
 	
-	# Remove all cards first
+	# Remove cards to shuffle them
+	# NOTE: This only removes them from the tree to re-add them in new order.
+	# We must be careful not to touch non-Card children.
 	for card in cards_array:
 		draw_pile.remove_child(card)
 	
@@ -165,23 +200,29 @@ func reshuffle_discard_and_shuffle() -> void:
 
 ##Returns the top card of the draw pile without removing it. Returns null if empty.
 func peek_top_card() -> Card:
-	if draw_pile.get_child_count() == 0:
-		return null
-	
-	return draw_pile.get_child(draw_pile.get_child_count() - 1) as Card
+	var count = draw_pile.get_child_count()
+	for i in range(count - 1, -1, -1):
+		var child = draw_pile.get_child(i)
+		if child is Card:
+			return child
+	return null
 
 
 ##Returns an array of the top N cards from the draw pile without removing them.
 func peek_top_cards(count: int) -> Array[Card]:
 	var peeked_cards: Array[Card] = []
 	var child_count = draw_pile.get_child_count()
-	var start_index = max(0, child_count - count)
 	
-	for i in range(start_index, child_count):
-		var card = draw_pile.get_child(i)
-		if card is Card:
-			peeked_cards.append(card)
-	
+	# Iterate backwards to find cards
+	for i in range(child_count - 1, -1, -1):
+		if peeked_cards.size() >= count:
+			break
+		var child = draw_pile.get_child(i)
+		if child is Card:
+			peeked_cards.append(child)
+			
+	# Reverse to match order (top first)
+	# (peeked_cards currently has top card at index 0, which is usually expected)
 	return peeked_cards
 
 
@@ -209,12 +250,20 @@ func remove_card_from_discard_pile(card: Card) -> bool:
 
 ##Returns the number of cards in the draw pile.
 func get_draw_pile_size() -> int:
-	return draw_pile.get_child_count()
+	var count = 0
+	for child in draw_pile.get_children():
+		if child is Card:
+			count += 1
+	return count
 
 
 ##Returns the number of cards in the discard pile.
 func get_discard_pile_size() -> int:
-	return discard_pile.get_child_count()
+	var count = 0
+	for child in discard_pile.get_children():
+		if child is Card:
+			count += 1
+	return count
 
 
 ##Returns the total number of cards in both piles.
@@ -225,20 +274,22 @@ func get_total_card_count() -> int:
 ##Clears both draw and discard piles, freeing all cards.
 func clear_deck() -> void:
 	for child in draw_pile.get_children():
-		child.queue_free()
+		if child is Card:
+			child.queue_free()
 	
 	for child in discard_pile.get_children():
-		child.queue_free()
+		if child is Card:
+			child.queue_free()
 
 
 ##Returns true if the draw pile is empty.
 func is_draw_pile_empty() -> bool:
-	return draw_pile.get_child_count() == 0
+	return get_draw_pile_size() == 0
 
 
 ##Returns true if the discard pile is empty.
 func is_discard_pile_empty() -> bool:
-	return discard_pile.get_child_count() == 0
+	return get_discard_pile_size() == 0
 
 
 func _update_card_visibility() -> void:

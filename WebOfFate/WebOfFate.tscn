@@ -1,15 +1,22 @@
-[gd_scene load_steps=8 format=3 uid="uid://brvun6l03k0hu"]
+[gd_scene load_steps=11 format=3 uid="uid://brvun6l03k0hu"]
 
 [ext_resource type="Script" uid="uid://f86ti6qbssco" path="res://WebOfFate/web_of_fate_controller.gd" id="1_buxrw"]
 [ext_resource type="Script" uid="uid://bisyk4bowdvsf" path="res://addons/simple_cards/deck/manager/card_deck_manager.gd" id="2_gdbvl"]
+[ext_resource type="PackedScene" uid="uid://c8j8k8rf2432o" path="res://WebOfFate/ui/card_reward_panel.tscn" id="3_reward"]
 [ext_resource type="Script" uid="uid://cw1k60qf7hw1h" path="res://WebOfFate/components/player_hand.gd" id="4_tp2j7"]
 [ext_resource type="Script" uid="uid://cg5plqwqsx624" path="res://WebOfFate/game_table.gd" id="6_game_table"]
 [ext_resource type="PackedScene" uid="uid://d3j8k8rf2430m" path="res://WebOfFate/components/game_slot.tscn" id="7_game_slot"]
 [ext_resource type="PackedScene" uid="uid://c8j8k8rf2431n" path="res://WebOfFate/components/thread_renderer.tscn" id="8_thread_renderer"]
 [ext_resource type="Resource" path="res://WebOfFate/cards/decks/debug_deck.tres" id="9_debug_deck"]
+[ext_resource type="Script" uid="uid://d2tit1216nktl" path="res://WebOfFate/components/screen_shaker.gd" id="10_shaker"]
+[ext_resource type="PackedScene" uid="uid://tooltip12345" path="res://WebOfFate/ui/tooltip_panel.tscn" id="11_tooltip"]
 
 [node name="WebOfFateController" type="CanvasLayer"]
 script = ExtResource("1_buxrw")
+
+[node name="Camera2D" type="Camera2D" parent="."]
+anchor_mode = 0
+script = ExtResource("10_shaker")
 
 [node name="GameTable" type="Control" parent="."]
 layout_mode = 3
@@ -62,11 +69,16 @@ offset_bottom = 190.0
 slot_id = 3
 
 [node name="Slot_Center" parent="GameTable" instance=ExtResource("7_game_slot")]
-layout_mode = 0
-offset_left = 195.0
-offset_top = -47.0
-offset_right = 295.0
-offset_bottom = 93.0
+layout_mode = 1
+anchors_preset = -1
+anchor_left = -0.568
+anchor_top = -1.501
+anchor_right = -0.568
+anchor_bottom = -1.501
+offset_left = 535.80005
+offset_top = 163.14
+offset_right = 635.80005
+offset_bottom = 303.14
 slot_id = 4
 
 [node name="CardDeckManager" type="Node" parent="." node_paths=PackedStringArray("draw_pile", "discard_pile")]
@@ -107,7 +119,7 @@ offset_right = 20.0
 offset_bottom = 11.5
 grow_horizontal = 2
 grow_vertical = 2
-text = "DECK"
+text = "GAME_DECK_LABEL"
 horizontal_alignment = 1
 vertical_alignment = 1
 
@@ -116,10 +128,10 @@ layout_mode = 3
 anchors_preset = 1
 anchor_left = 1.0
 anchor_right = 1.0
-offset_left = -150.0
-offset_top = 50.0
-offset_right = -50.0
-offset_bottom = 190.0
+offset_left = -174.0
+offset_top = 163.0
+offset_right = -74.0
+offset_bottom = 303.0
 grow_horizontal = 0
 
 [node name="Panel" type="Panel" parent="CardDeckManager/Discards"]
@@ -143,23 +155,17 @@ offset_right = 31.0
 offset_bottom = 11.5
 grow_horizontal = 2
 grow_vertical = 2
-text = "DISCARD"
+text = "GAME_DISCARD_LABEL"
 horizontal_alignment = 1
 vertical_alignment = 1
 
 [node name="PlayerHand" type="Control" parent="."]
 layout_mode = 3
-anchors_preset = 7
-anchor_left = 0.5
-anchor_top = 1.0
-anchor_right = 0.5
-anchor_bottom = 1.0
-offset_left = -60.0
-offset_top = 283.0
-offset_right = -60.0
-offset_bottom = 283.0
-grow_horizontal = 2
-grow_vertical = 0
+anchors_preset = 0
+offset_left = 601.0
+offset_top = 898.0
+offset_right = 601.0
+offset_bottom = 898.0
 script = ExtResource("4_tp2j7")
 max_selected = 1
 card_spacing = 70.0
@@ -183,19 +189,19 @@ layout_mode = 2
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_font_sizes/font_size = 18
-text = "Chapter 1"
+text = "GAME_CHAPTER_LABEL"
 horizontal_alignment = 1
 
 [node name="ProgressLabel" type="Label" parent="GameInfoPanel/VBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
-text = "Progress: 0 / 500 DP"
+text = "GAME_PROGRESS_LABEL"
 horizontal_alignment = 1
 
 [node name="TurnLabel" type="Label" parent="GameInfoPanel/VBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
-text = "Turn: 1 / 10"
+text = "GAME_TURN_LABEL"
 horizontal_alignment = 1
 
 [node name="ResourcePanel" type="VBoxContainer" parent="."]
@@ -210,12 +216,12 @@ grow_vertical = 2
 
 [node name="DestinyPointsLabel" type="Label" parent="ResourcePanel"]
 layout_mode = 2
-text = "Destiny Points: 0"
+text = "GAME_DP_LABEL"
 horizontal_alignment = 1
 
 [node name="ChaosLabel" type="Label" parent="ResourcePanel"]
 layout_mode = 2
-text = "Chaos: 0/100"
+text = "GAME_CHAOS_LABEL"
 horizontal_alignment = 1
 
 [node name="ChaosProgressBar" type="ProgressBar" parent="ResourcePanel"]
@@ -225,7 +231,7 @@ show_percentage = false
 [node name="WeaveFateButton" type="Button" parent="ResourcePanel"]
 unique_name_in_owner = true
 layout_mode = 2
-text = "WEAVE FATE"
+text = "GAME_WEAVE_BTN"
 
 [node name="StoryPanel" type="PanelContainer" parent="."]
 anchors_preset = 3
@@ -286,7 +292,10 @@ text = "Chapter description..."
 [node name="StartButton" type="Button" parent="ChapterStartPanel/VBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
-text = "Begin"
+text = "GAME_BEGIN_BTN"
+
+[node name="CardRewardPanel" parent="." instance=ExtResource("3_reward")]
+visible = false
 
 [node name="LevelCompletePanel" type="PanelContainer" parent="."]
 visible = false
@@ -310,13 +319,13 @@ alignment = 1
 [node name="Label" type="Label" parent="LevelCompletePanel/VBoxContainer"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 24
-text = "LEVEL COMPLETE"
+text = "GAME_LEVEL_COMPLETE"
 horizontal_alignment = 1
 
 [node name="NextLevelButton" type="Button" parent="LevelCompletePanel/VBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
-text = "Next Chapter"
+text = "GAME_NEXT_LEVEL_BTN"
 
 [node name="GameOverPanel" type="PanelContainer" parent="."]
 visible = false
@@ -339,12 +348,14 @@ alignment = 1
 
 [node name="Label" type="Label" parent="GameOverPanel/VBoxContainer"]
 layout_mode = 2
-theme_override_colors/font_color = Color(1, 0.3, 0.3, 1)
 theme_override_font_sizes/font_size = 24
-text = "GAME OVER"
+text = "GAME_GAME_OVER"
 horizontal_alignment = 1
 
 [node name="RestartButton" type="Button" parent="GameOverPanel/VBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
-text = "Restart Level"
+text = "GAME_RESTART_BTN"
+
+[node name="TooltipPanel" parent="." instance=ExtResource("11_tooltip")]
+visible = false

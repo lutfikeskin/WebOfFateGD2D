@@ -10,6 +10,7 @@ enum Category {
 
 @export var id: String
 @export var display_name: String
+@export_multiline var description: String
 @export var category: Category
 @export var tags: Array[String] = []
 @export var base_dp: int = 0

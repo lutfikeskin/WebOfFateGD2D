@@ -5,7 +5,7 @@
 [resource]
 script = ExtResource("1_script")
 id = "grandmas_cookie"
-display_name = "Grandma's Cookie"
+display_name = "CARD_NAME_grandmas_cookie"
 category = 1
 tags = Array[String](["food", "comfort"])
 base_dp = 0

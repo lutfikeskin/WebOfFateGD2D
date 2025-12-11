@@ -1,150 +1,60 @@
-# Kaderin Ağları (Web of Fate) – Master Tasarım Dokümanı (GDD) v3.0
-
-Bu doküman, "Kaderin Ağları" oyununun temel mekaniklerini, veri yapısını ve teknik mimarisini tanımlar. Proje, hem 3D hem de 2D uygulamalara (Implementation) izin verecek şekilde **Veri Odaklı (Data-Driven)** ve **Mantık-Görünüm Ayrımı (Logic-View Separation)** prensipleriyle tasarlanmıştır.
-
+---
+description: "Core project context and patterns"
+globs:
+alwaysApply: true
 ---
 
-## 1. Oyun Kimliği
+# Web of Fate GDD
 
-*   **İsim:** Kaderin Ağları (Web of Fate)
-*   **Tür:** Narrative Puzzle / Roguelike Deckbuilder
-*   **Motor:** Godot 4.5+ (GDScript)
-*   **Temel Vaat:** Oyuncu bir savaşçı değil, bir "Kader Örgücüsü"dür. Kartlar savaşmak için değil, hikayeyi ve kader ağını manipüle etmek için kullanılır.
-*   **Hook (Kanca):** "Sticky Web" (Yapışkan Ağ) mekaniği. Yanlış hamleler masada kalır ve yer kaplar. Sadece doğru hikayeler (sinerjiler) düğümleri çözer.
+## 1. Game Overview
+**Title:** Web of Fate
+**Genre:** Card Game / Puzzle / Narrative
+**Platform:** PC (Godot 4)
+**Target Audience:** Strategy and story-driven game lovers.
 
----
+## 2. Core Gameplay Loop
+1.  **Preparation Phase:** Players start with a hand of cards (Actors, Items, Events, Locations).
+2.  **Weaving Phase:** Players place cards into a 5-slot "Loom" (Game Table).
+3.  **Connection Logic:** Slots are connected by "Threads". Placing cards creates interactions based on:
+    *   **Tags:** Matching tags (e.g., "Heroic" + "Weapon") create generic synergies.
+    *   **Combos:** Specific pairs (e.g., "Romeo" + "Juliet") create unique story events.
+4.  **Resolution Phase:**
+    *   **Synergy:** Successful combinations generate Destiny Points (DP) and are removed from the board (Discarded).
+    *   **Sticky Web:** Unmatched cards stay on the board, clogging slots.
+    *   **Chaos:** Some cards or interactions generate Chaos. If Chaos reaches max, the game ends.
+5.  **Progression:** Collect enough DP to complete the Chapter.
 
-## 2. Oynanış Döngüsü (Core Loop)
+## 3. Key Mechanics
+*   **Sticky Web:** The board is not cleared automatically. You must "solve" the cards you placed.
+*   **Threads:** Visual lines connecting slots. Different thread types (Red, Gold, etc.) modify interactions.
+*   **Chaos Management:** Risk/Reward mechanic. High power often comes with High Chaos.
 
-Oyun, **Tek Buton Akışı** (Weave Fate) üzerine kuruludur.
+## 4. Systems & Architecture
+*   **Data Driven:** All cards, synergies, and chapters are defined as `Resource` files.
+*   **Managers:**
+    *   `GameManager`: Global state, level progression.
+    *   `TurnManager`: Turn phases (Input -> Weaving -> Resolution).
+    *   `LoomManager`: Board state and connections.
+    *   `DataManager`: Loading and serving resources.
+    *   `CardDeckManager`: Deck lists, drawing, discarding.
 
-### 2.1 Fazlar
-1.  **Hazırlık (Preparation):**
-    *   Oyuncu desteden elini 5 karta tamamlar.
-    *   Eldeki kartlar, masadaki (Loom) boş slotlara yerleştirilir.
-    *   *Strateji:* Hangi kartın hangi slotta olduğu, bağlandığı iplik rengine (Thread Type) ve komşu kartlara göre belirlenir.
+## 5. Progression & Polish (New Features)
+### 5.1 Drafting System (Deckbuilding)
+*   At the end of each successful chapter, the player enters a **Draft Phase**.
+*   **Selection:** 3 random cards are presented from the unlocked pool.
+*   **Choice:** Player chooses 1 card to permanently add to their deck for the run.
+*   **Goal:** Allows specializing the deck (e.g., focusing on "Violence" or "Romance" synergies).
 
-2.  **Örme (Weaving):**
-    *   Oyuncu "WEAVE FATE" butonuna basar.
-    *   Oyun duraksar ve hesaplama başlar.
-    *   **Story Engine** devreye girer: Kartların kombinasyonuna göre ekrana bir hikaye metni yazılır (örn: "Kahraman kılıcı buldu ama aşka yenik düştü.").
+### 5.2 Visual Polish (Juice)
+*   **Screen Shake:** Triggers on high-impact events (Big Synergies, Game Over, High Chaos).
+*   **Card Dissolve:** Cards shouldn't just vanish. They should burn away or unravel into threads when discarded.
+*   **Thread Snap:** Visual feedback when a connection is broken or resolved.
+*   **Audio:** (Future) Dynamic music layers based on Chaos level.
 
-3.  **Çözümleme (Resolution & Sticky Web):**
-    *   **Sinerji Kontrolü:** Bağlı slotlar kontrol edilir. Eğer geçerli bir sinerji varsa (örn: Hero + Sword), bu kartlar puan (DP) kazandırır ve **Masadan Kaldırılır (Discard)**.
-    *   **Tıkanma (Stuck):** Sinerji oluşturmayan kartlar **Masada Kalır**. Bu kartlar slotları işgal etmeye devam eder.
-    *   *Ceza:* Eğer tüm slotlar dolarsa ve sinerji yoksa veya Kaos limiti aşılırsa oyun biter.
+### 5.3 UX Enhancements
+*   **Intent Lines (Ghost Threads):** When dragging a card over a slot, show semi-transparent lines indicating potential connections *before* dropping.
+*   **Tooltips:** Hovering over a card explains its Tags and keywords.
 
----
-
-## 3. Sistem Mimarisi (2D/3D Agnostik)
-
-Oyun mantığı, görünümden bağımsızdır. `GameManager` ve `LoomManager` 2D veya 3D düğümlerden haberdar değildir, sadece Veri (Data) ve ID'ler ile konuşur.
-
-### 3.1 Singletonlar (Autoloads)
-*   **`GameManager`**: Oyunun durumunu (State), Desteyi (Deck), Puanları (DP/Chaos) ve Fazları yönetir.
-*   **`LoomManager`**: Slotların mantıksal haritasını tutar. Hangi Slot ID'de hangi `CardData` var, hangi Slotlar birbirine bağlı bilgisini yönetir.
-
-### 3.2 Veri Yapıları (Custom Resources)
-Tüm oyun içeriği `.tres` dosyalarıdır. Kod değiştirmeden oyun dengesi değiştirilebilir.
-
-*   **`CardData`**:
-    *   `id`: String (Unique)
-    *   `display_name`: String
-    *   `category`: Enum (Character, Item, Event, Location)
-    *   `tags`: Array[String] (Violence, Mystic, Romance, Heroic)
-    *   `base_dp`: int
-    *   `base_chaos`: int
-    *   `texture_path`: String (Görsel yolu)
-
-*   **`SynergyData`**:
-    *   `required_cards`: Array[CardData] (Spesifik kart gereksinimi)
-    *   `required_tags`: Array[String] (Etiket gereksinimi)
-    *   `result_dp_bonus`: int
-    *   `result_chaos_change`: int
-    *   `is_valid`: bool (Slotu temizler mi?)
-
-*   **`NarrativeEvent`**:
-    *   `text_template`: String ("{card1} meets {card2}...")
-    *   `conditions`: Array[Resource] (Hangi kartlar/etiketler yan yana gelince bu hikaye çıkar?)
-    *   `priority`: int
-
----
-
-## 4. Mevcut İçerik (Kartlar ve Sinerjiler)
-
-### 4.1 Uygulanmış Kartlar (Mevcut `CardData`)
-Şu anda sistemde tanımlı ve çalışan kartlar:
-
-| Kart Adı | Kategori | Etiketler | Temel Etki |
-| :--- | :--- | :--- | :--- |
-| **Novice Hero** | Character | `Heroic`, `Human` | +5 DP, -2 Chaos |
-| **Legendary Sword** | Item | `Weapon`, `Metal` | +10 DP, +5 Chaos |
-| **Bloody Baron** | Character | `Violence`, `Villain` | +15 DP, +15 Chaos |
-| **Forbidden Love** | Event | `Romance`, `Tragedy` | +20 DP, +10 Chaos |
-| **Mystic Guide** | Character | `Mystic`, `Support` | +5 DP, -5 Chaos |
-
-### 4.2 Örnek Sinerjiler
-*   **Hero's Journey:** `Novice Hero` + `Legendary Sword` -> Slotlar temizlenir, yüksek puan.
-*   **Tragic End:** `Forbidden Love` + `Bloody Baron` -> Yüksek Kaos, Trajik hikaye tetiklenir.
-
----
-
-## 5. Proje Klasör Yapısı
-
-Bu yapı, hem 2D hem 3D için ortaktır. Görsel dosyalar (`scenes`) ayrışır.
-
-```text
-res://
-├── data/                       # TÜM OYUN VERİSİ (Logic)
-│   ├── cards/                  # CardData .tres dosyaları
-│   ├── synergies/              # SynergyData .tres dosyaları
-│   ├── narrative/              # NarrativeEvent .tres dosyaları
-│   └── threads/                # İplik tanımları
-├── logic/                      # OYUN MANTIĞI (Script Only)
-│   ├── game_manager.gd         # Autoload
-│   ├── loom_manager.gd         # Autoload
-│   ├── synergy_calculator.gd   # Helper class
-│   └── story_engine.gd         # Helper class
-├── resources/                  # RESOURCE SCRIPTS (Tanımlar)
-│   ├── card_data.gd
-│   ├── synergy_data.gd
-│   ├── narrative_event.gd
-│   └── ...
-├── scenes/                     # GÖRÜNÜM (View)
-│   ├── 3d/                     # 3D Versiyon Varlıkları
-│   │   ├── table_3d.tscn
-│   │   ├── card_3d.tscn
-│   │   ├── slot_3d.tscn
-│   │   └── thread_visualizer.gd
-│   ├── 2d/                     # 2D Versiyon Varlıkları (Planlanan)
-│   │   ├── table_2d.tscn
-│   │   ├── card_2d.tscn
-│   │   └── slot_2d.tscn
-│   └── ui/                     # Ortak UI
-│       └── hud.tscn
-└── assets/                     # Görseller, Sesler, Materyaller
-```
-
----
-
-## 6. 2D ve 3D Entegrasyon Stratejisi
-
-Bu GDD'yi 2D projede kullanırken dikkat edilecekler:
-
-1.  **Logic Dosyaları Aynen Kalır:** `logic/` ve `resources/` klasörleri 2D projeye kopyala-yapıştır yapılabilir. Hiçbir değişiklik gerektirmez.
-2.  **Sinyal Yapısı:**
-    *   2D'de: `Slot2D` tıklandığında AYNI `LoomManager.card_placed` sinyalini yaymalıdır.
-3.  **Görselleştirme:**
-    *   2D'de `Line2D` nodu kullanılarak aynı mantık (Start Pos -> End Pos) ile iplikler çizilir.
-
-### Mevcut Durum Notları
-*   **Drag & Drop:** Şu anki `DragController` 3D Raycast kullanır. 2D versiyonu için Godot'un yerleşik `_get_drag_data` ve `_drop_data` fonksiyonları veya basit bir `Area2D` mouse takibi kullanılmalıdır.
-*   **Highlight:** 2D'de `modulate` değeri veya bir `Shader` kullanılabilir.
-
----
-
-## 7. Hedefler (Roadmap)
-
-1.  **Narrative Genişlemesi:** 50+ Hikaye parçası eklemek.
-2.  **Görsel Cila:**
-    *   2D için: Pixel art veya vektörel UI tasarımı.
+### 5.4 Narrative System
+*   **Dynamic Prophecies:** Instead of static logs, the game generates a "Prophecy" text based on the cards played in a chapter.
+*   **Template:** "The union of [Card A] and [Card B] brought [Result]..."

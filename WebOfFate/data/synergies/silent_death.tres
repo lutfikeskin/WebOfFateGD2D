@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="SynergyData" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://WebOfFate/resources/synergy_data.gd" id="1_synergy"]
+
+[resource]
+script = ExtResource("1_synergy")
+id = "silent_death"
+card_id_1 = "shadow_assassin"
+card_id_2 = "poisoned_chalice"
+result_dp = 60
+result_chaos = -10
+remove_cards = true
+log_message = "LOG_silent_death"
+

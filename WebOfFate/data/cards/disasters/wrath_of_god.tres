@@ -5,7 +5,7 @@
 [resource]
 script = ExtResource("1_script")
 id = "wrath_of_god"
-display_name = "Wrath of God"
+display_name = "CARD_NAME_wrath_of_god"
 category = 4
 tags = Array[String](["divine", "endgame"])
 base_dp = 0

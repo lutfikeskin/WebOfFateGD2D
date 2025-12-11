@@ -39,32 +39,18 @@ theme_override_constants/separation = 20
 [node name="Label" type="Label" parent="MarginContainer/VBoxContainer"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 32
-text = "HOW TO PLAY"
+text = "TUTORIAL_TITLE"
 horizontal_alignment = 1
 
 [node name="RichTextLabel" type="RichTextLabel" parent="MarginContainer/VBoxContainer"]
 layout_mode = 2
 size_flags_vertical = 3
 bbcode_enabled = true
-text = "[b]Goal:[/b]
-Weave a destiny by placing cards into slots to generate Destiny Points (DP). Complete the Chapter's DP goal before you run out of turns or Chaos consumes you.
-
-[b]How to Play:[/b]
-1. [b]Place Cards:[/b] Click a card in your hand, then click a slot on the table.
-2. [b]Form Synergies:[/b] Connect cards that share tags (e.g. Heroic + Weapon) or specific combos (e.g. Hero + Sword).
-3. [b]Weave Fate:[/b] Click 'WEAVE FATE' to end your turn.
-   - [color=green]Matched cards[/color] generate DP and are removed (discarded).
-   - [color=red]Unmatched cards[/color] stay on the table (Sticky Web), blocking slots.
-   - Some cards generate Chaos. Don't let Chaos reach 100!
-
-[b]Tips:[/b]
-- [color=yellow]Gold threads[/color] reduce Chaos.
-- [color=red]Red threads[/color] double bonuses but increase Chaos.
-- Read card descriptions to find secret combos!"
+text = "TUTORIAL_TEXT"
 
 [node name="BackButton" type="Button" parent="MarginContainer/VBoxContainer"]
 custom_minimum_size = Vector2(200, 50)
 layout_mode = 2
 size_flags_horizontal = 4
-text = "BACK TO MENU"
+text = "TUTORIAL_BACK"
 

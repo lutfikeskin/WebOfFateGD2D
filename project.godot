@@ -22,6 +22,10 @@ LoomManager="*res://WebOfFate/logic/loom_manager.gd"
 GameManager="*res://WebOfFate/logic/game_manager.gd"
 DataManager="*res://WebOfFate/logic/data_manager.gd"
 TurnManager="*res://WebOfFate/logic/turn_manager.gd"
+NarrativeManager="*res://WebOfFate/logic/narrative_manager.gd"
+AudioManager="*res://WebOfFate/logic/audio_manager.gd"
+SaveManager="*res://WebOfFate/logic/save_manager.gd"
+TooltipManager="*res://WebOfFate/logic/tooltip_manager.gd"
 
 [display]
 
@@ -32,6 +36,11 @@ window/stretch/mode="canvas_items"
 [editor_plugins]
 
 enabled=PackedStringArray("res://addons/simple_cards/plugin.cfg")
+
+[internationalization]
+
+locale/translations=PackedStringArray("res://translations/translations.en.translation", "res://translations/translations.tr.translation")
+locale/test="tr"
 
 [rendering]
 

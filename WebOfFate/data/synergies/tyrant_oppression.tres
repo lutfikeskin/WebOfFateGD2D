@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="SynergyData" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://WebOfFate/resources/synergy_data.gd" id="1_synergy"]
+
+[resource]
+script = ExtResource("1_synergy")
+id = "tyrant_oppression"
+card_id_1 = "tyrant_king"
+card_id_2 = "bloody_baron"
+result_dp = 80
+result_chaos = 40
+remove_cards = true
+log_message = "LOG_tyrant_oppression"
+

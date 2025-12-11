@@ -5,7 +5,7 @@
 [resource]
 script = ExtResource("1_script")
 id = "map_fragment"
-display_name = "Map Fragment"
+display_name = "CARD_NAME_map_fragment"
 category = 1
 tags = Array[String](["quest", "mystery"])
 base_dp = 5

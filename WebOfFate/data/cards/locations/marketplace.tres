@@ -5,7 +5,7 @@
 [resource]
 script = ExtResource("1_script")
 id = "marketplace"
-display_name = "Marketplace"
+display_name = "CARD_NAME_marketplace"
 category = 3
 tags = Array[String](["social", "trade"])
 base_dp = 0

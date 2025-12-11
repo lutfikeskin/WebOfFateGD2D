@@ -5,7 +5,7 @@
 [resource]
 script = ExtResource("1_script")
 id = "puppet_strings"
-display_name = "Puppet Strings"
+display_name = "CARD_NAME_puppet_strings"
 category = 1
 tags = Array[String](["manipulation"])
 base_dp = 0

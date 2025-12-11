@@ -38,27 +38,54 @@ theme_override_constants/separation = 20
 [node name="TitleLabel" type="Label" parent="VBoxContainer"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 48
-text = "WEB OF FATE"
+text = "GAME_TITLE"
 horizontal_alignment = 1
+
+[node name="ContinueButton" type="Button" parent="VBoxContainer"]
+unique_name_in_owner = true
+visible = false
+custom_minimum_size = Vector2(0, 50)
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+text = "MENU_CONTINUE"
 
 [node name="PlayButton" type="Button" parent="VBoxContainer"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 50)
 layout_mode = 2
 theme_override_font_sizes/font_size = 24
-text = "PLAY"
+text = "MENU_PLAY"
 
 [node name="HowToPlayButton" type="Button" parent="VBoxContainer"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 50)
 layout_mode = 2
 theme_override_font_sizes/font_size = 24
-text = "HOW TO PLAY"
+text = "MENU_HOW_TO_PLAY"
+
+[node name="LanguageContainer" type="HBoxContainer" parent="VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 10
+alignment = 1
+
+[node name="Label" type="Label" parent="VBoxContainer/LanguageContainer"]
+layout_mode = 2
+text = "Language:"
+
+[node name="LangOptionButton" type="OptionButton" parent="VBoxContainer/LanguageContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+selected = 0
+item_count = 2
+popup/item_0/text = "English"
+popup/item_0/id = 0
+popup/item_1/text = "Türkçe"
+popup/item_1/id = 1
 
 [node name="QuitButton" type="Button" parent="VBoxContainer"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 50)
 layout_mode = 2
 theme_override_font_sizes/font_size = 24
-text = "QUIT"
-
+text = "MENU_QUIT"

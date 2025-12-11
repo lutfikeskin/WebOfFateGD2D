@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="SynergyData" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://WebOfFate/resources/synergy_data.gd" id="1_synergy"]
+
+[resource]
+script = ExtResource("1_synergy")
+id = "time_travel"
+card_id_1 = "mystic_guide"
+card_id_2 = "time_gate"
+result_dp = 100
+result_chaos = 0
+remove_cards = true
+log_message = "LOG_time_travel"
+

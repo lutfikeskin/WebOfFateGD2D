@@ -5,7 +5,7 @@
 [resource]
 script = ExtResource("1_script")
 id = "oblivion"
-display_name = "Oblivion"
+display_name = "CARD_NAME_oblivion"
 category = 4
 tags = Array[String](["void"])
 base_dp = 0

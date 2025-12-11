@@ -61,9 +61,14 @@ func get_card() -> Card:
 	return null
 
 func can_accept_card(card: Card) -> bool:
-	return state == SlotState.EMPTY and not state == SlotState.LOCKED
+	# Check both state and actual container content for safety
+	return not has_card() and state != SlotState.LOCKED
 
 func place_card(card: Card) -> void:
+	if has_card():
+		push_warning("Attempted to place card in a filled slot (Slot ID: %d)" % slot_id)
+		return
+
 	# If card has a parent, remove from there properly (if it's a CardHand or another Slot)
 	var parent = card.get_parent()
 	if parent:
@@ -82,8 +87,9 @@ func place_card(card: Card) -> void:
 	if card.has_method("kill_all_tweens"):
 		card.kill_all_tweens()
 	
-	# Reset card transforms for 2D centering
-	card.position = card_container.size / 2.0 - card.size / 2.0
+	# Use anchors to center the card reliably, even if size is not yet updated
+	card.set_anchors_preset(Control.PRESET_CENTER)
+	card.position = Vector2.ZERO
 	card.rotation = 0
 	card.scale = Vector2.ONE
 	card.position_offset = Vector2.ZERO # Important for CardHand reset
@@ -118,6 +124,9 @@ func remove_card(card: Card = null, new_parent: Node = null) -> Card:
 	
 	# Reset mouse filter to STOP (default) so it can be clicked/dragged normally in hand
 	target_card.mouse_filter = Control.MOUSE_FILTER_STOP
+	
+	# Reset anchors to Top-Left for CardHand or other containers that expect manual positioning
+	target_card.set_anchors_preset(Control.PRESET_TOP_LEFT)
 	
 	state = SlotState.EMPTY
 	card_removed.emit(target_card, slot_id)

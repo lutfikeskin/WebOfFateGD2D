@@ -1,109 +1,123 @@
-class_name ThreadRenderer extends Control
+extends Control
+class_name ThreadRenderer
 
+# Visual configuration
 @export var line_width: float = 4.0
-@export var default_color: Color = Color.WHITE
-@export var red_thread_color: Color = Color(0.8, 0.2, 0.2)
-@export var gold_thread_color: Color = Color(0.8, 0.7, 0.1)
-@export var purple_thread_color: Color = Color(0.6, 0.2, 0.8)
+@export var thread_colors = {
+	LoomManager.ThreadType.WHITE: Color.WHITE,
+	LoomManager.ThreadType.RED: Color(0.8, 0.2, 0.2), # Red
+	LoomManager.ThreadType.GOLD: Color(1.0, 0.8, 0.2), # Gold
+	LoomManager.ThreadType.PURPLE: Color(0.6, 0.2, 0.8) # Purple
+}
 
-var _lines: Dictionary = {} # connection_key -> Line2D
-
-func _ready() -> void:
-	# Defer setup to ensure slots are positioned
-	# We wait a frame or two to be safe with layout
-	get_tree().process_frame.connect(setup_threads)
-
-func setup_threads() -> void:
-	# Clear existing lines
-	for line in _lines.values():
-		line.queue_free()
-	_lines.clear()
-
-	var slots = LoomManager.get_all_slots()
-	var processed_pairs = []
-
-	for slot in slots:
-		var connections = LoomManager.get_connections_for_slot(slot.slot_id)
-		for conn in connections:
-			var target_id = conn["target_slot"]
-			var pair = [min(slot.slot_id, target_id), max(slot.slot_id, target_id)]
-			
-			if processed_pairs.has(pair):
-				continue
-			processed_pairs.append(pair)
-			
-			var target_slot = LoomManager.get_slot(target_id)
-			if target_slot:
-				_create_line(slot, target_slot, conn["type"])
-
-func _create_line(slot1: Control, slot2: Control, type: int) -> void:
-	var line = Line2D.new()
-	line.width = line_width
-	line.default_color = _get_color_for_type(type)
-	line.antialiased = true
-	
-	# Add to scene
-	add_child(line)
-	
-	# Store reference
-	var key = "%d-%d" % [min(slot1.slot_id, slot2.slot_id), max(slot1.slot_id, slot2.slot_id)]
-	_lines[key] = line
-	
-	# Set initial positions
-	_update_line_positions(line, slot1, slot2)
+# Stores Line2D nodes: key is [min_id, max_id], value is Line2D
+var _lines: Dictionary = {}
+var _ghost_lines: Array[Line2D] = []
 
 func _process(_delta: float) -> void:
-	# Keep lines connected to slots (in case of layout changes/resizing)
 	update_all_line_positions()
 
 func update_all_line_positions() -> void:
 	var slots = LoomManager.get_all_slots()
-	var processed_pairs = []
 	
+	# First, ensure we have lines for all connections
 	for slot in slots:
-		var connections = LoomManager.get_connections_for_slot(slot.slot_id)
+		var slot_id = slot.slot_id
+		var connections = LoomManager.get_connections_for_slot(slot_id)
+		
 		for conn in connections:
 			var target_id = conn["target_slot"]
-			var pair = [min(slot.slot_id, target_id), max(slot.slot_id, target_id)]
-			if processed_pairs.has(pair): continue
-			processed_pairs.append(pair)
+			var type = conn["type"]
 			
-			var key = "%d-%d" % [pair[0], pair[1]]
-			if _lines.has(key):
-				var target_slot = LoomManager.get_slot(target_id)
-				if target_slot:
-					_update_line_positions(_lines[key], slot, target_slot)
+			# Create a unique key for the connection (order independent)
+			var key = [min(slot_id, target_id), max(slot_id, target_id)]
+			
+			if not _lines.has(key):
+				_create_line(key, type)
+			
+			# Update position
+			_update_line_positions(key, slot_id, target_id)
 
-func _update_line_positions(line: Line2D, slot1: Control, slot2: Control) -> void:
-	var start_pos = slot1.global_position + slot1.size / 2.0
-	var end_pos = slot2.global_position + slot2.size / 2.0
+func _create_line(key: Array, type: int) -> void:
+	var line = Line2D.new()
+	line.width = line_width
+	line.default_color = thread_colors.get(type, Color.WHITE)
+	line.begin_cap_mode = Line2D.LINE_CAP_ROUND
+	line.end_cap_mode = Line2D.LINE_CAP_ROUND
 	
-	line.clear_points()
-	line.add_point(line.to_local(start_pos))
-	line.add_point(line.to_local(end_pos))
+	# Add to scene
+	add_child(line)
+	_lines[key] = line
 
-func _get_color_for_type(type: int) -> Color:
-	match type:
-		LoomManager.ThreadType.RED: return red_thread_color
-		LoomManager.ThreadType.GOLD: return gold_thread_color
-		LoomManager.ThreadType.PURPLE: return purple_thread_color
-		_: return default_color
+func _update_line_positions(key: Array, id1: int, id2: int) -> void:
+	var line = _lines[key]
+	var slot1 = LoomManager.get_slot(id1)
+	var slot2 = LoomManager.get_slot(id2)
+	
+	if slot1 and slot2:
+		# Convert global positions to local for the Line2D (which is child of this control)
+		# Assuming slots are siblings or in same canvas layer context basically
+		# Use get_global_rect().get_center() for accurate center
+		
+		var start_pos = slot1.get_global_rect().get_center()
+		var end_pos = slot2.get_global_rect().get_center()
+		
+		line.clear_points()
+		line.add_point(line.to_local(start_pos))
+		line.add_point(line.to_local(end_pos))
 
-func highlight_connection(slot_id1: int, slot_id2: int, active: bool) -> void:
-	var key = "%d-%d" % [min(slot_id1, slot_id2), max(slot_id1, slot_id2)]
+# Highlight logic: change visual style if a synergy is active
+func highlight_connection(id1: int, id2: int, active: bool) -> void:
+	var key = [min(id1, id2), max(id1, id2)]
 	if _lines.has(key):
 		var line = _lines[key]
 		if active:
-			line.width = line_width * 2.5
-			var base_color = _get_original_color_for_line(slot_id1, slot_id2)
-			line.default_color = base_color.lightened(0.5)
+			line.width = line_width * 2.0
+			line.modulate = Color(1.5, 1.5, 1.5) # Glow effect
 		else:
 			line.width = line_width
-			line.default_color = _get_original_color_for_line(slot_id1, slot_id2)
+			line.modulate = Color.WHITE
 
-func _get_original_color_for_line(slot_id1: int, slot_id2: int) -> Color:
-	var conns = LoomManager.get_connections_for_slot(slot_id1)
-	for c in conns:
-		if c["target_slot"] == slot_id2:
-			return _get_color_for_type(c["type"])
-	return default_color
+# --- GHOST LINES (Intent Prediction) ---
+
+func show_ghost_connections(target_slot_id: int) -> void:
+	_clear_ghost_lines()
+	
+	var connections = LoomManager.get_connections_for_slot(target_slot_id)
+	var target_slot = LoomManager.get_slot(target_slot_id)
+	
+	if not target_slot: return
+	
+	var mouse_pos = get_global_mouse_position() # Ghost lines connect to mouse cursor (held card)
+	
+	for conn in connections:
+		var neighbor_id = conn["target_slot"]
+		var neighbor_slot = LoomManager.get_slot(neighbor_id)
+		var type = conn["type"]
+		
+		if neighbor_slot:
+			var line = Line2D.new()
+			line.width = line_width * 0.8
+			var col = thread_colors.get(type, Color.WHITE)
+			col.a = 0.5 # Transparent
+			line.default_color = col
+			line.begin_cap_mode = Line2D.LINE_CAP_ROUND
+			line.end_cap_mode = Line2D.LINE_CAP_ROUND
+			
+			add_child(line)
+			_ghost_lines.append(line)
+			
+			var start_pos = neighbor_slot.get_global_rect().get_center()
+			# End pos is the mouse cursor (simulating where the card will drop)
+			var end_pos = mouse_pos
+			
+			line.add_point(line.to_local(start_pos))
+			line.add_point(line.to_local(end_pos))
+
+func hide_ghost_connections() -> void:
+	_clear_ghost_lines()
+
+func _clear_ghost_lines() -> void:
+	for line in _ghost_lines:
+		line.queue_free()
+	_ghost_lines.clear()

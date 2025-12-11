@@ -1,0 +1,140 @@
+keys,en,tr
+GAME_TITLE,WEB OF FATE,KADER AĞI
+MENU_PLAY,PLAY,OYNA
+MENU_HOW_TO_PLAY,HOW TO PLAY,NASIL OYNANIR
+MENU_QUIT,QUIT,ÇIKIŞ
+TUTORIAL_TITLE,HOW TO PLAY,NASIL OYNANIR
+TUTORIAL_BACK,BACK TO MENU,MENÜYE DÖN
+TUTORIAL_TEXT,"[b]Goal:[/b]
+Weave a destiny by placing cards into slots to generate Destiny Points (DP). Complete the Chapter's DP goal before you run out of turns or Chaos consumes you.
+
+[b]How to Play:[/b]
+1. [b]Place Cards:[/b] Click a card in your hand, then click a slot on the table.
+2. [b]Form Synergies:[/b] Connect cards that share tags (e.g. Heroic + Weapon) or specific combos (e.g. Hero + Sword).
+3. [b]Weave Fate:[/b] Click 'WEAVE FATE' to end your turn.
+   - [color=green]Matched cards[/color] generate DP and are removed (discarded).
+   - [color=red]Unmatched cards[/color] stay on the table (Sticky Web), blocking slots.
+   - Some cards generate Chaos. Don't let Chaos reach 100!
+
+[b]Tips:[/b]
+- [color=yellow]Gold threads[/color] reduce Chaos.
+- [color=red]Red threads[/color] double bonuses but increase Chaos.
+- Read card descriptions to find secret combos!","[b]Amaç:[/b]
+Destiny Points (DP) üretmek için kartları yuvalara yerleştirerek bir kader örün. Tur sayınız bitmeden veya Kaos sizi tüketmeden Bölümün DP hedefini tamamlayın.
+
+[b]Nasıl Oynanır:[/b]
+1. [b]Kart Yerleştir:[/b] Elinizdeki bir karta tıklayın, ardından masadaki bir yuvaya tıklayın.
+2. [b]Sinerji Oluştur:[/b] Aynı etiketlere (örn. Kahraman + Silah) veya özel kombolara (örn. Kahraman + Kılıç) sahip kartları bağlayın.
+3. [b]Kaderi Ör:[/b] Turunuzu bitirmek için 'WEAVE FATE' (Kaderi Ör) butonuna tıklayın.
+   - [color=green]Eşleşen kartlar[/color] DP üretir ve masadan kaldırılır (Discard edilir).
+   - [color=red]Eşleşmeyen kartlar[/color] masada kalır (Yapışkan Ağ), yuvaları bloke eder.
+   - Bazı kartlar Kaos üretir. Kaos'un 100'e ulaşmasına izin vermeyin!
+
+[b]İpuçları:[/b]
+- [color=yellow]Altın iplikler[/color] Kaos'u azaltır.
+- [color=red]Kırmızı iplikler[/color] bonusları ikiye katlar ama Kaos'u artırır.
+- Gizli komboları bulmak için kart açıklamalarını okuyun!"
+GAME_CHAPTER_LABEL,Chapter,Bölüm
+GAME_PROGRESS_LABEL,Progress,İlerleme
+GAME_TURN_LABEL,Turn,Tur
+GAME_DP_LABEL,Destiny Points,Kader Puanı
+GAME_CHAOS_LABEL,Chaos,Kaos
+GAME_WEAVE_BTN,WEAVE FATE,KADERİ ÖR
+GAME_DECK_LABEL,DECK,DESTE
+GAME_DISCARD_LABEL,DISCARD,ATILANLAR
+GAME_LEVEL_COMPLETE,LEVEL COMPLETE,BÖLÜM TAMAMLANDI
+GAME_GAME_OVER,GAME OVER,OYUN BİTTİ
+GAME_RESTART_BTN,Restart Level,Bölümü Yeniden Başlat
+GAME_NEXT_LEVEL_BTN,Next Chapter,Sonraki Bölüm
+GAME_BEGIN_BTN,Begin,Başla
+GAME_SKIP_REWARD_BTN,Skip Reward,Ödülü Geç
+GAME_CHOOSE_REWARD,CHOOSE YOUR REWARD,ÖDÜLÜNÜ SEÇ
+CARD_NAME_novice_hero,Novice Hero,Acemi Kahraman
+CARD_DESC_novice_hero,A young hero starting their journey.,Yolculuğuna yeni başlayan genç bir kahraman.
+CARD_NAME_forbidden_love,Forbidden Love,Yasak Aşk
+CARD_DESC_forbidden_love,Love that defies fate.,Kadere meydan okuyan aşk.
+CARD_NAME_bloody_baron,Bloody Baron,Kanlı Baron
+CARD_DESC_bloody_baron,A ruthless noble.,Acımasız bir soylu.
+CARD_NAME_mystic_guide,Mystic Guide,Gizemli Rehber
+CARD_DESC_mystic_guide,Shows the way through chaos.,Kaosun içinde yolu gösterir.
+CARD_NAME_court_jester,Court Jester,Saray Soytarısı
+CARD_DESC_court_jester,Makes fun of everything.,Her şeyle alay eder.
+CARD_NAME_plague_rat,Plague Rat,Vebalı Fare
+CARD_DESC_plague_rat,Spreads disease.,Hastalık yayar.
+CARD_NAME_dragon_whelp,Dragon Whelp,Ejderha Yavrusu
+CARD_DESC_dragon_whelp,A small dragon with big potential.,Büyük potansiyele sahip küçük bir ejderha.
+CARD_NAME_shadow_assassin,Shadow Assassin,Gölge Suikastçı
+CARD_DESC_shadow_assassin,Strikes from the shadows.,Gölgelerden saldırır.
+CARD_NAME_jealous_prince,Jealous Prince,Kıskanç Prens
+CARD_DESC_jealous_prince,Envies the throne.,Tahta göz dikmiş.
+CARD_NAME_tyrant_king,Tyrant King,Zalim Kral
+CARD_DESC_tyrant_king,Rules with an iron fist.,Demir yumrukla yönetir.
+CARD_NAME_legendary_sword,Legendary Sword,Efsanevi Kılıç
+CARD_DESC_legendary_sword,A weapon of legends.,Efsanelerin silahı.
+CARD_NAME_cursed_ring,Cursed Ring,Lanetli Yüzük
+CARD_DESC_cursed_ring,Brings power at a cost.,Bedeli olan bir güç getirir.
+CARD_NAME_grandmas_cookie,Grandma's Cookie,Büyükanne Kurabiyesi
+CARD_DESC_grandmas_cookie,Comfort food.,Rahatlatıcı yiyecek.
+CARD_NAME_map_fragment,Map Fragment,Harita Parçası
+CARD_DESC_map_fragment,A piece of the puzzle.,Bulmacanın bir parçası.
+CARD_NAME_poisoned_chalice,Poisoned Chalice,Zehirli Kadeh
+CARD_DESC_poisoned_chalice,Deadly drink.,Ölümcül içecek.
+CARD_NAME_puppet_strings,Puppet Strings,Kukla İpleri
+CARD_DESC_puppet_strings,Who controls whom?,Kim kimi kontrol ediyor?
+CARD_NAME_broken_shield,Broken Shield,Kırık Kalkan
+CARD_DESC_broken_shield,Failed protection.,Başarısız koruma.
+CARD_NAME_blacksmith,Blacksmith,Demirci
+CARD_DESC_blacksmith,Forges weapons.,Silah döver.
+CARD_NAME_sibling_betrayal,Sibling Betrayal,Kardeş İhaneti
+CARD_DESC_sibling_betrayal,Trust broken.,Güven kırıldı.
+CARD_NAME_sudden_storm,Sudden Storm,Ani Fırtına
+CARD_DESC_sudden_storm,Nature's wrath.,Doğanın gazabı.
+CARD_NAME_heroic_sacrifice,Heroic Sacrifice,Kahramanca Fedakarlık
+CARD_DESC_heroic_sacrifice,Giving all for the cause.,Dava uğruna her şeyi vermek.
+CARD_NAME_misunderstanding,Misunderstanding,Yanlış Anlaşılma
+CARD_DESC_misunderstanding,Confusion leads to chaos.,Kafa karışıklığı kaosa yol açar.
+CARD_NAME_prophecy,Prophecy,Kehanet
+CARD_DESC_prophecy,Foretells the future.,Geleceği bildirir.
+CARD_NAME_dawn_break,Dawn Break,Şafak Vakti
+CARD_DESC_dawn_break,Light returns.,Işık geri döner.
+CARD_NAME_wedding_ceremony,Wedding Ceremony,Düğün Töreni
+CARD_DESC_wedding_ceremony,Union of souls.,Ruhların birleşimi.
+CARD_NAME_volcano_eruption,Volcano Eruption,Volkan Patlaması
+CARD_DESC_volcano_eruption,Explosive power.,Patlayıcı güç.
+CARD_NAME_dark_forest,Dark Forest,Karanlık Orman
+CARD_DESC_dark_forest,Full of dangers.,Tehlikelerle dolu.
+CARD_NAME_ruined_shrine,Ruined Shrine,Yıkık Tapınak
+CARD_DESC_ruined_shrine,Forgotten gods.,Unutulmuş tanrılar.
+CARD_NAME_tavern_corner,Tavern Corner,Han Köşesi
+CARD_DESC_tavern_corner,Rest and rumors.,Dinlenme ve dedikodular.
+CARD_NAME_cliff_edge,Cliff Edge,Uçurum Kenarı
+CARD_DESC_cliff_edge,Don't look down.,Aşağı bakma.
+CARD_NAME_marketplace,Marketplace,Pazar Yeri
+CARD_DESC_marketplace,Trade and barter.,Ticaret ve takas.
+CARD_NAME_volcano,Volcano,Yanardağ
+CARD_DESC_volcano,Active danger.,Aktif tehlike.
+CARD_NAME_purification_pool,Purification Pool,Arınma Havuzu
+CARD_DESC_purification_pool,Cleanses corruption.,Yozlaşmayı temizler.
+CARD_NAME_time_gate,Time Gate,Zaman Kapısı
+CARD_DESC_time_gate,Portal to another time.,Başka bir zamana açılan kapı.
+CARD_NAME_crimson_moon,Crimson Moon,Kızıl Ay
+CARD_DESC_crimson_moon,Bad omen.,Kötü alamet.
+CARD_NAME_oblivion,Oblivion,Unutkanlık
+CARD_DESC_oblivion,Fading memories.,Silinen anılar.
+CARD_NAME_time_paradox,Time Paradox,Zaman Paradoksu
+CARD_DESC_time_paradox,History rewritten.,Tarih yeniden yazıldı.
+CARD_NAME_mass_hysteria,Mass Hysteria,Kitlesel Histeri
+CARD_DESC_mass_hysteria,Panic spreads.,Panik yayılıyor.
+CARD_NAME_wrath_of_god,Wrath of God,Tanrının Gazabı
+CARD_DESC_wrath_of_god,Divine punishment.,İlahi ceza.
+CARD_NAME_doomsday_clock,Doomsday Clock,Kıyamet Saati
+CARD_DESC_doomsday_clock,Time is running out.,Zaman tükeniyor.
+LOG_SYNERGY_FORMED,"Synergy formed: %s meets %s (%s link). (+10 DP)","Sinerji oluştu: %s ile %s birleşti (%s bağı). (+10 DP)"
+MENU_CONTINUE,CONTINUE,DEVAM ET
+MENU_NEW_GAME,NEW GAME,YENİ OYUN
+LOG_tyrant_oppression,"The Tyrant King and Bloody Baron join forces to oppress the land! (+80 DP, +40 Chaos)","Zalim Kral ve Kanlı Baron güçlerini birleştirip diyarı eziyor! (+80 DP, +40 Kaos)"
+LOG_silent_death,"The Shadow Assassin delivers the Poisoned Chalice. A silent end. (+60 DP, -10 Chaos)","Gölge Suikastçı Zehirli Kadehi sunuyor. Sessiz bir son. (+60 DP, -10 Kaos)"
+LOG_repair_shield,"The Blacksmith repairs the Broken Shield! Defense restored. (+40 DP, -20 Chaos)","Demirci Kırık Kalkanı onarıyor! Savunma onarıldı. (+40 DP, -20 Kaos)"
+LOG_plague_outbreak,"A Plague Rat infests the Marketplace! Chaos spreads! (+20 DP, +60 Chaos)","Vebalı Fare Pazar Yeri'ni istila ediyor! Kaos yayılıyor! (+20 DP, +60 Kaos)"
+LOG_comedy_chaos,"The Jester turns a Misunderstanding into a hilarious disaster! (+50 DP, +20 Chaos)","Soytarı, bir Yanlış Anlaşılmayı komik bir felakete dönüştürüyor! (+50 DP, +20 Kaos)"
+LOG_time_travel,"The Mystic Guide opens the Time Gate! Secrets of the past revealed! (+100 DP)","Gizemli Rehber Zaman Kapısı'nı açıyor! Geçmişin sırları ortaya çıktı! (+100 DP)"
