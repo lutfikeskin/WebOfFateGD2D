@@ -1,0 +1,15 @@
+res://WebOfFate/WebOfFate.tscn
+res://WebOfFate/web_of_fate_controller.gd
+res://card_layouts/web_of_fate_card_layout.gd
+res://WebOfFate/game_table.gd
+res://WebOfFate/logic/game_manager.gd
+res://WebOfFate/resources/chapter_data.gd
+res://WebOfFate/main_menu.gd
+res://addons/simple_cards/deck/manager/card_deck_manager.gd
+res://WebOfFate/logic/synergy_calculator.gd
+res://WebOfFate/logic/data_manager.gd
+res://WebOfFate/logic/turn_manager.gd
+res://WebOfFate/resources/synergy_data.gd
+res://addons/simple_cards/hand/card_hand.gd
+res://WebOfFate/components/player_hand.gd
+res://WebOfFate/components/game_slot.gd

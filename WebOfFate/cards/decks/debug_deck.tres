@@ -1,0 +1,59 @@
+[gd_resource type="Resource" script_class="CardDeck" load_steps=42 format=3]
+
+[ext_resource type="Script" path="res://addons/simple_cards/deck/card_deck.gd" id="1_script"]
+[ext_resource type="Resource" path="res://WebOfFate/data/cards/characters/novice_hero.tres" id="2_c1"]
+[ext_resource type="Resource" path="res://WebOfFate/data/cards/characters/forbidden_love.tres" id="3_c2"]
+[ext_resource type="Resource" path="res://WebOfFate/data/cards/characters/bloody_baron.tres" id="4_c3"]
+[ext_resource type="Resource" path="res://WebOfFate/data/cards/characters/mystic_guide.tres" id="5_c4"]
+[ext_resource type="Resource" path="res://WebOfFate/data/cards/characters/court_jester.tres" id="6_c5"]
+[ext_resource type="Resource" path="res://WebOfFate/data/cards/characters/plague_rat.tres" id="7_c6"]
+[ext_resource type="Resource" path="res://WebOfFate/data/cards/characters/dragon_whelp.tres" id="8_c7"]
+[ext_resource type="Resource" path="res://WebOfFate/data/cards/characters/shadow_assassin.tres" id="9_c8"]
+[ext_resource type="Resource" path="res://WebOfFate/data/cards/characters/jealous_prince.tres" id="10_c9"]
+[ext_resource type="Resource" path="res://WebOfFate/data/cards/characters/tyrant_king.tres" id="11_c10"]
+[ext_resource type="Resource" path="res://WebOfFate/data/cards/characters/blacksmith.tres" id="12_c11"]
+[ext_resource type="Resource" path="res://WebOfFate/data/cards/items/legendary_sword.tres" id="13_i1"]
+[ext_resource type="Resource" path="res://WebOfFate/data/cards/items/cursed_ring.tres" id="14_i2"]
+[ext_resource type="Resource" path="res://WebOfFate/data/cards/items/grandmas_cookie.tres" id="15_i3"]
+[ext_resource type="Resource" path="res://WebOfFate/data/cards/items/map_fragment.tres" id="16_i4"]
+[ext_resource type="Resource" path="res://WebOfFate/data/cards/items/poisoned_chalice.tres" id="17_i5"]
+[ext_resource type="Resource" path="res://WebOfFate/data/cards/items/puppet_strings.tres" id="18_i6"]
+[ext_resource type="Resource" path="res://WebOfFate/data/cards/items/broken_shield.tres" id="19_i7"]
+[ext_resource type="Resource" path="res://WebOfFate/data/cards/events/sibling_betrayal.tres" id="20_e1"]
+[ext_resource type="Resource" path="res://WebOfFate/data/cards/events/sudden_storm.tres" id="21_e2"]
+[ext_resource type="Resource" path="res://WebOfFate/data/cards/events/heroic_sacrifice.tres" id="22_e3"]
+[ext_resource type="Resource" path="res://WebOfFate/data/cards/events/misunderstanding.tres" id="23_e4"]
+[ext_resource type="Resource" path="res://WebOfFate/data/cards/events/prophecy.tres" id="24_e5"]
+[ext_resource type="Resource" path="res://WebOfFate/data/cards/events/dawn_break.tres" id="25_e6"]
+[ext_resource type="Resource" path="res://WebOfFate/data/cards/events/wedding_ceremony.tres" id="26_e7"]
+[ext_resource type="Resource" path="res://WebOfFate/data/cards/events/volcano_eruption.tres" id="27_e8"]
+[ext_resource type="Resource" path="res://WebOfFate/data/cards/locations/dark_forest.tres" id="28_l1"]
+[ext_resource type="Resource" path="res://WebOfFate/data/cards/locations/ruined_shrine.tres" id="29_l2"]
+[ext_resource type="Resource" path="res://WebOfFate/data/cards/locations/tavern_corner.tres" id="30_l3"]
+[ext_resource type="Resource" path="res://WebOfFate/data/cards/locations/cliff_edge.tres" id="31_l4"]
+[ext_resource type="Resource" path="res://WebOfFate/data/cards/locations/marketplace.tres" id="32_l5"]
+[ext_resource type="Resource" path="res://WebOfFate/data/cards/locations/volcano.tres" id="33_l6"]
+[ext_resource type="Resource" path="res://WebOfFate/data/cards/locations/purification_pool.tres" id="34_l7"]
+[ext_resource type="Resource" path="res://WebOfFate/data/cards/locations/time_gate.tres" id="35_l8"]
+[ext_resource type="Resource" path="res://WebOfFate/data/cards/disasters/crimson_moon.tres" id="36_d1"]
+[ext_resource type="Resource" path="res://WebOfFate/data/cards/disasters/oblivion.tres" id="37_d2"]
+[ext_resource type="Resource" path="res://WebOfFate/data/cards/disasters/time_paradox.tres" id="38_d3"]
+[ext_resource type="Resource" path="res://WebOfFate/data/cards/disasters/mass_hysteria.tres" id="39_d4"]
+[ext_resource type="Resource" path="res://WebOfFate/data/cards/disasters/wrath_of_god.tres" id="40_d5"]
+[ext_resource type="Resource" path="res://WebOfFate/data/cards/disasters/doomsday_clock.tres" id="41_d6"]
+
+[resource]
+script = ExtResource("1_script")
+deck_name = "Web of Fate Debug Deck"
+cards = Array[Resource("res://addons/simple_cards/card/card_resource/card_resource.gd")]([
+    ExtResource("2_c1"), ExtResource("3_c2"), ExtResource("4_c3"), ExtResource("5_c4"), ExtResource("6_c5"), 
+    ExtResource("7_c6"), ExtResource("8_c7"), ExtResource("9_c8"), ExtResource("10_c9"), ExtResource("11_c10"), ExtResource("12_c11"),
+    ExtResource("13_i1"), ExtResource("14_i2"), ExtResource("15_i3"), ExtResource("16_i4"), ExtResource("17_i5"), 
+    ExtResource("18_i6"), ExtResource("19_i7"),
+    ExtResource("20_e1"), ExtResource("21_e2"), ExtResource("22_e3"), ExtResource("23_e4"), ExtResource("24_e5"), 
+    ExtResource("25_e6"), ExtResource("26_e7"), ExtResource("27_e8"),
+    ExtResource("28_l1"), ExtResource("29_l2"), ExtResource("30_l3"), ExtResource("31_l4"), ExtResource("32_l5"), 
+    ExtResource("33_l6"), ExtResource("34_l7"), ExtResource("35_l8"),
+    ExtResource("36_d1"), ExtResource("37_d2"), ExtResource("38_d3"), ExtResource("39_d4"), ExtResource("40_d5"), ExtResource("41_d6")
+])
+

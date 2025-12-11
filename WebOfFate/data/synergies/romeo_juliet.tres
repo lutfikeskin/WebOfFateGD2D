@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="SynergyData" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://WebOfFate/resources/synergy_data.gd" id="1_synergy"]
+
+[resource]
+script = ExtResource("1_synergy")
+id = "romeo_juliet"
+card_id_1 = "forbidden_love"
+card_id_2 = "jealous_prince"
+result_dp = 60
+result_chaos = 40
+remove_cards = true
+log_message = "Forbidden Love strikes the Prince! A tragic tale unfolds! (+60 DP, +40 Chaos)"
+

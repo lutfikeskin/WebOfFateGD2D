@@ -1,0 +1,350 @@
+[gd_scene load_steps=8 format=3 uid="uid://brvun6l03k0hu"]
+
+[ext_resource type="Script" uid="uid://f86ti6qbssco" path="res://WebOfFate/web_of_fate_controller.gd" id="1_buxrw"]
+[ext_resource type="Script" uid="uid://bisyk4bowdvsf" path="res://addons/simple_cards/deck/manager/card_deck_manager.gd" id="2_gdbvl"]
+[ext_resource type="Script" uid="uid://cw1k60qf7hw1h" path="res://WebOfFate/components/player_hand.gd" id="4_tp2j7"]
+[ext_resource type="Script" uid="uid://cg5plqwqsx624" path="res://WebOfFate/game_table.gd" id="6_game_table"]
+[ext_resource type="PackedScene" uid="uid://d3j8k8rf2430m" path="res://WebOfFate/components/game_slot.tscn" id="7_game_slot"]
+[ext_resource type="PackedScene" uid="uid://c8j8k8rf2431n" path="res://WebOfFate/components/thread_renderer.tscn" id="8_thread_renderer"]
+[ext_resource type="Resource" path="res://WebOfFate/cards/decks/debug_deck.tres" id="9_debug_deck"]
+
+[node name="WebOfFateController" type="CanvasLayer"]
+script = ExtResource("1_buxrw")
+
+[node name="GameTable" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -300.0
+offset_top = -150.0
+offset_right = 300.0
+offset_bottom = -10.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("6_game_table")
+
+[node name="ThreadRenderer" parent="GameTable" instance=ExtResource("8_thread_renderer")]
+layout_mode = 1
+
+[node name="Slot_TL" parent="GameTable" instance=ExtResource("7_game_slot")]
+layout_mode = 0
+offset_left = 30.0
+offset_top = -151.0
+offset_right = 130.0
+offset_bottom = -11.0
+slot_id = 0
+
+[node name="Slot_TR" parent="GameTable" instance=ExtResource("7_game_slot")]
+layout_mode = 0
+offset_left = 360.0
+offset_top = -151.0
+offset_right = 460.0
+offset_bottom = -11.0
+slot_id = 1
+
+[node name="Slot_BL" parent="GameTable" instance=ExtResource("7_game_slot")]
+layout_mode = 0
+offset_left = 30.0
+offset_top = 50.0
+offset_right = 130.0
+offset_bottom = 190.0
+slot_id = 2
+
+[node name="Slot_BR" parent="GameTable" instance=ExtResource("7_game_slot")]
+layout_mode = 0
+offset_left = 360.0
+offset_top = 50.0
+offset_right = 460.0
+offset_bottom = 190.0
+slot_id = 3
+
+[node name="Slot_Center" parent="GameTable" instance=ExtResource("7_game_slot")]
+layout_mode = 0
+offset_left = 195.0
+offset_top = -47.0
+offset_right = 295.0
+offset_bottom = 93.0
+slot_id = 4
+
+[node name="CardDeckManager" type="Node" parent="." node_paths=PackedStringArray("draw_pile", "discard_pile")]
+physics_interpolation_mode = 2
+script = ExtResource("2_gdbvl")
+show_cards = true
+starting_deck = ExtResource("9_debug_deck")
+draw_pile = NodePath("Draw")
+discard_pile = NodePath("Discards")
+metadata/_custom_type_script = "uid://bisyk4bowdvsf"
+
+[node name="Draw" type="Control" parent="CardDeckManager"]
+layout_mode = 3
+anchors_preset = 0
+offset_left = 50.0
+offset_top = 50.0
+offset_right = 150.0
+offset_bottom = 190.0
+
+[node name="Panel" type="Panel" parent="CardDeckManager/Draw"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Label" type="Label" parent="CardDeckManager/Draw"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -11.5
+offset_right = 20.0
+offset_bottom = 11.5
+grow_horizontal = 2
+grow_vertical = 2
+text = "DECK"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Discards" type="Control" parent="CardDeckManager"]
+layout_mode = 3
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -150.0
+offset_top = 50.0
+offset_right = -50.0
+offset_bottom = 190.0
+grow_horizontal = 0
+
+[node name="Panel" type="Panel" parent="CardDeckManager/Discards"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Label" type="Label" parent="CardDeckManager/Discards"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -31.0
+offset_top = -11.5
+offset_right = 31.0
+offset_bottom = 11.5
+grow_horizontal = 2
+grow_vertical = 2
+text = "DISCARD"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="PlayerHand" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -60.0
+offset_top = 283.0
+offset_right = -60.0
+offset_bottom = 283.0
+grow_horizontal = 2
+grow_vertical = 0
+script = ExtResource("4_tp2j7")
+max_selected = 1
+card_spacing = 70.0
+max_hand_size = 5
+metadata/_custom_type_script = "uid://bbi8i6vef3f6y"
+
+[node name="GameInfoPanel" type="PanelContainer" parent="."]
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -250.0
+offset_top = 20.0
+offset_right = -20.0
+offset_bottom = 120.0
+grow_horizontal = 0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="GameInfoPanel"]
+layout_mode = 2
+
+[node name="ChapterLabel" type="Label" parent="GameInfoPanel/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 18
+text = "Chapter 1"
+horizontal_alignment = 1
+
+[node name="ProgressLabel" type="Label" parent="GameInfoPanel/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Progress: 0 / 500 DP"
+horizontal_alignment = 1
+
+[node name="TurnLabel" type="Label" parent="GameInfoPanel/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Turn: 1 / 10"
+horizontal_alignment = 1
+
+[node name="ResourcePanel" type="VBoxContainer" parent="."]
+anchors_preset = 4
+anchor_top = 0.5
+anchor_bottom = 0.5
+offset_left = 20.0
+offset_top = -100.0
+offset_right = 200.0
+offset_bottom = 100.0
+grow_vertical = 2
+
+[node name="DestinyPointsLabel" type="Label" parent="ResourcePanel"]
+layout_mode = 2
+text = "Destiny Points: 0"
+horizontal_alignment = 1
+
+[node name="ChaosLabel" type="Label" parent="ResourcePanel"]
+layout_mode = 2
+text = "Chaos: 0/100"
+horizontal_alignment = 1
+
+[node name="ChaosProgressBar" type="ProgressBar" parent="ResourcePanel"]
+layout_mode = 2
+show_percentage = false
+
+[node name="WeaveFateButton" type="Button" parent="ResourcePanel"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "WEAVE FATE"
+
+[node name="StoryPanel" type="PanelContainer" parent="."]
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -300.0
+offset_top = -250.0
+offset_right = -20.0
+offset_bottom = -20.0
+grow_horizontal = 0
+grow_vertical = 0
+
+[node name="ScrollContainer" type="ScrollContainer" parent="StoryPanel"]
+layout_mode = 2
+
+[node name="StoryLabel" type="RichTextLabel" parent="StoryPanel/ScrollContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+bbcode_enabled = true
+text = "[i]Fate awaits...[/i]"
+fit_content = true
+
+[node name="ChapterStartPanel" type="PanelContainer" parent="."]
+visible = false
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -200.0
+offset_top = -150.0
+offset_right = 200.0
+offset_bottom = 150.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="ChapterStartPanel"]
+layout_mode = 2
+theme_override_constants/separation = 15
+
+[node name="TitleLabel" type="Label" parent="ChapterStartPanel/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+text = "Chapter 1"
+horizontal_alignment = 1
+
+[node name="DescriptionLabel" type="RichTextLabel" parent="ChapterStartPanel/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 3
+text = "Chapter description..."
+
+[node name="StartButton" type="Button" parent="ChapterStartPanel/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Begin"
+
+[node name="LevelCompletePanel" type="PanelContainer" parent="."]
+visible = false
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -150.0
+offset_top = -100.0
+offset_right = 150.0
+offset_bottom = 100.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="LevelCompletePanel"]
+layout_mode = 2
+theme_override_constants/separation = 20
+alignment = 1
+
+[node name="Label" type="Label" parent="LevelCompletePanel/VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+text = "LEVEL COMPLETE"
+horizontal_alignment = 1
+
+[node name="NextLevelButton" type="Button" parent="LevelCompletePanel/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Next Chapter"
+
+[node name="GameOverPanel" type="PanelContainer" parent="."]
+visible = false
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -150.0
+offset_top = -100.0
+offset_right = 150.0
+offset_bottom = 100.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="GameOverPanel"]
+layout_mode = 2
+theme_override_constants/separation = 20
+alignment = 1
+
+[node name="Label" type="Label" parent="GameOverPanel/VBoxContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.3, 0.3, 1)
+theme_override_font_sizes/font_size = 24
+text = "GAME OVER"
+horizontal_alignment = 1
+
+[node name="RestartButton" type="Button" parent="GameOverPanel/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Restart Level"

@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="CardData" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://WebOfFate/resources/card_data.gd" id="1_script"]
+
+[resource]
+script = ExtResource("1_script")
+id = "dawn_break"
+display_name = "Dawn Break"
+category = 2
+tags = Array[String](["light", "hope"])
+base_dp = 0
+base_chaos = -15
+texture_path = ""
+card_suit = 0
+value = 0
+

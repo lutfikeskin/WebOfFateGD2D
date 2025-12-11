@@ -1,0 +1,133 @@
+---
+description: "Core project context and patterns"
+globs:
+alwaysApply: true
+---
+
+{
+  "rules": [
+
+    //============================================================
+    // ENGINE, LANGUAGE & GENERAL TECHNICAL GUIDELINES
+    //============================================================
+
+    "Use Godot 4.5 and strictly GDScript for all gameplay systems.",
+    "Follow Godot’s official style guide when not overridden by the rules here.",
+    "Prefer Godot-native patterns (Nodes, Resources, Signals, Autoloads) over custom frameworks, unless necessary.",
+    "Always use static typing in GDScript (typed variables, typed function arguments, typed return values).",
+    "Leverage built-in Godot Debugger, Profiler, and built-in logging tools.",
+    "When implementing tools scripts or editor functionality, mark them with @tool and keep editor-specific behavior isolated.",
+
+
+    //============================================================
+    // DATA & RESOURCE SYSTEM
+    //============================================================
+
+    "Never hardcode gameplay stats in scripts. Always load card, character, effect, and configuration data from Resource files.",
+    "All game data must be structured using Resources, not Dictionaries, unless the GDD specifically allows exceptions.",
+    "Resources must be immutable during runtime unless explicitly designed to be modified.",
+    "Use .tres or .res files for static data, and custom Resource classes for structured gameplay data (cards, abilities, enemy patterns, etc.).",
+    "Use a centralized DataManager Autoload for loading, caching, and serving Resources if required.",
+    "Ensure card IDs, effect names, and config keys remain consistent across all files; avoid string duplication across the codebase.",
+
+
+    //============================================================
+    // PROJECT ARCHITECTURE & CODE ORGANIZATION
+    //============================================================
+
+    "Utilize Autoloads as single-responsibility managers (GameState, DataManager, EventBus, UIManager, etc.).",
+    "Avoid circular dependencies at all costs.",
+    "Scene-based objects must not directly reference other high-level systems; always communicate through signals, events, or manager APIs.",
+    "Heavy logic belongs in managers or service scripts, not individual scenes.",
+    "Use the EventBus (autoload) to broadcast global events — no cross-scene direct calls.",
+    "Favor composition over inheritance; avoid deep inheritance trees.",
+    "Keep Scenes lightweight: Scenes = presentation; Scripts = logic; Resources = data.",
+    "When appropriate, create ‘Glue Scripts’ that connect systems without embedding logic in UI or animation nodes.",
+    "Any card effect or ability must be implemented as modular, independent logic blocks that the gameplay system can sequence.",
+
+
+    //============================================================
+    // SIGNALS, EVENTS & COMMUNICATION
+    //============================================================
+
+    "Use signals for all communication between UI, gameplay systems, and managers.",
+    "Never reach into another scene’s internal nodes via get_node() unless that scene explicitly exposes an API.",
+    "If two systems communicate frequently, consider routing them through an Autoload EventBus to prevent spaghetti dependencies.",
+    "Ensure signal connections are type-safe and documented.",
+    "Use named signals with clear intent (e.g., card_played(card_id), turn_ended(), damage_applied(target, amount)).",
+    "Disconnect signals properly when nodes are freed to avoid stray callbacks.",
+
+
+    //============================================================
+    // CARD SYSTEM RULES
+    //============================================================
+
+    "Cards must be defined entirely through Resource data files.",
+    "A Card Resource must contain: ID, type, cost, rarity, rules text, icon, tags, and a reference to its Effect logic.",
+    "Effects should be modular scripts or Resources that can be executed by the CardSystem.",
+    "Do not implement effect logic inside the Card scene directly.",
+    "Card rendering must be UI-only; logic is not allowed inside visuals.",
+    "Never compute gameplay logic inside UI components (CardDisplay, HoverPreview, Tooltip).",
+    "Card interactions must follow the architecture: Input/UI → CardSystem → GameState → Board/Units.",
+
+
+    //============================================================
+    // GAMEPLAY LOOP & TURN SYSTEM
+    //============================================================
+
+    "The turn system must be governed by a dedicated TurnManager Autoload.",
+    "TurnManager communicates with GameState, CardSystem, and UI exclusively via signals and events.",
+    "Turn phases (start, upkeep, action, end) should be modular and extendable.",
+    "All gameplay actions must be queued and processed deterministically if possible.",
+    "Avoid direct invokes of gameplay logic from UI; use request_action() patterns instead.",
+
+
+    //============================================================
+    // CODING STYLE & BEST PRACTICES
+    //============================================================
+
+    "Use typed GDScript for all variables, parameters, and return values.",
+    "Name scripts and Resources clearly according to their purpose.",
+    "Keep functions small and focused — one responsibility per function.",
+    "Avoid long files; split systems into smaller modules when needed.",
+    "Use constants for repeated values and enums for state machines.",
+    "Use match statements where logical, but avoid overly complex flow control.",
+    "Preload resources when used frequently; load() only for infrequent or dynamic elements.",
+    "Document non-obvious behavior with concise comments.",
+    "Avoid premature optimization; focus on clarity and maintainability first.",
+
+
+    //============================================================
+    // UI, INPUT & PRESENTATION
+    //============================================================
+
+    "UI should never contain gameplay logic. It only reflects state and sends requests/events.",
+    "Use AnimationPlayer/AnimationTree for presentation states; never tie gameplay states to animations.",
+    "Input events must be routed through a centralized InputManager if complexity increases.",
+    "Render layers, z-index, and card ordering must be controlled through a UI Manager script, not ad-hoc changes.",
+    "Ensure tooltips and previews always read from Resource data, not script variables.",
+
+
+    //============================================================
+    // DEBUGGING, TESTING & LOGGING
+    //============================================================
+
+    "Create debug helpers for spawning cards, simulating turns, and printing GameState.",
+    "Use assertions in development builds to detect invalid data.",
+    "Log important gameplay events (if needed, implement a DebugConsole autoload).",
+    "When a bug occurs, determine whether it originates in Data, Scene, or Manager — maintain strict separation.",
+
+
+    //============================================================
+    // MAINTAINABILITY & FUTURE-PROOFING
+    //============================================================
+
+    "All gameplay systems must be extendable without rewriting existing code.",
+    "Avoid writing monolithic manager scripts; break them into modular subsystems.",
+    "Document every new Resource type so it’s clear how data is structured.",
+    "Gameplay logic must function even if visual components are missing — core logic must be headless-compatible.",
+    "Prefer declarative data-driven designs (e.g., ability sequences) whenever possible.",
+    "Any new feature must follow existing architecture patterns, not bypass them."
+
+  ]
+}

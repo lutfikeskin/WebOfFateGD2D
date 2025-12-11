@@ -1,0 +1,41 @@
+; Engine configuration file.
+; It's best edited using the editor UI and not directly,
+; since the parameters that go here are not all obvious.
+;
+; Format:
+;   [section] ; section goes between []
+;   param=value ; assign values to parameters
+
+config_version=5
+
+[application]
+
+config/name="SimpleCardsV2"
+run/main_scene="res://WebOfFate/main_menu.tscn"
+config/features=PackedStringArray("4.5", "GL Compatibility")
+config/icon="res://icon.svg"
+
+[autoload]
+
+CG="*res://addons/simple_cards/card_global.gd"
+LoomManager="*res://WebOfFate/logic/loom_manager.gd"
+GameManager="*res://WebOfFate/logic/game_manager.gd"
+DataManager="*res://WebOfFate/logic/data_manager.gd"
+TurnManager="*res://WebOfFate/logic/turn_manager.gd"
+
+[display]
+
+window/size/viewport_width=1280
+window/size/viewport_height=720
+window/stretch/mode="canvas_items"
+
+[editor_plugins]
+
+enabled=PackedStringArray("res://addons/simple_cards/plugin.cfg")
+
+[rendering]
+
+textures/canvas_textures/default_texture_filter=0
+renderer/rendering_method="gl_compatibility"
+renderer/rendering_method.mobile="gl_compatibility"
+environment/defaults/default_clear_color=Color(0.18717614, 0.18717614, 0.18717614, 1)

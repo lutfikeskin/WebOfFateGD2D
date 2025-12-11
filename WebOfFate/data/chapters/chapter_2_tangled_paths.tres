@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="ChapterData" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://WebOfFate/resources/chapter_data.gd" id="1_script"]
+
+[resource]
+script = ExtResource("1_script")
+chapter_name = "Chapter 2: Tangled Paths"
+description = "Gather 1000 Destiny Points. Chaos limit is tighter (80)."
+narrative_intro = "The first threads are woven, but the pattern grows complex. Darker forces intervene, and the margin for error shrinks.
+
+Goal: Reach 1000 Destiny Points.
+Limit: Chaos must stay below 80.
+Time: You have 15 turns."
+target_dp = 1000
+max_chaos = 80
+max_turns = 15

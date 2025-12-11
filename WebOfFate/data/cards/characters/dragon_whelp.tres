@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="CardData" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://WebOfFate/resources/card_data.gd" id="1_script"]
+
+[resource]
+script = ExtResource("1_script")
+id = "dragon_whelp"
+display_name = "Dragon Whelp"
+category = 0
+tags = Array[String](["monster", "dragon"])
+base_dp = 30
+base_chaos = 20
+texture_path = ""
+card_suit = 0
+value = 0
+

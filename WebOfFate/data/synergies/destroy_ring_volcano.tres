@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="SynergyData" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://WebOfFate/resources/synergy_data.gd" id="1_synergy"]
+
+[resource]
+script = ExtResource("1_synergy")
+id = "destroy_ring_volcano"
+card_id_1 = "cursed_ring"
+card_id_2 = "volcano"
+result_dp = 80
+result_chaos = -10
+remove_cards = true
+log_message = "The Cursed Ring is destroyed in the fires! (+80 DP)"
+

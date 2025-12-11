@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="CardData" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://WebOfFate/resources/card_data.gd" id="1_script"]
+
+[resource]
+script = ExtResource("1_script")
+id = "ruined_shrine"
+display_name = "Ruined Shrine"
+category = 3
+tags = Array[String](["holy", "ruin"])
+base_dp = 0
+base_chaos = 0
+texture_path = ""
+card_suit = 0
+value = 0
+

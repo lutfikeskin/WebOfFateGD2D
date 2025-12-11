@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="SynergyData" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://WebOfFate/resources/synergy_data.gd" id="1_synergy"]
+
+[resource]
+script = ExtResource("1_synergy")
+id = "treasure_room"
+card_id_1 = "map_fragment"
+card_id_2 = "map_fragment"
+result_dp = 50
+result_chaos = 0
+remove_cards = true
+log_message = "The map is complete! Treasure found! (+50 DP)"
+
