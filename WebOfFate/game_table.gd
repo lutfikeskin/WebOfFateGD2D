@@ -84,6 +84,12 @@ func _on_slot_clicked(slot_id: int) -> void:
 func _return_card_to_hand(slot: GameSlot) -> void:
 	if not _player_hand:
 		return
+	
+	# Check if card can be removed (only if placed this turn)
+	if not slot.can_remove_card():
+		# Card was placed in a previous turn, cannot be removed
+		AudioManager.play_sfx(AudioManager.Sound.CLICK)  # Play click sound but don't remove
+		return
 		
 	# Get card from slot
 	var card = slot.remove_card(null, _player_hand)
@@ -108,8 +114,8 @@ func _try_place_selected_card_in_slot(slot: GameSlot) -> void:
 		# Deselect from hand
 		_player_hand.toggle_select(card_to_move)
 		
-		# Place in slot
-		slot.place_card(card_to_move)
+		# Place in slot (track current turn)
+		slot.place_card(card_to_move, GameManager.turn_count)
 		LoomManager.notify_card_placed(card_to_move, slot.slot_id)
 		_update_visual_feedback()
 		AudioManager.play_sfx(AudioManager.Sound.CARD_PLACE)
@@ -173,7 +179,7 @@ func _on_dropped_card() -> void:
 				if _player_hand and _player_hand.selected.has(_held_card):
 					_player_hand.toggle_select(_held_card)
 				
-				slot.place_card(_held_card)
+				slot.place_card(_held_card, GameManager.turn_count)
 				LoomManager.notify_card_placed(_held_card, slot.slot_id)
 				_update_visual_feedback()
 				AudioManager.play_sfx(AudioManager.Sound.CARD_PLACE)
@@ -193,6 +199,8 @@ func get_all_slot_cards() -> Array[Card]:
 	for slot in slots:
 		cards.append(slot.get_card())
 	return cards
+
+# Removed _on_turn_started - cards are locked immediately after weave
 
 func _on_weaving_phase_started() -> void:
 	weave_fate()
@@ -244,19 +252,15 @@ func weave_fate() -> void:
 	
 	# STICKY WEB: Only remove cards that were part of synergies
 	var cards_removed_count: int = 0
-	
-	# DEBUG: Print outcome
-	print("DEBUG: Weaving Result - DP: %d, Chaos: %d, Cards to Remove: %d" % [outcome.dp, outcome.chaos, outcome.cards_to_remove.size()])
-	
 	for card in outcome.cards_to_remove:
 		var slot = _find_slot_with_card(card)
 		if slot:
 			var slot_center = slot.global_position + slot.size / 2.0
-			var removed_card = slot.remove_card()
+			# Force remove for synergy cards (they must be discarded)
+			var removed_card = slot.remove_card(null, null, true)
 			if removed_card:
 				# Discard the card (add to discard pile)
 				# Notify via signal for manager to handle
-				print("DEBUG: Discarding card from synergy: ", removed_card.card_data.display_name if removed_card.card_data else removed_card.name)
 				
 				# Spawn VFX at card location
 				_spawn_vfx(VFX_SYNERGY, slot_center)
@@ -276,7 +280,6 @@ func weave_fate() -> void:
 				removed_card.rotation_degrees = 0
 				
 				# Signal for DeckManager to move it to discard pile
-				print("DEBUG: Emitting card_discarded for: ", removed_card.name)
 				card_discarded.emit(removed_card)
 				
 				cards_removed_count += 1
@@ -291,20 +294,22 @@ func weave_fate() -> void:
 	
 	# TANGLED WEB: Fail state - all slots full AND no cards were removed
 	var all_full = true
-	var cards_remaining = []
 	for slot in slots:
 		if not slot.has_card():
 			all_full = false
-		else:
-			cards_remaining.append(slot.get_card().name)
-			
-	print("DEBUG: Slot Status - Full: %s, Cards Remaining: %s" % [all_full, cards_remaining])
+			break
 	
 	if all_full and cards_removed_count == 0:
 		TurnManager.trigger_game_over("Web Tangled! All slots are full and no synergies were formed!")
 		AudioManager.play_sfx(AudioManager.Sound.GAME_OVER)
 		_update_visual_feedback()
 		return
+	
+	# Lock all remaining cards (they can no longer be interacted with)
+	# Cards that remain after weaving are now "locked" - no interaction allowed
+	for slot in slots:
+		if slot.has_card():
+			slot.lock_card()
 	
 	# Finish Weaving Phase
 	weaving_completed.emit()
