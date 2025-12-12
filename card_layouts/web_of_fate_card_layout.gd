@@ -4,6 +4,8 @@ extends CardLayout
 @onready var texture_rect: TextureRect = %TextureRect
 @onready var value_label: Label = %ValueLabel
 @onready var category_label: Label = %CategoryLabel
+@onready var title_badge: Label = %TitleBadge
+@onready var mood_indicator: Label = %MoodIndicator
 
 var res: CardData
 
@@ -27,6 +29,7 @@ func _update_display() -> void:
 		texture_rect.texture = load(res.texture_path)
 		
 	set_text_display()
+	_update_chronicle_display()
 
 func set_color():
 	if not card_color: return
@@ -66,3 +69,40 @@ func set_text_display():
 		value_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	else:
 		value_label.text = ""
+
+## Update title and mood from Chronicle System
+func _update_chronicle_display() -> void:
+	# Hide by default
+	if title_badge:
+		title_badge.visible = false
+	if mood_indicator:
+		mood_indicator.visible = false
+	
+	# Check if ChronicleManager is available and has data
+	if not Engine.has_singleton("ChronicleManager"):
+		# ChronicleManager is autoload, not singleton - check differently
+		pass
+	
+	# Try to get entity state from ChronicleManager
+	if ChronicleManager and ChronicleManager.chronicle and res:
+		var entity: EntityState = ChronicleManager.chronicle.entity_states.get(res.id)
+		if entity:
+			# Show title badge if earned
+			if title_badge and not entity.earned_titles.is_empty():
+				title_badge.text = entity.earned_titles[0]
+				title_badge.visible = true
+			
+			# Show mood indicator
+			if mood_indicator:
+				mood_indicator.text = _mood_to_emoji(entity.mood)
+				mood_indicator.visible = true
+
+func _mood_to_emoji(mood: float) -> String:
+	if mood >= 0.5:
+		return "😊"
+	elif mood >= 0.0:
+		return "😐"
+	elif mood >= -0.5:
+		return "😟"
+	else:
+		return "😢"

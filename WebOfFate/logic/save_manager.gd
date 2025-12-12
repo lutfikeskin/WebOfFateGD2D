@@ -14,6 +14,9 @@ func _ready() -> void:
 func load_game() -> bool:
 	current_save = SaveGame.load_save()
 	if current_save:
+		# Restore Chronicle data if exists
+		if current_save.chronicle:
+			ChronicleManager.chronicle = current_save.chronicle
 		print("SaveManager: Save loaded successfully.")
 		return true
 	else:
@@ -35,6 +38,9 @@ func save_game() -> void:
 			deck_ids.append(card.id)
 	current_save.player_deck_ids = deck_ids
 	
+	# Sync Chronicle data
+	current_save.chronicle = ChronicleManager.chronicle
+	
 	# Save to disk
 	current_save.write_save()
 	print("SaveManager: Game saved.")
@@ -49,4 +55,3 @@ func create_new_game() -> void:
 
 func has_save_file() -> bool:
 	return ResourceLoader.exists(SaveGame.SAVE_PATH)
-

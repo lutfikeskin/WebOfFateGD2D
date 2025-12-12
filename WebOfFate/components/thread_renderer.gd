@@ -10,12 +10,18 @@ class_name ThreadRenderer
 	LoomManager.ThreadType.PURPLE: Color(0.6, 0.2, 0.8) # Purple
 }
 
+# Relationship visual colors
+const BOND_COLOR := Color(1.0, 0.5, 0.8) # Pink glow for bonded cards
+const GRUDGE_COLOR := Color(0.4, 0.0, 0.0) # Dark red for enemies
+
 # Stores Line2D nodes: key is [min_id, max_id], value is Line2D
 var _lines: Dictionary = {}
 var _ghost_lines: Array[Line2D] = []
+var _relationship_overlays: Dictionary = {} # Overlay lines for relationships
 
 func _process(_delta: float) -> void:
 	update_all_line_positions()
+	_update_relationship_overlays()
 
 func update_all_line_positions() -> void:
 	var slots = LoomManager.get_all_slots()
@@ -58,7 +64,6 @@ func _update_line_positions(key: Array, id1: int, id2: int) -> void:
 		# Convert global positions to local for the Line2D (which is child of this control)
 		# Assuming slots are siblings or in same canvas layer context basically
 		# Use get_global_rect().get_center() for accurate center
-		
 		var start_pos = slot1.get_global_rect().get_center()
 		var end_pos = slot2.get_global_rect().get_center()
 		
@@ -77,6 +82,83 @@ func highlight_connection(id1: int, id2: int, active: bool) -> void:
 		else:
 			line.width = line_width
 			line.modulate = Color.WHITE
+
+## Update relationship visual overlays based on Chronicle data
+func _update_relationship_overlays() -> void:
+	# Clear old overlays
+	for overlay in _relationship_overlays.values():
+		if is_instance_valid(overlay):
+			overlay.queue_free()
+	_relationship_overlays.clear()
+	
+	# Check if Chronicle is available
+	if not ChronicleManager or not ChronicleManager.chronicle:
+		return
+	
+	var slots = LoomManager.get_all_slots()
+	
+	# Check all slot pairs for relationship data
+	for i in range(slots.size()):
+		for j in range(i + 1, slots.size()):
+			var slot1 = slots[i]
+			var slot2 = slots[j]
+			
+			if not slot1.has_card() or not slot2.has_card():
+				continue
+			
+			var card1_id = _get_card_id_from_slot(slot1)
+			var card2_id = _get_card_id_from_slot(slot2)
+			
+			if card1_id.is_empty() or card2_id.is_empty():
+				continue
+			
+			# Check relationship
+			var rel = ChronicleManager.chronicle.get_relationship(card1_id, card2_id)
+			if not rel:
+				continue
+			
+			# Only show overlay for strong relationships
+			if rel.affinity >= 0.5 or rel.affinity <= -0.4:
+				_create_relationship_overlay(slot1, slot2, rel.affinity)
+
+func _create_relationship_overlay(slot1, slot2, affinity: float) -> void:
+	var overlay = Line2D.new()
+	overlay.width = line_width * 1.5
+	
+	if affinity >= 0.5:
+		overlay.default_color = BOND_COLOR
+		overlay.default_color.a = 0.6
+	else:
+		overlay.default_color = GRUDGE_COLOR
+		overlay.default_color.a = 0.8
+	
+	overlay.begin_cap_mode = Line2D.LINE_CAP_ROUND
+	overlay.end_cap_mode = Line2D.LINE_CAP_ROUND
+	overlay.z_index = -1 # Behind regular threads
+	
+	add_child(overlay)
+	
+	var start_pos = slot1.get_global_rect().get_center()
+	var end_pos = slot2.get_global_rect().get_center()
+	
+	overlay.add_point(overlay.to_local(start_pos))
+	overlay.add_point(overlay.to_local(end_pos))
+	
+	var key = "%s_%s" % [slot1.slot_id, slot2.slot_id]
+	_relationship_overlays[key] = overlay
+
+func _get_card_id_from_slot(slot) -> String:
+	if slot.has_method("get_card"):
+		var card = slot.get_card()
+		if card and card.card_data:
+			return card.card_data.id
+	elif slot.has_method("has_card") and slot.has_card():
+		# Try alternative access
+		var children = slot.get_children()
+		for child in children:
+			if child.has_method("get") and child.get("card_data"):
+				return child.card_data.id
+	return ""
 
 # --- GHOST LINES (Intent Prediction) ---
 

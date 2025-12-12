@@ -86,3 +86,24 @@ theme_override_fonts/font = ExtResource("2_eobcc")
 theme_override_font_sizes/font_size = 10
 text = "TYPE"
 label_settings = SubResource("LabelSettings_gnfya")
+
+[node name="TitleBadge" type="Label" parent="SubViewport/MarginContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 8
+size_flags_vertical = 0
+theme_override_colors/font_color = Color(0.8, 0.6, 0.2, 1)
+theme_override_fonts/font = ExtResource("2_eobcc")
+theme_override_font_sizes/font_size = 8
+horizontal_alignment = 2
+visible = false
+
+[node name="MoodIndicator" type="Label" parent="SubViewport/MarginContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 8
+size_flags_vertical = 8
+theme_override_font_sizes/font_size = 14
+horizontal_alignment = 2
+vertical_alignment = 2
+visible = false

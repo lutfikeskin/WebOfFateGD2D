@@ -138,3 +138,7 @@ LOG_repair_shield,"The Blacksmith repairs the Broken Shield! Defense restored. (
 LOG_plague_outbreak,"A Plague Rat infests the Marketplace! Chaos spreads! (+20 DP, +60 Chaos)","Vebalı Fare Pazar Yeri'ni istila ediyor! Kaos yayılıyor! (+20 DP, +60 Kaos)"
 LOG_comedy_chaos,"The Jester turns a Misunderstanding into a hilarious disaster! (+50 DP, +20 Chaos)","Soytarı, bir Yanlış Anlaşılmayı komik bir felakete dönüştürüyor! (+50 DP, +20 Kaos)"
 LOG_time_travel,"The Mystic Guide opens the Time Gate! Secrets of the past revealed! (+100 DP)","Gizemli Rehber Zaman Kapısı'nı açıyor! Geçmişin sırları ortaya çıktı! (+100 DP)"
+CHRONICLE_VICTORY_TITLE,THE CHRONICLE OF VICTORY,ZAFER KRONİĞİ
+CHRONICLE_DEFEAT_TITLE,THE CHRONICLE OF DOOM,YIKIM KRONİĞİ
+CHRONICLE_VIEW_BTN,View Chronicle,Kroniği Gör
+CHRONICLE_CONTINUE_BTN,Continue,Devam Et

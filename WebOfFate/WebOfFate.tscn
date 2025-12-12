@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=3 uid="uid://brvun6l03k0hu"]
+[gd_scene load_steps=12 format=3 uid="uid://brvun6l03k0hu"]
 
 [ext_resource type="Script" uid="uid://f86ti6qbssco" path="res://WebOfFate/web_of_fate_controller.gd" id="1_buxrw"]
 [ext_resource type="Script" uid="uid://bisyk4bowdvsf" path="res://addons/simple_cards/deck/manager/card_deck_manager.gd" id="2_gdbvl"]
@@ -9,6 +9,7 @@
 [ext_resource type="PackedScene" uid="uid://c8j8k8rf2431n" path="res://WebOfFate/components/thread_renderer.tscn" id="8_thread_renderer"]
 [ext_resource type="Resource" path="res://WebOfFate/cards/decks/debug_deck.tres" id="9_debug_deck"]
 [ext_resource type="Script" uid="uid://d2tit1216nktl" path="res://WebOfFate/components/screen_shaker.gd" id="10_shaker"]
+[ext_resource type="PackedScene" path="res://WebOfFate/ui/chronicle_panel.tscn" id="11_bd2bt"]
 [ext_resource type="PackedScene" uid="uid://tooltip12345" path="res://WebOfFate/ui/tooltip_panel.tscn" id="11_tooltip"]
 
 [node name="WebOfFateController" type="CanvasLayer"]
@@ -358,4 +359,7 @@ layout_mode = 2
 text = "GAME_RESTART_BTN"
 
 [node name="TooltipPanel" parent="." instance=ExtResource("11_tooltip")]
+visible = false
+
+[node name="ChroniclePanel" parent="." instance=ExtResource("11_bd2bt")]
 visible = false

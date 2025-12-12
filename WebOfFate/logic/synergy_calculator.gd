@@ -57,6 +57,16 @@ func calculate_turn_results(loom_manager: Node) -> Dictionary:
 					if combo_result.log != "":
 						log_entries.append(combo_result.log)
 					
+					# Chronicle System: Record this synergy
+					if card.card_data is CardData and target_card.card_data is CardData:
+						var card_data1 := card.card_data as CardData
+						var card_data2 := target_card.card_data as CardData
+						ChronicleManager.record_synergy(
+							card_data1.id, card_data2.id,
+							combo_result,
+							thread_type
+						)
+					
 					if combo_result.remove_cards:
 						if not cards_to_remove.has(card): cards_to_remove.append(card)
 						if not cards_to_remove.has(target_card): cards_to_remove.append(target_card)

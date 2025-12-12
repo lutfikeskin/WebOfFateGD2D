@@ -26,6 +26,7 @@ NarrativeManager="*res://WebOfFate/logic/narrative_manager.gd"
 AudioManager="*res://WebOfFate/logic/audio_manager.gd"
 SaveManager="*res://WebOfFate/logic/save_manager.gd"
 TooltipManager="*res://WebOfFate/logic/tooltip_manager.gd"
+ChronicleManager="*res://WebOfFate/logic/chronicle_manager.gd"
 
 [display]
 

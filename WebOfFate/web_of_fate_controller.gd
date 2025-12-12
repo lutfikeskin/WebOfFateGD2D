@@ -23,6 +23,7 @@ class_name WebOfFateController
 @onready var game_over_panel: PanelContainer = $GameOverPanel
 @onready var chapter_start_panel: PanelContainer = $ChapterStartPanel
 @onready var card_reward_panel: PanelContainer = $CardRewardPanel # New reference
+@onready var chronicle_panel: PanelContainer = $ChroniclePanel # Chronicle System UI
 @onready var next_level_button: Button = %NextLevelButton
 @onready var restart_button: Button = %RestartButton
 @onready var start_chapter_button: Button = %StartButton
@@ -41,9 +42,11 @@ func _ready() -> void:
 	restart_button.pressed.connect(_on_restart_pressed)
 	start_chapter_button.pressed.connect(_on_start_chapter_pressed)
 	
-	# Connect Reward Panel signals
 	card_reward_panel.card_selected.connect(_on_reward_card_selected)
 	card_reward_panel.skipped.connect(_on_reward_skipped)
+	
+	# Connect Chronicle Panel signals
+	chronicle_panel.dismissed.connect(_on_chronicle_dismissed)
 	
 	# Connect game table signals
 	game_table.resources_updated.connect(_on_resources_updated)
@@ -103,13 +106,16 @@ func _on_level_complete(_stats: Dictionary) -> void:
 	print("Level Complete!")
 	story_label.append_text("\n[color=green]GAME_LEVEL_COMPLETE[/color]")
 	weave_fate_button.disabled = true
+	# Show Chronicle first, then level complete panel
+	chronicle_panel.show_chronicle(true)
 	level_complete_panel.visible = true
 
 func _on_tm_game_over(reason: String) -> void:
 	print("Game Over (TM): ", reason)
 	if screen_shaker: screen_shaker.add_trauma(0.8)
-	# Assuming reason is also localized or passed as key if possible, 
-	# but for now let's just show the panel. The label inside is localized.
+	# Record run end in Chronicle and show panel
+	ChronicleManager.record_run_end(false, reason)
+	chronicle_panel.show_chronicle(false)
 	game_over_panel.visible = true
 	weave_fate_button.disabled = true
 
@@ -128,6 +134,10 @@ func _on_reward_card_selected(card_data: CardData) -> void:
 func _on_reward_skipped() -> void:
 	print("Draft skipped.")
 	_proceed_to_next_level()
+
+func _on_chronicle_dismissed() -> void:
+	# Chronicle panel was dismissed, nothing else to do
+	pass
 
 func _proceed_to_next_level() -> void:
 	GameManager.next_level()
@@ -155,7 +165,8 @@ func _reset_game_state() -> void:
 	for slot in game_table.slots:
 		if slot.has_card():
 			var c = slot.remove_card()
-			c.queue_free()
+			if c:
+				c.queue_free()
 			
 	game_table.destiny_points = 0
 	game_table.chaos = 0

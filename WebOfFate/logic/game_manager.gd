@@ -40,6 +40,9 @@ func _ready() -> void:
 func start_new_run() -> void:
 	reset_progress()
 	
+	# Initialize Chronicle System for new run
+	ChronicleManager.start_new_chronicle()
+	
 	# Load Chapter 1
 	var chapter1 = load(chapter_paths[0])
 	if chapter1:
@@ -144,7 +147,7 @@ func update_progress(turn_dp: int, chaos_level: int) -> void:
 	
 	# Assuming param 1 is DELTA DP, param 2 is ABSOLUTE CHAOS
 	total_dp += turn_dp
-	current_chaos = chaos_level 
+	current_chaos = chaos_level
 	turn_count += 1
 	
 	_emit_progress()
