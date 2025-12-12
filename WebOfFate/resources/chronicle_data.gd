@@ -55,6 +55,13 @@ func get_or_create_relationship(card1_id: String, card2_id: String) -> Relations
 	relationships[key] = rel
 	return rel
 
+## Get relationship if it exists, returns null otherwise
+func get_relationship(card1_id: String, card2_id: String) -> RelationshipData:
+	var key := RelationshipData.make_key(card1_id, card2_id)
+	if relationships.has(key):
+		return relationships[key]
+	return null
+
 ## Add a memory to the chronicle
 func add_memory(memory: MemoryEntry) -> void:
 	memories.append(memory)

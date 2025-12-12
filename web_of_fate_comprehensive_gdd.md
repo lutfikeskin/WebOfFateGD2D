@@ -409,36 +409,79 @@ Players choose one of three paths at run start:
 
 **Priority:** High
 
+**Status:** ✅ Fully Implemented
+
+Run başında oyuncuya yol seçimi sunar. Her yol farklı zorluk/ödül dengesi sağlar.
+
+**Features:**
+
+- Active Path stored in `GameManager`
+- Modifiers applied globally (`dp_multiplier`, `chaos_multiplier`)
+- Path Selection UI at run start
+
+**Paths (Default):**
+
+| Path            | Bonus              | Risk       | Goal             |
+| --------------- | ------------------ | ---------- | ---------------- |
+| Path of Valor   | +20% DP            | +15% Chaos | High score chase |
+| Path of Harmony | -25% Chaos         | -10% DP    | Safe completion  |
+| Path of Mystery | Random events 2x   | Mixed      | Chaotic fun      |
+| Path of Legend  | Legendary cards 2x | +30% Chaos | Collection       |
+
+**Files:**
+
+- `resources/bid_data.gd`
+- `ui/path_selection_panel.tscn`
+
+### 5.2 Hand Management (Mulligan System)
+
+**Priority:** High
+
+**Status:** ✅ Fully Implemented
+
+Oyun başında ve her tur kart seçimi yaparak stratejik derinlik ekler.
+
+**Mechanics:**
+
+1. **Draw Phase**: Draw 7 cards (or `hand_size + 1`)
+2. **Selection**: Player selects 5 cards to keep
+3. **Discard**: Unselected cards are shuffled back into deck bottom
+
+**Files:**
+
+- `ui/hand_selection_panel.tscn`
+- `components/player_hand.gd`
+
+### 5.2.1 Fate Event UI
+
+**Priority:** Medium
+
+**Status:** ✅ Fully Implemented
+
+Fate Events görsel popup ile gösterilir ve oyuncu seçimlerini yönetir.
+
 **Components:**
 
-- `BidData` Resource class
-- Bid selection UI (main menu or run start)
-- Bid progress tracking in `GameManager`
-- Bid completion detection
-- Reward system
+- `FateEventPopup` scene (Auto-triggered by `FateEventManager`)
+- Event card animation
+- Choice buttons for Fate's Crossroad
 
-**BidData Structure:**
+**UI Elements:**
 
-```gdscript
-class_name BidData extends Resource
+| Element        | Description               |
+| -------------- | ------------------------- |
+| Event Title    | Gold text, large          |
+| Event Icon     | Color-coded by event type |
+| Description    | Italic narrative text     |
+| Duration Badge | "2 Turns Remaining"       |
+| Choice Buttons | For crossroad events      |
 
-@export var bid_name: String
-@export_multiline var description: String
-@export var target_type: BidTargetType
-@export var target_value: int
-@export var reward_type: RewardType
-@export var reward_data: Dictionary
+**Files:**
 
-enum BidTargetType {
-    REACH_DP,
-    LOW_CHAOS,
-    FAST_COMPLETE,
-    SYNERGY_COUNT,
-    SPECIFIC_TAG
-}
-```
+- `ui/fate_event_popup.tscn`
+- `logic/fate_event_manager.gd`
 
-### 5.2 Card Offer System
+### 5.3 Card Offer System
 
 **Priority:** High
 
@@ -506,6 +549,117 @@ enum EffectType {
 - Extend `ThreadRenderer` system
 - Add hover detection in `GameSlot`
 - Calculate potential synergies on hover
+
+### 5.6 Card Rarity System
+
+**Priority:** High
+
+**Status:** ✅ Fully Implemented
+
+Cards have rarity levels that affect DP generation and visual appearance.
+
+**Rarities:**
+
+| Rarity    | Drop Rate | DP Multiplier | Visual                     |
+| --------- | --------- | ------------- | -------------------------- |
+| COMMON    | 60%       | 1.0x          | White border               |
+| RARE      | 25%       | 1.3x          | Blue border                |
+| EPIC      | 12%       | 1.6x          | Purple border (thicker)    |
+| LEGENDARY | 3%        | 2.0x          | Gold border (thick + glow) |
+
+**CardData Methods:**
+
+```gdscript
+func get_rarity_multiplier() -> float
+func get_effective_dp() -> int  # base_dp * rarity multiplier
+func get_rarity_color() -> Color
+```
+
+### 5.7 Multiple Endings System
+
+**Priority:** High
+
+**Status:** ✅ Fully Implemented
+
+Run endings are determined by dominant story arcs and player performance.
+
+**Endings (11 types):**
+
+| Ending               | Trigger                     | Victory |
+| -------------------- | --------------------------- | ------- |
+| The Hero's Triumph   | Heroic Journey + Low Chaos  | ✅      |
+| Pyrrhic Victory      | Heroic Journey + High Chaos | ✅      |
+| Fall into Darkness   | Corruption dominant         | ❌      |
+| Love Conquers All    | Romance completed           | ✅      |
+| The Weeping of Fates | Tragedy dominant            | ❌      |
+| Path to Redemption   | Redemption completed        | ✅      |
+| Blood Vendetta       | Revenge completed           | ✅      |
+| Broken Bonds         | Betrayal dominant           | ✅      |
+| Noble Sacrifice      | Sacrifice dominant          | ✅      |
+| Master Weaver        | 15+ synergies, no clear arc | ✅      |
+| Tangled Threads      | Low performance             | ❌      |
+
+**Location:** `resources/run_ending.gd`
+
+### 5.8 Fate Events System
+
+**Priority:** Medium
+
+**Status:** ✅ Fully Implemented
+
+Dynamic events trigger every 3-5 turns to add strategic variety.
+
+**Events (10 types):**
+
+| Event            | Effect                         |
+| ---------------- | ------------------------------ |
+| Solar Eclipse    | Gold threads → Red for 2 turns |
+| Lunar Blessing   | Next synergy: no Chaos         |
+| Prophecy         | See/reorder next 3 cards       |
+| Fate's Crossroad | Choose: +20 DP or -20 Chaos    |
+| Thread Storm     | All threads randomize colors   |
+| Chaos Surge      | +15 Chaos, +50% DP this turn   |
+| Harmony Wave     | All cards +5 DP for 1 turn     |
+| Destiny Mirror   | Next synergy effect doubled    |
+| Void Touch       | Random slot inactive 2 turns   |
+| Ancient Blessing | Legendary card in next draw    |
+
+**FateEventManager Signals:**
+
+```gdscript
+signal event_triggered(event: FateEvent)
+signal event_expired(event: FateEvent)
+signal choice_required(event: FateEvent, options: Array)
+```
+
+### 5.9 Negative Synergies (Anti-Synergies)
+
+**Priority:** Medium
+
+**Status:** ✅ Fully Implemented
+
+Certain card combinations cause negative effects instead of benefits.
+
+**SynergyData Fields:**
+
+```gdscript
+@export var is_negative: bool = false
+@export var conflict_tags: Array[String] = []
+```
+
+**Example Anti-Synergies:**
+
+| Cards                           | Effect            | Narrative                     |
+| ------------------------------- | ----------------- | ----------------------------- |
+| Holy Knight + Dark Lord         | -30 DP, +50 Chaos | "Light and darkness clash!"   |
+| Lover + Jealous Prince          | -20 DP, +30 Chaos | "Jealousy poisons the heart"  |
+| Sacred Temple + Cursed Artifact | -15 DP, +25 Chaos | "Darkness defiles the sacred" |
+
+**Strategic Purpose:**
+
+- Forces thoughtful card placement
+- Creates risk when chasing powerful combos
+- Adds narrative tension
 
 ### 5.5 Chronicle System (Emergent Narrative Engine)
 

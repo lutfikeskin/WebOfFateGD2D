@@ -28,6 +28,9 @@ var turn_count: int = 0
 # Deck Persistence
 var player_deck_cards: Array[CardData] = [] # The persistent deck list for the run
 
+# Active Path (Bid) for run
+var active_path: BidData = null
+
 # Config - In a real game, this list would be loaded from a resource registry
 var chapter_paths: Array[String] = [
 	"res://WebOfFate/data/chapters/chapter_1_awakening.tres",
@@ -36,6 +39,23 @@ var chapter_paths: Array[String] = [
 
 func _ready() -> void:
 	pass
+
+## Get DP multiplier from active path
+func get_dp_multiplier() -> float:
+	if active_path:
+		return active_path.dp_multiplier
+	return 1.0
+
+## Get Chaos multiplier from active path
+func get_chaos_multiplier() -> float:
+	if active_path:
+		return active_path.chaos_multiplier
+	return 1.0
+
+## Set active path for the run
+func set_active_path(path: BidData) -> void:
+	active_path = path
+	print("GameManager: Path selected - %s" % path.path_name)
 
 func start_new_run() -> void:
 	reset_progress()

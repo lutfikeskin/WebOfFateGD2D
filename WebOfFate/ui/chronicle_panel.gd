@@ -9,6 +9,8 @@ signal dismissed()
 @onready var stats_container: VBoxContainer = %StatsContainer
 @onready var close_button: Button = %CloseButton
 
+var current_ending: RunEnding
+
 func _ready() -> void:
 	close_button.pressed.connect(_on_close_pressed)
 	visible = false
@@ -25,8 +27,18 @@ func show_chronicle(is_victory: bool = true) -> void:
 	else:
 		ChronicleManager.record_run_end(false, "Chaos overwhelmed the Loom.")
 	
-	# Set title based on outcome
-	title_label.text = "CHRONICLE_VICTORY_TITLE" if is_victory else "CHRONICLE_DEFEAT_TITLE"
+	# Calculate ending based on Chronicle data
+	var max_chaos := 100
+	if GameManager.current_chapter:
+		max_chaos = GameManager.current_chapter.max_chaos
+	current_ending = RunEnding.determine_ending(
+		ChronicleManager.chronicle,
+		GameManager.current_chaos,
+		max_chaos
+	)
+	
+	# Set title based on ending
+	title_label.text = current_ending.title
 	
 	# Generate and display summary
 	_populate_summary()
@@ -39,6 +51,13 @@ func _populate_summary() -> void:
 	summary_container.clear()
 	
 	var chronicle := ChronicleManager.chronicle
+	
+	# Show ending description prominently
+	summary_container.append_text("[center][color=gold][b]%s[/b][/color][/center]\n" % current_ending.title)
+	summary_container.append_text("[center][i]%s[/i][/center]\n\n" % current_ending.description)
+	
+	if current_ending.bonus_dp > 0:
+		summary_container.append_text("[center][color=green]+%d Bonus DP[/color][/center]\n\n" % current_ending.bonus_dp)
 	
 	# Opening narrative
 	var opening := "In this chapter of fate, %d synergies were woven across %d turns.\n\n" % [

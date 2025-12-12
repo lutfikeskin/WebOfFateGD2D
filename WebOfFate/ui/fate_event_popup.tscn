@@ -1,0 +1,70 @@
+[gd_scene load_steps=2 format=3 uid="uid://c2y4xmn8qp5kw"]
+
+[ext_resource type="Script" path="res://WebOfFate/ui/fate_event_popup.gd" id="1_script"]
+
+[node name="FateEventPopup" type="PanelContainer"]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -250.0
+offset_top = -150.0
+offset_right = 250.0
+offset_bottom = 150.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_script")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="Header" type="HBoxContainer" parent="VBoxContainer"]
+layout_mode = 2
+alignment = 1
+
+[node name="EventIcon" type="TextureRect" parent="VBoxContainer/Header"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(48, 48)
+layout_mode = 2
+expand_mode = 2
+stretch_mode = 5
+
+[node name="EventTitle" type="Label" parent="VBoxContainer/Header"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.843137, 0, 1)
+theme_override_font_sizes/font_size = 28
+text = "Fate Event"
+
+[node name="EventDescription" type="RichTextLabel" parent="VBoxContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 80)
+layout_mode = 2
+size_flags_vertical = 3
+bbcode_enabled = true
+text = "[center][i]An event has occurred...[/i][/center]"
+fit_content = true
+
+[node name="DurationLabel" type="Label" parent="VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.7, 0.7, 0.9, 1)
+theme_override_font_sizes/font_size = 14
+text = "2 turns remaining"
+horizontal_alignment = 1
+
+[node name="ChoicesContainer" type="HBoxContainer" parent="VBoxContainer"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+alignment = 1
+theme_override_constants/separation = 20
+
+[node name="AcknowledgeButton" type="Button" parent="VBoxContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(150, 40)
+layout_mode = 2
+size_flags_horizontal = 4
+text = "Continue"

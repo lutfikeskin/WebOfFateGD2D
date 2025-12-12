@@ -19,3 +19,21 @@ extends Resource
 ## Narrative log message to display when this synergy triggers
 @export var log_message: String = ""
 
+@export_group("Anti-Synergy")
+## If true, this is a negative synergy (cards conflict)
+@export var is_negative: bool = false
+## Tags that trigger this anti-synergy (alternative to specific card IDs)
+@export var conflict_tags: Array[String] = []
+
+## Check if this synergy is harmful
+func is_harmful() -> bool:
+	return is_negative or result_dp < 0 or result_chaos > 30
+
+## Get display color based on type
+func get_display_color() -> Color:
+	if is_negative:
+		return Color(0.8, 0.2, 0.2) # Red for anti-synergy
+	elif result_chaos > 20:
+		return Color(0.8, 0.5, 0.2) # Orange for high chaos
+	else:
+		return Color(0.2, 0.8, 0.3) # Green for positive

@@ -57,6 +57,9 @@ func set_color():
 			
 	if category_label:
 		category_label.text = cat_text
+	
+	# Apply rarity border color
+	_apply_rarity_visuals()
 
 func set_text_display():
 	if not value_label: return
@@ -106,3 +109,30 @@ func _mood_to_emoji(mood: float) -> String:
 		return "😟"
 	else:
 		return "😢"
+
+## Apply rarity-based visual effects (border color, glow)
+func _apply_rarity_visuals() -> void:
+	if not res or not card_color:
+		return
+	
+	var rarity_color := res.get_rarity_color()
+	
+	# Get or create StyleBox for border color
+	var style = card_color.get_theme_stylebox("panel")
+	if style and style is StyleBoxFlat:
+		var new_style := style.duplicate() as StyleBoxFlat
+		new_style.border_color = rarity_color
+		
+		# Legendary cards get thicker border
+		if res.rarity == CardData.Rarity.LEGENDARY:
+			new_style.border_width_left = 6
+			new_style.border_width_top = 6
+			new_style.border_width_right = 6
+			new_style.border_width_bottom = 6
+		elif res.rarity == CardData.Rarity.EPIC:
+			new_style.border_width_left = 5
+			new_style.border_width_top = 5
+			new_style.border_width_right = 5
+			new_style.border_width_bottom = 5
+		
+		card_color.add_theme_stylebox_override("panel", new_style)
