@@ -39,7 +39,9 @@ func save_game() -> void:
 	current_save.player_deck_ids = deck_ids
 	
 	# Sync Chronicle data
-	current_save.chronicle = ChronicleManager.chronicle
+	# Use duplicate(true) to ensure we save a snapshot and break references if needed
+	if ChronicleManager.chronicle:
+		current_save.chronicle = ChronicleManager.chronicle.duplicate(true)
 	
 	# Save to disk
 	current_save.write_save()

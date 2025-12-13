@@ -1,4 +1,4 @@
-[gd_scene load_steps=14 format=3 uid="uid://brvun6l03k0hu"]
+[gd_scene load_steps=15 format=3 uid="uid://brvun6l03k0hu"]
 
 [ext_resource type="Script" uid="uid://f86ti6qbssco" path="res://WebOfFate/web_of_fate_controller.gd" id="1_buxrw"]
 [ext_resource type="Script" uid="uid://bisyk4bowdvsf" path="res://addons/simple_cards/deck/manager/card_deck_manager.gd" id="2_gdbvl"]
@@ -13,9 +13,12 @@
 [ext_resource type="PackedScene" uid="uid://tooltip12345" path="res://WebOfFate/ui/tooltip_panel.tscn" id="11_tooltip"]
 [ext_resource type="PackedScene" uid="uid://c2y4xmn8qp5kw" path="res://WebOfFate/ui/fate_event_popup.tscn" id="12_fate_event"]
 [ext_resource type="PackedScene" uid="uid://bx5ywq4s3m8rl" path="res://WebOfFate/ui/hand_selection_panel.tscn" id="13_hand_select"]
+[ext_resource type="PackedScene" uid="uid://c5y4xmn8qp500" path="res://WebOfFate/ui/toast_notifications.tscn" id="14_toast"]
 
 [node name="WebOfFateController" type="CanvasLayer"]
 script = ExtResource("1_buxrw")
+
+[node name="ToastNotifications" parent="." instance=ExtResource("14_toast")]
 
 [node name="Camera2D" type="Camera2D" parent="."]
 anchor_mode = 0
@@ -371,3 +374,6 @@ visible = false
 
 [node name="HandSelectionPanel" parent="." instance=ExtResource("13_hand_select")]
 visible = false
+
+[node name="ToastNotifications2" parent="." instance=ExtResource("14_toast")]
+unique_name_in_owner = true
