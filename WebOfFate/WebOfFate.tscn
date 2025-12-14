@@ -1,4 +1,4 @@
-[gd_scene load_steps=15 format=3 uid="uid://brvun6l03k0hu"]
+[gd_scene load_steps=16 format=3 uid="uid://brvun6l03k0hu"]
 
 [ext_resource type="Script" uid="uid://f86ti6qbssco" path="res://WebOfFate/web_of_fate_controller.gd" id="1_buxrw"]
 [ext_resource type="Script" uid="uid://bisyk4bowdvsf" path="res://addons/simple_cards/deck/manager/card_deck_manager.gd" id="2_gdbvl"]
@@ -14,6 +14,12 @@
 [ext_resource type="PackedScene" uid="uid://c2y4xmn8qp5kw" path="res://WebOfFate/ui/fate_event_popup.tscn" id="12_fate_event"]
 [ext_resource type="PackedScene" uid="uid://bx5ywq4s3m8rl" path="res://WebOfFate/ui/hand_selection_panel.tscn" id="13_hand_select"]
 [ext_resource type="PackedScene" uid="uid://c5y4xmn8qp500" path="res://WebOfFate/ui/toast_notifications.tscn" id="14_toast"]
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_62te0"]
+expand_margin_left = 75.0
+expand_margin_top = 75.0
+expand_margin_right = 75.0
+expand_margin_bottom = 75.0
 
 [node name="WebOfFateController" type="CanvasLayer"]
 script = ExtResource("1_buxrw")
@@ -38,40 +44,43 @@ offset_bottom = -10.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("6_game_table")
+metadata/_edit_lock_ = true
 
 [node name="ThreadRenderer" parent="GameTable" instance=ExtResource("8_thread_renderer")]
 layout_mode = 1
+offset_top = -36.0
+offset_bottom = -36.0
 
 [node name="Slot_TL" parent="GameTable" instance=ExtResource("7_game_slot")]
 layout_mode = 0
 offset_left = 30.0
-offset_top = -151.0
+offset_top = -187.0
 offset_right = 130.0
-offset_bottom = -11.0
+offset_bottom = -47.0
 slot_id = 0
 
 [node name="Slot_TR" parent="GameTable" instance=ExtResource("7_game_slot")]
 layout_mode = 0
 offset_left = 360.0
-offset_top = -151.0
+offset_top = -187.0
 offset_right = 460.0
-offset_bottom = -11.0
+offset_bottom = -47.0
 slot_id = 1
 
 [node name="Slot_BL" parent="GameTable" instance=ExtResource("7_game_slot")]
 layout_mode = 0
 offset_left = 30.0
-offset_top = 50.0
+offset_top = 14.0
 offset_right = 130.0
-offset_bottom = 190.0
+offset_bottom = 154.0
 slot_id = 2
 
 [node name="Slot_BR" parent="GameTable" instance=ExtResource("7_game_slot")]
 layout_mode = 0
 offset_left = 360.0
-offset_top = 50.0
+offset_top = 14.0
 offset_right = 460.0
-offset_bottom = 190.0
+offset_bottom = 154.0
 slot_id = 3
 
 [node name="Slot_Center" parent="GameTable" instance=ExtResource("7_game_slot")]
@@ -82,9 +91,9 @@ anchor_top = -1.501
 anchor_right = -0.568
 anchor_bottom = -1.501
 offset_left = 535.80005
-offset_top = 163.14
+offset_top = 127.14
 offset_right = 635.80005
-offset_bottom = 303.14
+offset_bottom = 267.14
 slot_id = 4
 
 [node name="CardDeckManager" type="Node" parent="." node_paths=PackedStringArray("draw_pile", "discard_pile")]
@@ -103,6 +112,7 @@ offset_left = 50.0
 offset_top = 50.0
 offset_right = 150.0
 offset_bottom = 190.0
+metadata/_edit_lock_ = true
 
 [node name="Panel" type="Panel" parent="CardDeckManager/Draw"]
 layout_mode = 1
@@ -139,6 +149,7 @@ offset_top = 163.0
 offset_right = -74.0
 offset_bottom = 303.0
 grow_horizontal = 0
+metadata/_edit_lock_ = true
 
 [node name="Panel" type="Panel" parent="CardDeckManager/Discards"]
 layout_mode = 1
@@ -219,6 +230,7 @@ offset_top = -100.0
 offset_right = 200.0
 offset_bottom = 100.0
 grow_vertical = 2
+metadata/_edit_lock_ = true
 
 [node name="DestinyPointsLabel" type="Label" parent="ResourcePanel"]
 layout_mode = 2
@@ -245,12 +257,13 @@ anchor_left = 1.0
 anchor_top = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = -300.0
-offset_top = -250.0
-offset_right = -20.0
-offset_bottom = -20.0
+offset_left = -314.0
+offset_top = -269.0
+offset_right = -34.0
+offset_bottom = -39.0
 grow_horizontal = 0
 grow_vertical = 0
+theme_override_styles/panel = SubResource("StyleBoxTexture_62te0")
 
 [node name="ScrollContainer" type="ScrollContainer" parent="StoryPanel"]
 layout_mode = 2
@@ -260,6 +273,7 @@ unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
+theme_override_colors/default_color = Color(0, 0, 0, 1)
 bbcode_enabled = true
 text = "[i]Fate awaits...[/i]"
 fit_content = true
@@ -377,3 +391,4 @@ visible = false
 
 [node name="ToastNotifications2" parent="." instance=ExtResource("14_toast")]
 unique_name_in_owner = true
+metadata/_edit_lock_ = true
