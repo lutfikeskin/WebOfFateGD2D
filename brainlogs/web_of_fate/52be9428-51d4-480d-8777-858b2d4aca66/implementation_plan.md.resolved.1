@@ -1,0 +1,24 @@
+# Web of Fate Shader Implementation Plan - Gothic Update
+
+## Goal
+Update [fate_background_web.gdshader](file:///c:/Users/Lutfi/Desktop/Godot/Assets/simple-card-pile-ui-master/simple-card-pile-ui-master/web_of_fate/shaders/fate_background_web.gdshader) to shift the aesthetic from "sci-fi" to "gothic/organic".
+
+## Proposed Changes
+
+### [web_of_fate/shaders]
+#### [MODIFY] [fate_background_web.gdshader](file:///c:/Users/Lutfi/Desktop/Godot/Assets/simple-card-pile-ui-master/simple-card-pile-ui-master/web_of_fate/shaders/fate_background_web.gdshader)
+- **Uniforms**:
+    - Change default `background_color` to deep dark purple/black.
+    - Change default `web_color` to a ghostly white or blood red.
+    - Add `warp_amount` to control organic distortion.
+    - Add `vignette_intensity` for atmosphere.
+- **Logic**:
+    - Implement a `noise` function (using existing `n21` or similar) to create organic domain warping.
+    - Apply warping to the `uv` coordinates before they are passed to the `layer` function or within the `layer` function.
+    - Add a vignette calculation in `fragment()` to darken the edges.
+    - Slow down the default animation speed for a creepier, heavier feel.
+
+## Verification Plan
+### Manual Verification
+- The user will need to check the shader in the Godot editor.
+- I will verify the code compiles and the logic for distortion and vignette is sound.

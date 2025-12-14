@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://d2evvuc5knmpg"]
+
+[ext_resource type="Script" uid="uid://dd5xrtbh88wrb" path="res://WebOfFate/tools/content_generator.gd" id="1_4asnp"]
+
+[node name="Content" type="Node2D"]
+script = ExtResource("1_4asnp")

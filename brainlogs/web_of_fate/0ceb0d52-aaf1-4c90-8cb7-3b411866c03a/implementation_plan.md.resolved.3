@@ -1,0 +1,64 @@
+# Implementation Plan - Phase 4: Content Expansion
+
+## Goal Description
+Expand the game content by adding new Paths, Combos, and Relics. This will provide variety and replayability.
+
+## User Review Required
+> [!NOTE]
+> I will be creating a new directory `web_of_fate/data/paths` to store Path resources.
+
+## Proposed Changes
+
+### `web_of_fate/data/paths`
+
+#### [NEW] [warriors_path.tres](file:///c:/Users/Lutfi/Desktop/Godot/Assets/simple-card-pile-ui-master/simple-card-pile-ui-master/web_of_fate/data/paths/warriors_path.tres)
+-   **Name:** "Warrior's Path"
+-   **Goal:** 500 Legacy
+-   **Limit:** 15 Spreads
+-   **Bonus:** +100 Legacy
+
+#### [NEW] [merchants_route.tres](file:///c:/Users/Lutfi/Desktop/Godot/Assets/simple-card-pile-ui-master/simple-card-pile-ui-master/web_of_fate/data/paths/merchants_route.tres)
+-   **Name:** "Merchant's Route"
+-   **Goal:** 1000 Legacy
+-   **Limit:** 12 Spreads
+-   **Bonus:** +200 Legacy
+
+#### [NEW] [mystics_way.tres](file:///c:/Users/Lutfi/Desktop/Godot/Assets/simple-card-pile-ui-master/simple-card-pile-ui-master/web_of_fate/data/paths/mystics_way.tres)
+-   **Name:** "Mystic's Way"
+-   **Goal:** 300 Legacy
+-   **Limit:** 8 Spreads
+-   **Chaos Multiplier:** 1.5
+
+### `web_of_fate/data/combos`
+
+#### [NEW] [void_echo.tres](file:///c:/Users/Lutfi/Desktop/Godot/Assets/simple-card-pile-ui-master/simple-card-pile-ui-master/web_of_fate/data/combos/void_echo.tres)
+-   **Name:** "Void Echo"
+-   **Cards:** The Void + Oracle's Whisper
+-   **Effect:** High Legacy gain.
+
+#### [NEW] [natures_wrath.tres](file:///c:/Users/Lutfi/Desktop/Godot/Assets/simple-card-pile-ui-master/simple-card-pile-ui-master/web_of_fate/data/combos/natures_wrath.tres)
+-   **Name:** "Nature's Wrath"
+-   **Cards:** Wild Surge + Tempest Surge
+-   **Effect:** Adds Chaos but gives Legacy.
+
+### `web_of_fate/data/relics`
+
+#### [NEW] [lucky_coin.tres](file:///c:/Users/Lutfi/Desktop/Godot/Assets/simple-card-pile-ui-master/simple-card-pile-ui-master/web_of_fate/data/relics/lucky_coin.tres)
+-   **Name:** "Lucky Coin"
+-   **Effect:** Passive +10% Legacy gain.
+
+#### [NEW] [chaos_shield.tres](file:///c:/Users/Lutfi/Desktop/Godot/Assets/simple-card-pile-ui-master/simple-card-pile-ui-master/web_of_fate/data/relics/chaos_shield.tres)
+-   **Name:** "Chaos Shield"
+-   **Effect:** Reduces Chaos gain by 10%.
+
+### `web_of_fate/scripts`
+
+#### [MODIFY] [PathSelector.gd](file:///c:/Users/Lutfi/Desktop/Godot/Assets/simple-card-pile-ui-master/simple-card-pile-ui-master/web_of_fate/scripts/PathSelector.gd)
+-   **Update:** Ensure it loads paths from `web_of_fate/data/paths/`.
+
+## Verification Plan
+
+### Manual Verification
+1.  **Path Selection:** Start game -> Verify new paths appear in selector.
+2.  **Combo Test:** Place "The Void" and "Oracle's Whisper" -> Verify "Void Echo" combo triggers.
+3.  **Relic Test:** Unlock "Lucky Coin" via shop/path -> Verify Legacy gain increases.

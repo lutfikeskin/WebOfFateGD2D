@@ -1,0 +1,33 @@
+# Phase 4: Content Expansion Walkthrough
+
+## Overview
+In this phase, we expanded the game content by adding new Paths, Combos, and Relics, and updated the `PathSelector` to load paths dynamically.
+
+## Changes
+
+### New Paths
+We added three new paths in `web_of_fate/data/paths/`:
+1.  **Warrior's Path:** High risk, high reward (500 Legacy Goal, 15 Spreads).
+2.  **Merchant's Route:** Safe accumulation (1000 Legacy Goal, 12 Spreads, Lucky Coin relic).
+3.  **Mystic's Way:** Chaotic and short (300 Legacy Goal, 8 Spreads, Chaos Shield relic).
+
+### New Combos
+We added two new combos in `web_of_fate/data/combos/`:
+1.  **Void Echo:** "The Void" + "Oracle's Whisper" -> High Legacy gain.
+2.  **Nature's Wrath:** "Wild Surge" + "Tempest Surge" -> Chaos + Legacy.
+
+### New Relics
+We added two new relics in `web_of_fate/data/relics/`:
+1.  **Lucky Coin:** +10% Legacy gain.
+2.  **Chaos Shield:** Reduces Chaos gain.
+
+### Code Updates
+-   **PathSelector.gd:** Updated to load path resources dynamically from `web_of_fate/data/paths/`.
+
+## Verification
+-   Ran [PathSelector.gd](file:///c:/Users/Lutfi/Desktop/Godot/Assets/simple-card-pile-ui-master/simple-card-pile-ui-master/web_of_fate/scripts/PathSelector.gd) in headless mode to verify resource loading.
+-   Verified directory structure for new content.
+
+## Next Steps
+-   Playtest the new paths and combos to balance values.
+-   Add visual assets (icons) for the new content.

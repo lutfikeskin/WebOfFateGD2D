@@ -1,0 +1,35 @@
+# Tasks
+
+- [ ] Research Codebase [/]
+    - [x] Explore `web_of_fate` directory
+    - [ ] Read existing `GAME_DESIGN_DOCUMENT.md` and `GAME_LOOP_ANALYSIS.md`
+    - [ ] Read key scripts to understand mechanics (Card system, Spreads, Game Loop)
+    - [ ] Identify current theme and visual style
+- [x] Draft Game Design Document (GDD)
+    - [x] Game Overview (Concept, Genre, Target Audience)
+    - [x] Gameplay Mechanics (Core Loop, Cards, Spreads, Resources)
+    - [x] Story and Setting (Theme, Narrative)
+    - [x] Characters/Entities
+    - [x] Level Design/Progression
+    - [x] Art and Audio Style
+    - [x] UI/UX
+- [x] Phase 1: Solidify the Core (Critical Fixes)
+    - [x] Fix Dual Progression Conflict (Disable Age when Path active)
+    - [x] Fix Spread Limit Logic (Standardize checks)
+    - [x] Prevent Post-Game Actions (Strict GAME_OVER state)
+    - [x] Standardize Signals (Separate path vs currency signals)
+- [x] Phase 2: The "Juice" (Game Feel)
+    - [x] Visuals (Screen shake, particles, dynamic text)
+    - [x] Audio (SFX, Music)
+- [x] Phase 3: Unify Progression
+    - [x] Meta-Progression (Grimoire)
+    - [x] Shop System
+- [x] Phase 4: Content Expansion
+    - [x] More Combos
+    - [x] More Paths
+    - [x] More Relics
+- [x] Phase 5: Localization
+    - [x] Create Translation CSV
+    - [x] Replace Hardcoded Strings with Keys
+    - [x] Implement Language Selector
+    - [x] Verify Turkish Translation

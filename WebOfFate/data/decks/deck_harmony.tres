@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="CardDeck" load_steps=7 format=3]
+
+[ext_resource type="Script" path="res://addons/simple_cards/deck/card_deck.gd" id="1_script"]
+[ext_resource type="Resource" path="res://WebOfFate/data/cards/characters/mystic_guide.tres" id="2_c1"]
+[ext_resource type="Resource" path="res://WebOfFate/data/cards/characters/forbidden_love.tres" id="3_c2"]
+[ext_resource type="Resource" path="res://WebOfFate/data/cards/characters/dragon_whelp.tres" id="4_c3"]
+[ext_resource type="Resource" path="res://WebOfFate/data/cards/items/grandmas_cookie.tres" id="5_i1"]
+[ext_resource type="Resource" path="res://WebOfFate/data/cards/locations/purification_pool.tres" id="6_l1"]
+
+[resource]
+script = ExtResource("1_script")
+deck_name = "Harmony Deck"
+cards = Array[Resource("res://addons/simple_cards/card/card_resource/card_resource.gd")]([
+	ExtResource("2_c1"), ExtResource("3_c2"), ExtResource("4_c3"), ExtResource("5_i1"), ExtResource("6_l1")
+])

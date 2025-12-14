@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="CardData" load_steps=2 format=3 uid="uid://ilf5w8bbdhnh"]
+
+[ext_resource type="Script" uid="uid://bgfnixfvfwooy" path="res://WebOfFate/resources/card_data.gd" id="1_djkox"]
+
+[resource]
+script = ExtResource("1_djkox")
+id = "cursed_dagger"
+display_name = "Cursed Dagger"
+description = "Hungers for blood."
+category = 1
+tags = Array[String](["violence", "cursed"])
+base_dp = 5
+base_chaos = 15

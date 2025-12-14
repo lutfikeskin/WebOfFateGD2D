@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="CardData" load_steps=2 format=3 uid="uid://bwjlvil08f12e"]
+
+[ext_resource type="Script" uid="uid://bgfnixfvfwooy" path="res://WebOfFate/resources/card_data.gd" id="1_yjdmy"]
+
+[resource]
+script = ExtResource("1_yjdmy")
+id = "grand_inquisitor"
+display_name = "Grand Inquisitor"
+description = "Purges heresy with fire."
+rarity = 2
+tags = Array[String](["violence", "holy"])
+base_dp = 10
+base_chaos = 20

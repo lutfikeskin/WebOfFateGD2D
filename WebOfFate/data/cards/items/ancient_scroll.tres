@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="CardData" load_steps=2 format=3 uid="uid://byj45owkkaubp"]
+
+[ext_resource type="Script" uid="uid://bgfnixfvfwooy" path="res://WebOfFate/resources/card_data.gd" id="1_oedty"]
+
+[resource]
+script = ExtResource("1_oedty")
+id = "ancient_scroll"
+display_name = "Ancient Scroll"
+description = "Contains forgotten prophecies."
+category = 1
+tags = Array[String](["mystic", "knowledge"])
+base_dp = 15
+base_chaos = 2

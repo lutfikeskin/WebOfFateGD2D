@@ -1,0 +1,6 @@
+{
+  "artifactType": "ARTIFACT_TYPE_IMPLEMENTATION_PLAN",
+  "summary": "Plan to transition the card system to a Custom Resource architecture.\nIncludes creating `CardData`, `ComboData`, `DeckData` resources, `CardDB` and `ComboDB` autoloads, and updating existing systems.",
+  "updatedAt": "2025-11-19T15:53:36.041635500Z",
+  "version": "1"
+}

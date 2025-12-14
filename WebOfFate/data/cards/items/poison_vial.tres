@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="CardData" load_steps=2 format=3 uid="uid://bure5jr7gf0da"]
+
+[ext_resource type="Script" uid="uid://bgfnixfvfwooy" path="res://WebOfFate/resources/card_data.gd" id="1_ms2re"]
+
+[resource]
+script = ExtResource("1_ms2re")
+id = "poison_vial"
+display_name = "Poison Vial"
+description = "A subtle weapon."
+category = 1
+tags = Array[String](["violence", "tool"])
+base_dp = 8
+base_chaos = 12

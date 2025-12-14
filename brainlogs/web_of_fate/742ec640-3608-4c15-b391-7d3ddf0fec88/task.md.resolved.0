@@ -1,0 +1,19 @@
+# Emergent Narrative System Implementation
+
+## Planning Phase
+- [/] Design complete data architecture (Resource classes)
+- [/] Create detailed implementation plan with file changes
+- [ ] Get user approval on plan
+
+## Implementation Phase (After Approval)
+- [ ] Phase 1: EntityState system (card memory/state)
+- [ ] Phase 2: MemoryBank (run-level event tracking)
+- [ ] Phase 3: Enhanced NarrativeEngine (dynamic text generation)
+- [ ] Phase 4: RelationshipGraph (card connections)
+- [ ] Phase 5: StoryArcTracker (emergent plot arcs)
+- [ ] Phase 6: Chronicle UI integration
+
+## Verification Phase
+- [ ] Test narrative generation across synergies
+- [ ] Verify state persistence across turns/chapters
+- [ ] Create walkthrough demonstrating emergent stories

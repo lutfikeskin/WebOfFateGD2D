@@ -19,18 +19,15 @@ func _ready() -> void:
 func show_chronicle(is_victory: bool = true) -> void:
 	# Record the run end in Chronicle
 	if is_victory:
-		ChronicleManager.record_chapter_complete(
-			GameManager.total_dp,
-			GameManager.current_chaos,
-			GameManager.turn_count
+		ChronicleManager.record_run_end(
+			true,
+			"Destiny woven successfully."
 		)
 	else:
 		ChronicleManager.record_run_end(false, "Chaos overwhelmed the Loom.")
 	
 	# Calculate ending based on Chronicle data
-	var max_chaos := 100
-	if GameManager.current_chapter:
-		max_chaos = GameManager.current_chapter.max_chaos
+	var max_chaos := GameManager.MAX_CHAOS
 	current_ending = RunEnding.determine_ending(
 		ChronicleManager.chronicle,
 		GameManager.current_chaos,

@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="CardData" load_steps=2 format=3 uid="uid://j2m3wk0cl23k"]
+
+[ext_resource type="Script" uid="uid://bgfnixfvfwooy" path="res://WebOfFate/resources/card_data.gd" id="1_1olau"]
+
+[resource]
+script = ExtResource("1_1olau")
+id = "crossroads"
+display_name = "Crossroads"
+description = "Where decisions are made."
+category = 3
+tags = Array[String](["mystic", "travel"])
+base_dp = 15
+base_chaos = 15

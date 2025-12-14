@@ -1,0 +1,12 @@
+[gd_resource type="Resource" script_class="SynergyData" load_steps=2 format=3 uid="uid://dbed12hvxv434"]
+
+[ext_resource type="Script" uid="uid://d4bvr1tbkere0" path="res://WebOfFate/resources/synergy_data.gd" id="1_b2qrd"]
+
+[resource]
+script = ExtResource("1_b2qrd")
+id = "assassin_dagger"
+card_id_1 = "dark_assassin"
+card_id_2 = "cursed_dagger"
+result_dp = 30
+result_chaos = 30
+log_message = "The Assassin strikes with the Cursed Dagger! Blood flows."

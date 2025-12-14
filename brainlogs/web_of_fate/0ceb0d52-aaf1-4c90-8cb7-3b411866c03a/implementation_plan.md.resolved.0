@@ -1,0 +1,43 @@
+# Implementation Plan - Solidifying Core Mechanics
+
+## Goal Description
+Fix critical bugs in the game loop, specifically the conflict between Age and Path progression systems, spread limit logic, and UI signal desyncs. This will ensure a stable foundation for further polish.
+
+## User Review Required
+> [!IMPORTANT]
+> This update changes the core game loop. The "Age" system will now be strictly disabled when playing a "Path".
+
+## Proposed Changes
+
+### `web_of_fate/scripts`
+
+#### [MODIFY] [GameManager.gd](file:///c:/Users/Lutfi/Desktop/Godot/Assets/simple-card-pile-ui-master/simple-card-pile-ui-master/web_of_fate/scripts/GameManager.gd)
+-   **Add Signals:** `path_progress_updated(current, goal)`
+-   **Modify `resolve_spread`:**
+    -   Strictly separate Path vs Age logic.
+    -   If `current_path` is active, DO NOT call `add_age_score` or `check_age_progress`.
+    -   Emit `path_progress_updated` when path legacy changes.
+-   **Modify `_check_path_completion`:**
+    -   Fix off-by-one error in spread limit check (use `>` instead of `>=` after increment).
+-   **Modify `end_run`:**
+    -   Set `current_state = State.GAME_OVER`.
+
+#### [MODIFY] [SimpleGameController.gd](file:///c:/Users/Lutfi/Desktop/Godot/Assets/simple-card-pile-ui-master/simple-card-pile-ui-master/web_of_fate/scripts/SimpleGameController.gd)
+-   **Connect Signals:** Connect to `path_progress_updated`.
+-   **Modify `_on_legacy_changed`:** Only update "Total Score" display, not Path progress.
+-   **Add `_on_path_progress_updated`:** Update Path UI label here.
+-   **Modify `_check_and_auto_draw`:** Check `game_manager.current_state != GameManager.State.GAME_OVER` before drawing.
+-   **Modify `_on_resolve_button_pressed`:** Check state before allowing resolution.
+
+## Verification Plan
+
+### Manual Verification
+1.  **Path Mode Test:**
+    -   Start a run with "Safe Passage".
+    -   Verify "Age" score does NOT increase.
+    -   Verify Path progress updates correctly in UI.
+    -   Play until spread limit. Verify game ends at correct spread count (12/12).
+2.  **Game Over Test:**
+    -   Fail a run.
+    -   Verify cards cannot be drawn or placed.
+    -   Verify no auto-draw happens.

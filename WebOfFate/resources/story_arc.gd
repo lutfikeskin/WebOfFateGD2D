@@ -84,6 +84,10 @@ const ARC_TRIGGERS := {
 	ArcType.REUNION: {
 		"required_tags": ["reunion", "family"],
 		"separated_first": true
+	},
+	ArcType.MYSTERY: {
+		"required_tags": ["mystic", "secret"],
+		"min_synergies": 1
 	}
 }
 

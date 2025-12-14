@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="CardData" load_steps=2 format=3 uid="uid://0wounaxbefkf"]
+
+[ext_resource type="Script" uid="uid://bgfnixfvfwooy" path="res://WebOfFate/resources/card_data.gd" id="1_7axf0"]
+
+[resource]
+script = ExtResource("1_7axf0")
+id = "civil_war"
+display_name = "Civil War"
+description = "Brother against brother."
+category = 4
+rarity = 2
+tags = Array[String](["violence", "political"])
+base_dp = 10
+base_chaos = 45

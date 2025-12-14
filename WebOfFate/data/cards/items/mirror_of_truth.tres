@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="CardData" load_steps=2 format=3 uid="uid://bsiy5o6yjfu7p"]
+
+[ext_resource type="Script" uid="uid://bgfnixfvfwooy" path="res://WebOfFate/resources/card_data.gd" id="1_muhyu"]
+
+[resource]
+script = ExtResource("1_muhyu")
+id = "mirror_of_truth"
+display_name = "Mirror of Truth"
+description = "Reveals one's true self."
+category = 1
+rarity = 2
+tags = Array[String](["mystic", "relic"])
+base_dp = 25
+base_chaos = 5

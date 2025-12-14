@@ -1,0 +1,12 @@
+[gd_resource type="Resource" script_class="SynergyData" load_steps=2 format=3 uid="uid://b76xliwh1sf78"]
+
+[ext_resource type="Script" uid="uid://d4bvr1tbkere0" path="res://WebOfFate/resources/synergy_data.gd" id="1_c3lc4"]
+
+[resource]
+script = ExtResource("1_c3lc4")
+id = "sage_scroll"
+card_id_1 = "wizened_sage"
+card_id_2 = "ancient_scroll"
+result_dp = 45
+result_chaos = -5
+log_message = "The Sage deciphers the ancient prophecy."

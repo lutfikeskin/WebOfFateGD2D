@@ -1,0 +1,46 @@
+# Implementation Plan - Phase 2: The "Juice"
+
+## Goal Description
+Implement visual and audio feedback systems to make the game feel responsive and satisfying ("Juicy"). This includes screen shake, particle effects, dynamic floating text, and sound effects.
+
+## User Review Required
+> [!NOTE]
+> I will be creating a new `JuiceManager` autoload to handle global effects like screen shake and particles.
+
+## Proposed Changes
+
+### `web_of_fate/scripts`
+
+#### [NEW] [JuiceManager.gd](file:///c:/Users/Lutfi/Desktop/Godot/Assets/simple-card-pile-ui-master/simple-card-pile-ui-master/web_of_fate/scripts/JuiceManager.gd)
+-   **Purpose:** Centralized manager for game feel.
+-   **Features:**
+    -   `shake_screen(intensity, duration)`: Applies shake to the camera or main control node.
+    -   `spawn_particle(type, position)`: Spawns one-shot particle effects.
+    -   `play_sfx(stream_name)`: Plays sound effects from a dictionary.
+    -   `floating_text(text, position, color)`: Spawns floating text.
+
+#### [MODIFY] [SimpleGameController.gd](file:///c:/Users/Lutfi/Desktop/Godot/Assets/simple-card-pile-ui-master/simple-card-pile-ui-master/web_of_fate/scripts/SimpleGameController.gd)
+-   **Integrate JuiceManager:**
+    -   Call `JuiceManager.shake_screen()` on card placement and resolution.
+    -   Call `JuiceManager.play_sfx()` for interactions (draw, place, resolve).
+    -   Update `_show_number_popup` to use `JuiceManager.floating_text`.
+
+#### [MODIFY] [GameManager.gd](file:///c:/Users/Lutfi/Desktop/Godot/Assets/simple-card-pile-ui-master/simple-card-pile-ui-master/web_of_fate/scripts/GameManager.gd)
+-   **Signals:** Ensure signals pass enough info for juice (e.g., `spread_resolved` passing combo info for big shakes).
+
+### `web_of_fate/scenes`
+
+#### [NEW] [JuiceManager.tscn](file:///c:/Users/Lutfi/Desktop/Godot/Assets/simple-card-pile-ui-master/simple-card-pile-ui-master/web_of_fate/scenes/JuiceManager.tscn)
+-   Node structure:
+    -   `Node` (Root)
+    -   `AudioStreamPlayer` (SFX)
+    -   `AudioStreamPlayer` (Music)
+    -   `CanvasLayer` (For particles/text on top)
+
+## Verification Plan
+
+### Manual Verification
+1.  **Shake Test:** Place a card -> Verify screen shakes slightly.
+2.  **SFX Test:** Draw cards -> Verify "snap" sound.
+3.  **Text Test:** Gain Legacy -> Verify gold text floats up.
+4.  **Combo Test:** Trigger a combo -> Verify bigger shake and special sound.

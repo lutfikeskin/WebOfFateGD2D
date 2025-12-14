@@ -1,0 +1,12 @@
+[gd_resource type="Resource" script_class="CardData" load_steps=2 format=3 uid="uid://dwvecro18sfm4"]
+
+[ext_resource type="Script" uid="uid://bgfnixfvfwooy" path="res://WebOfFate/resources/card_data.gd" id="1_36qvy"]
+
+[resource]
+script = ExtResource("1_36qvy")
+id = "high_priestess"
+display_name = "High Priestess"
+description = "Guardian of the sacred texts."
+rarity = 2
+tags = Array[String](["mystic", "holy"])
+base_dp = 20

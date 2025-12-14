@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="CardData" load_steps=2 format=3 uid="uid://bcgiwgr8v5qms"]
+
+[ext_resource type="Script" uid="uid://bgfnixfvfwooy" path="res://WebOfFate/resources/card_data.gd" id="1_wqdm6"]
+
+[resource]
+script = ExtResource("1_wqdm6")
+id = "mad_king"
+display_name = "Mad King"
+description = "Once a ruler, now a chaos bringer."
+rarity = 2
+tags = Array[String](["villain", "royalty", "tragedy"])
+base_dp = 5
+base_chaos = 25

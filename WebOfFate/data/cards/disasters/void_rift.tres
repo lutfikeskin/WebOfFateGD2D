@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="CardData" load_steps=2 format=3 uid="uid://b07a54w0ofw1m"]
+
+[ext_resource type="Script" uid="uid://bgfnixfvfwooy" path="res://WebOfFate/resources/card_data.gd" id="1_guhtf"]
+
+[resource]
+script = ExtResource("1_guhtf")
+id = "void_rift"
+display_name = "Void Rift"
+description = "Reality tears apart."
+category = 4
+rarity = 3
+tags = Array[String](["mystic", "cursed"])
+base_chaos = 60

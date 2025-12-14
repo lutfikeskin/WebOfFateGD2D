@@ -1,0 +1,12 @@
+[gd_resource type="Resource" script_class="SynergyData" load_steps=2 format=3 uid="uid://dv8vpyk6m6i80"]
+
+[ext_resource type="Script" uid="uid://d4bvr1tbkere0" path="res://WebOfFate/resources/synergy_data.gd" id="1_rjhv4"]
+
+[resource]
+script = ExtResource("1_rjhv4")
+id = "wedding_treaty"
+card_id_1 = "royal_wedding"
+card_id_2 = "peace_treaty"
+result_dp = 100
+result_chaos = -20
+log_message = "A union seals the peace!  Golden Age begins."

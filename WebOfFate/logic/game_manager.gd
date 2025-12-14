@@ -4,7 +4,7 @@ extends Node
 # Manages overall game state, progression, and level transitions.
 
 signal state_changed(new_state: GameState)
-signal chapter_loaded(chapter: ChapterData)
+# signal chapter_loaded removed
 signal progress_updated(current_dp: int, target_dp: int, turns: int, max_turns: int)
 signal level_complete(stats: Dictionary)
 signal game_over(reason: String)
@@ -17,8 +17,10 @@ enum GameState {
 }
 
 var current_state: GameState = GameState.MENU
-var current_chapter: ChapterData
-var current_chapter_index: int = 0
+# Run Configuration (formerly Chapters)
+const TARGET_DP = 500
+const MAX_CHAOS = 100
+const MAX_TURNS = 10 # Soft limit
 
 # Run Stats
 var total_dp: int = 0
@@ -26,16 +28,10 @@ var current_chaos: int = 0
 var turn_count: int = 0
 
 # Deck Persistence
-var player_deck_cards: Array[CardData] = [] # The persistent deck list for the run
+var player_deck_cards: Array[CardData] = []
 
-# Active Path (Bid) for run
+# Active Path (Bid)
 var active_path: BidData = null
-
-# Config - In a real game, this list would be loaded from a resource registry
-var chapter_paths: Array[String] = [
-	"res://WebOfFate/data/chapters/chapter_1_awakening.tres",
-	"res://WebOfFate/data/chapters/chapter_2_tangled_paths.tres"
-]
 
 func _ready() -> void:
 	pass
@@ -56,6 +52,18 @@ func get_chaos_multiplier() -> float:
 func set_active_path(path: BidData) -> void:
 	active_path = path
 	print("GameManager: Path selected - %s" % path.path_name)
+	
+	# Initialize Deck based on Path
+	player_deck_cards.clear()
+	if path.starting_deck:
+		_initialize_deck_from_resource(path.starting_deck)
+	else:
+		# Fallback to Debug Deck
+		var debug_deck = load("res://WebOfFate/cards/decks/debug_deck.tres")
+		if debug_deck:
+			_initialize_deck_from_resource(debug_deck)
+	
+	SaveManager.save_game()
 
 func start_new_run() -> void:
 	reset_progress()
@@ -63,12 +71,11 @@ func start_new_run() -> void:
 	# Initialize Chronicle System for new run
 	ChronicleManager.start_new_chronicle()
 	
-	# Load Chapter 1
-	var chapter1 = load(chapter_paths[0])
-	if chapter1:
-		current_chapter_index = 0
-		_initialize_deck_from_resource(chapter1.starting_deck)
-		load_chapter(chapter1)
+	current_state = GameState.PLAYING
+	state_changed.emit(GameState.PLAYING)
+	_emit_progress()
+	
+	AudioManager.play_music(AudioManager.Music.CHAPTER_THEME)
 		
 	# Setup initial save
 	SaveManager.create_new_game()
@@ -79,46 +86,32 @@ func continue_run() -> void:
 		return
 		
 	var save = SaveManager.current_save
-	current_chapter_index = save.current_chapter_index
+	# Restore from save logic if needed (Deck restored below)
 	
-	# Restore Deck
+	# Restore Deck from Save
 	player_deck_cards.clear()
 	for card_id in save.player_deck_ids:
 		var card_data = DataManager.get_card_data(card_id)
 		if card_data:
 			player_deck_cards.append(card_data)
 			
-	# Load Current Chapter
-	if current_chapter_index < chapter_paths.size():
-		var chapter = load(chapter_paths[current_chapter_index])
-		load_chapter(chapter)
-	else:
-		print("Game Complete! (No more chapters)")
-		# Handle Game Completion state
+	# If continuing mid-run, restore stats (assuming Save stores them, but currently SaveManager only syncs Deck/Chronicle/Path)
+	# TODO: SaveManager needs to persist total_dp, current_chaos, turns too.
+	# For now, just set state to PLAYING.
+	
+	current_state = GameState.PLAYING
+	state_changed.emit(GameState.PLAYING)
+	_emit_progress()
+	
+	# Resume music
+	AudioManager.play_music(AudioManager.Music.CHAPTER_THEME)
 
 func reset_progress() -> void:
-	current_chapter_index = 0
 	player_deck_cards.clear()
 	total_dp = 0
 	current_chaos = 0
 	turn_count = 0
-
-func load_chapter(chapter: ChapterData) -> void:
-	current_chapter = chapter
-	total_dp = 0
-	current_chaos = 0
-	turn_count = 0
-	
-	# If deck is empty (shouldn't happen in normal flow unless bug), init from chapter
-	if player_deck_cards.is_empty() and chapter.starting_deck:
-		_initialize_deck_from_resource(chapter.starting_deck)
-	
-	current_state = GameState.PLAYING
-	state_changed.emit(GameState.PLAYING)
-	chapter_loaded.emit(current_chapter)
-	_emit_progress()
-	
-	AudioManager.play_music(AudioManager.Music.CHAPTER_THEME)
+	active_path = null # Clear path on reset
 
 func _initialize_deck_from_resource(deck_res: CardDeck) -> void:
 	player_deck_cards.clear()
@@ -174,10 +167,8 @@ func update_progress(turn_dp: int, chaos_level: int) -> void:
 	_check_win_loss()
 
 func _check_win_loss() -> void:
-	if not current_chapter: return
-	
 	# Check Win
-	if total_dp >= current_chapter.target_dp:
+	if total_dp >= TARGET_DP:
 		current_state = GameState.LEVEL_COMPLETE
 		AudioManager.play_sfx(AudioManager.Sound.LEVEL_COMPLETE)
 		level_complete.emit({
@@ -188,13 +179,13 @@ func _check_win_loss() -> void:
 		state_changed.emit(GameState.LEVEL_COMPLETE)
 		return
 		
-	# Check Loss (Max Chaos checked by GameTable usually, but can be redundant here)
-	if current_chaos >= current_chapter.max_chaos:
+	# Check Loss (Max Chaos)
+	if current_chaos >= MAX_CHAOS:
 		trigger_game_over("Chaos limit reached!")
 		return
 		
 	# Check Loss (Max Turns)
-	if current_chapter.max_turns > 0 and turn_count >= current_chapter.max_turns:
+	if MAX_TURNS > 0 and turn_count >= MAX_TURNS:
 		trigger_game_over("Run out of time (Turns)!")
 		return
 
@@ -205,19 +196,29 @@ func trigger_game_over(reason: String) -> void:
 	SaveManager.create_new_game() # Reset save on death (Roguelike style)
 
 func _emit_progress() -> void:
-	if current_chapter:
-		progress_updated.emit(total_dp, current_chapter.target_dp, turn_count, current_chapter.max_turns)
+	progress_updated.emit(total_dp, TARGET_DP, turn_count, MAX_TURNS)
 
 func next_level() -> void:
-	current_chapter_index += 1
-	if current_chapter_index < chapter_paths.size():
-		var chapter = load(chapter_paths[current_chapter_index])
-		load_chapter(chapter)
-		SaveManager.save_game()
-	else:
-		print("Game Completed!")
-		# TODO: Victory Screen
+	# Infinite run style or restart same goal? 
+	# For now, just reset progress but keep deck
+	total_dp = 0
+	current_chaos = 0
+	turn_count = 0
+	# TODO: Maybe increase difficulty?
+	
+	current_state = GameState.PLAYING
+	state_changed.emit(GameState.PLAYING)
+	_emit_progress()
+	
+	SaveManager.save_game()
 
 func restart_level() -> void:
-	if current_chapter:
-		load_chapter(current_chapter)
+	# Keep current path for restart
+	var path_to_restart = active_path
+	
+	# Start new run (resets everything including active_path)
+	start_new_run()
+	
+	# Restore path and deck
+	if path_to_restart:
+		set_active_path(path_to_restart)

@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="CardData" load_steps=2 format=3 uid="uid://dnoeuned8ywvk"]
+
+[ext_resource type="Script" uid="uid://bgfnixfvfwooy" path="res://WebOfFate/resources/card_data.gd" id="1_vukpe"]
+
+[resource]
+script = ExtResource("1_vukpe")
+id = "betrayal"
+display_name = "Betrayal"
+description = "A knife in the back."
+category = 2
+rarity = 2
+tags = Array[String](["tragedy", "violence", "betrayal"])
+base_dp = 10
+base_chaos = 40

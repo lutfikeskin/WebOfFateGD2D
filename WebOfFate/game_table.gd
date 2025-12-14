@@ -50,6 +50,7 @@ func _ready() -> void:
 		var slot = slots[i]
 		slot.slot_id = i
 		slot.slot_clicked.connect(_on_slot_clicked)
+		slot.slot_right_clicked.connect(_on_slot_right_clicked)
 		slot.slot_hovered.connect(_on_slot_hovered)
 
 	CG.holding_card.connect(_on_holding_card)
@@ -88,7 +89,7 @@ func _return_card_to_hand(slot: GameSlot) -> void:
 	# Check if card can be removed (only if placed this turn)
 	if not slot.can_remove_card():
 		# Card was placed in a previous turn, cannot be removed
-		AudioManager.play_sfx(AudioManager.Sound.CLICK)  # Play click sound but don't remove
+		AudioManager.play_sfx(AudioManager.Sound.CLICK) # Play click sound but don't remove
 		return
 		
 	# Get card from slot
@@ -103,6 +104,59 @@ func _return_card_to_hand(slot: GameSlot) -> void:
 func _on_slot_hovered(_slot_id: int, state: bool) -> void:
 	if state:
 		AudioManager.play_sfx(AudioManager.Sound.HOVER, 1.2)
+
+## Sever Thread Logic (Right-Click to Sacrifice)
+func _on_slot_right_clicked(slot_id: int) -> void:
+	# Interaction blocked during weaving or game over
+	if TurnManager.is_busy:
+		return
+		
+	var slot = _get_slot_by_id(slot_id)
+	if not slot or not slot.has_card():
+		return
+	
+	# Cost to sever: 10 Chaos
+	var sever_cost = 10
+	
+	# Execute Sever
+	_perform_sever_thread(slot, sever_cost)
+
+func _perform_sever_thread(slot: GameSlot, cost: int) -> void:
+	# Add Chaos
+	chaos += cost
+	chaos = clamp(chaos, 0, MAX_CHAOS)
+	resources_updated.emit(destiny_points, chaos)
+	
+	# Visual Feedback for Cost
+	if cost > 0:
+		_spawn_vfx(VFX_CHAOS, slot.global_position + slot.size / 2)
+	
+	# Remove Card
+	# Force remove (true) to bypass turn restriction
+	var card = slot.remove_card(null, null, true)
+	if card:
+		# Dissolve VFX
+		_spawn_vfx(VFX_DISSOLVE, slot.global_position + slot.size / 2)
+		AudioManager.play_sfx(AudioManager.Sound.CARD_DISCARD) # Or separate SEVER sound
+		
+		# Toast Notification
+		var toast = get_node_or_null("%ToastNotifications")
+		if toast:
+			toast.show_notification("Thread Severed! (+%d Chaos)" % cost, Color(1, 0.4, 0.4))
+		
+		# Log to Chronicle/Story
+		story_updated.emit(["Thread severed. The weaver pays the price of chaos."])
+		
+		# Discard Logic
+		card_discarded.emit(card)
+		LoomManager.notify_card_removed(card)
+		card.queue_free() # Or move to discard pile (handled by signal usually, but let's free for now)
+		
+		_update_visual_feedback()
+		
+		# Check for Game Over if Chaos Maxed
+		if chaos >= MAX_CHAOS:
+			TurnManager.trigger_game_over("Chaos consumed the weaver!")
 
 func _try_place_selected_card_in_slot(slot: GameSlot) -> void:
 	if not _player_hand or _player_hand.selected.is_empty():
@@ -261,7 +315,6 @@ func weave_fate() -> void:
 			if removed_card:
 				# Discard the card (add to discard pile)
 				# Notify via signal for manager to handle
-				
 				# Spawn VFX at card location
 				_spawn_vfx(VFX_SYNERGY, slot_center)
 				_spawn_vfx(VFX_DISSOLVE, slot_center)

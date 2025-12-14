@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="CardData" load_steps=2 format=3 uid="uid://dy4nbeac5jyr5"]
+
+[ext_resource type="Script" uid="uid://bgfnixfvfwooy" path="res://WebOfFate/resources/card_data.gd" id="1_ib8ol"]
+
+[resource]
+script = ExtResource("1_ib8ol")
+id = "sunken_city"
+display_name = "Sunken City"
+description = "Lost beneath the waves."
+category = 3
+rarity = 2
+tags = Array[String](["mythic", "water"])
+base_dp = 25
+base_chaos = 10

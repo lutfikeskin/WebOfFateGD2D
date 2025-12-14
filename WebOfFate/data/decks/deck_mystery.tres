@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="CardDeck" load_steps=7 format=3]
+
+[ext_resource type="Script" path="res://addons/simple_cards/deck/card_deck.gd" id="1_script"]
+[ext_resource type="Resource" path="res://WebOfFate/data/cards/characters/court_jester.tres" id="2_c1"]
+[ext_resource type="Resource" path="res://WebOfFate/data/cards/characters/shadow_assassin.tres" id="3_c2"]
+[ext_resource type="Resource" path="res://WebOfFate/data/cards/items/puppet_strings.tres" id="4_i1"]
+[ext_resource type="Resource" path="res://WebOfFate/data/cards/items/cursed_ring.tres" id="5_i2"]
+[ext_resource type="Resource" path="res://WebOfFate/data/cards/events/prophecy.tres" id="6_e1"]
+
+[resource]
+script = ExtResource("1_script")
+deck_name = "Mystery Deck"
+cards = Array[Resource("res://addons/simple_cards/card/card_resource/card_resource.gd")]([
+	ExtResource("2_c1"), ExtResource("3_c2"), ExtResource("4_i1"), ExtResource("5_i2"), ExtResource("6_e1")
+])

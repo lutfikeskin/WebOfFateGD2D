@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="CardData" load_steps=2 format=3 uid="uid://b7ayye7jrxxve"]
+
+[ext_resource type="Script" uid="uid://bgfnixfvfwooy" path="res://WebOfFate/resources/card_data.gd" id="1_4md8w"]
+
+[resource]
+script = ExtResource("1_4md8w")
+id = "ivory_tower"
+display_name = "Ivory Tower"
+description = "Seat of high magic."
+category = 3
+rarity = 1
+tags = Array[String](["mystic", "structure"])
+base_dp = 20
+base_chaos = 2

@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="CardData" load_steps=2 format=3 uid="uid://cto51vlmik380"]
+
+[ext_resource type="Script" uid="uid://bgfnixfvfwooy" path="res://WebOfFate/resources/card_data.gd" id="1_8fls5"]
+
+[resource]
+script = ExtResource("1_8fls5")
+id = "beggars_alley"
+display_name = "Beggars Alley"
+description = "The lowest point."
+category = 3
+tags = Array[String](["tragedy", "place"])
+base_dp = 5
+base_chaos = 10

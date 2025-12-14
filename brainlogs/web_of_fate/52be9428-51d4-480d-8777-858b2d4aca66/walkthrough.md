@@ -1,0 +1,49 @@
+# Walkthrough: Game Loop Refactoring and Content Expansion
+
+I have successfully refactored the game loop to rely on the Path system and significantly expanded the game's content.
+
+## Changes
+
+### Game Loop Refactoring
+- **Removed Age/Blind System**: The old progression system based on Ages and Blinds has been removed from `GameManager.gd` and `SimpleGameController.gd`.
+- **Path-Centric Progression**: The game now exclusively uses `PathData` for progression. `GameManager` tracks path progress, and `SimpleGameController` displays it via the `legacy_label`.
+- **Deck Size**: The starting deck has been updated to 20 cards.
+
+### Content Expansion
+- **New Paths**: 10 new Path resources created in `web_of_fate/data/paths/`, each with unique goals and modifiers.
+- **New Cards**: 50 new Card resources created in `web_of_fate/data/cards/`, including:
+    - 22 Major Arcana cards
+    - 10 Wands (Minor Arcana)
+    - 10 Cups (Minor Arcana)
+    - 4 Swords (Minor Arcana - Ace, King, Queen, Knight)
+    - 4 Elementals (Fire, Water, Air, Earth)
+    - 4 Concepts (Karma, Destiny, Serendipity, Misfortune)
+- **New Combos**: 6 new Combo resources created in `web_of_fate/data/combos/`:
+    - Elemental Resonance (Fire, Water, Air, Earth)
+    - Fate's Design (3 Fate cards)
+    - Major Arcana Power (2 Major cards)
+
+### Technical Improvements
+- **Card Loading**: Updated `CardDB.gd` and `DeckManager.gd` to support loading `WebOfFateCard` resources directly, ensuring compatibility with the new content.
+- **Lint Fixes**: Resolved unused parameter warnings in `JuiceManager.gd`.
+
+## Verification Results
+
+### Automated Checks
+- **File Creation**: Verified creation of all 50 cards, 10 paths, and 6 combos.
+- **Script Updates**: Verified changes to `GameManager.gd`, `SimpleGameController.gd`, `CardDB.gd`, and `DeckManager.gd`.
+
+### Manual Verification Steps
+1.  **Launch the Game**: Run the project.
+2.  **Select a Path**: The Path Selection screen should appear (if implemented) or the default path should load.
+3.  **Gameplay**:
+    - Verify the deck contains 20 cards (mix of Major, Minor, Elementals).
+    - Play cards to the spread.
+    - Verify that Combos trigger (e.g., place two Fire cards horizontally/vertically).
+    - Verify that Legacy points accumulate towards the Path goal.
+    - Verify that the "Age" and "Blind" UI elements are gone/replaced by Path progress.
+
+## Next Steps
+- Implement a Path Selection UI if not already present.
+- Add more visual feedback for Combo triggers.
+- Balance the new cards and paths based on playtesting.

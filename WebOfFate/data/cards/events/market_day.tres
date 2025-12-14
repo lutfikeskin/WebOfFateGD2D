@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="CardData" load_steps=2 format=3 uid="uid://kh8mi3gslu2q"]
+
+[ext_resource type="Script" uid="uid://bgfnixfvfwooy" path="res://WebOfFate/resources/card_data.gd" id="1_37tgg"]
+
+[resource]
+script = ExtResource("1_37tgg")
+id = "market_day"
+display_name = "Market Day"
+description = "Trade flourishes."
+category = 2
+tags = Array[String](["wealth", "social"])
+base_dp = 15
+base_chaos = 5

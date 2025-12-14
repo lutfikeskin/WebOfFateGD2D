@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="CardData" load_steps=2 format=3 uid="uid://i0ov5bk7dk63"]
+
+[ext_resource type="Script" uid="uid://bgfnixfvfwooy" path="res://WebOfFate/resources/card_data.gd" id="1_up5u1"]
+
+[resource]
+script = ExtResource("1_up5u1")
+id = "iron_shackles"
+display_name = "Iron Shackles"
+description = "Signs of imprisonment."
+category = 1
+tags = Array[String](["tool", "oppression"])
+base_dp = 5
+base_chaos = 10

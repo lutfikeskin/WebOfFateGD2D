@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="CardData" load_steps=2 format=3 uid="uid://ck0r7oiu2tq1p"]
+
+[ext_resource type="Script" uid="uid://bgfnixfvfwooy" path="res://WebOfFate/resources/card_data.gd" id="1_ucexp"]
+
+[resource]
+script = ExtResource("1_ucexp")
+id = "noble_knight"
+display_name = "Noble Knight"
+description = "Defender of the realm."
+rarity = 1
+tags = Array[String](["heroic", "violence"])
+base_dp = 18
+base_chaos = 5

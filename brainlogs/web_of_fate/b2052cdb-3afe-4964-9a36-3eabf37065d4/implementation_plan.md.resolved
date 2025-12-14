@@ -1,0 +1,61 @@
+# Modular Game Flow Implementation Plan
+
+## Goal
+Create a modular, Balatro-like game flow for *Web of Fate* featuring a 5-slot grid (2x2 + Center), Artifacts (Jokers), a Shop phase, and Path-based progression.
+
+## User Review Required
+> [!IMPORTANT]
+> **Grid Layout**: The grid will now have 5 slots: Top-Left (TL), Top-Right (TR), Bottom-Left (BL), Bottom-Right (BR), and Center (C).
+> **Combos**: New combo patterns will be introduced:
+> - **Diagonals**: TL -> C -> BR, TR -> C -> BL
+> - **Cross**: Vertical/Horizontal through center (requires defining "Mid-Top" or just using Center as a bridge). *Assumption*: For now, Center acts as a "Wild" connector or specific Diagonal bridge.
+> **Artifacts**: "Jokers" will be implemented as `ArtifactData` resources.
+
+## Proposed Changes
+
+### Core Systems
+
+#### [MODIFY] [GameManager.gd](file:///c:/Users/Lutfi/Desktop/Godot/Assets/simple-card-pile-ui-master/simple-card-pile-ui-master/web_of_fate/scripts/GameManager.gd)
+- Add State Machine: `GameState { MENU, PLAY, RESOLUTION, SHOP, GAME_OVER }`.
+- Add `shop_manager` reference.
+- Update `resolve_spread` to trigger Artifact effects.
+
+#### [MODIFY] [SimpleGameController.gd](file:///c:/Users/Lutfi/Desktop/Godot/Assets/simple-card-pile-ui-master/simple-card-pile-ui-master/web_of_fate/scripts/SimpleGameController.gd)
+- Update `_initialize_slots` to include "Center" slot.
+- Update `_check_combos` to pass 5 slots to engine.
+- Add UI handling for Shop state (hide grid, show shop).
+
+#### [MODIFY] [ComboEngine.gd](file:///c:/Users/Lutfi/Desktop/Godot/Assets/simple-card-pile-ui-master/simple-card-pile-ui-master/web_of_fate/scripts/ComboEngine.gd)
+- Update `detect_position_combos` to handle 5 slots.
+- Add logic for Diagonal (TL-C-BR, TR-C-BL) and Center-adjacent patterns.
+
+### Data & Resources
+
+#### [NEW] [ArtifactData.gd](file:///c:/Users/Lutfi/Desktop/Godot/Assets/simple-card-pile-ui-master/simple-card-pile-ui-master/web_of_fate/scripts/resources/ArtifactData.gd)
+- Resource definition for Artifacts (Jokers).
+- Fields: [id](file:///c:/Users/Lutfi/Desktop/Godot/Assets/simple-card-pile-ui-master/simple-card-pile-ui-master/web_of_fate/scripts/Slot.gd.uid), `display_name`, `description`, `cost`, `rarity`, `effect_type`, `effect_value`.
+
+#### [NEW] [ArtifactManager.gd](file:///c:/Users/Lutfi/Desktop/Godot/Assets/simple-card-pile-ui-master/simple-card-pile-ui-master/web_of_fate/scripts/managers/ArtifactManager.gd)
+- Manages active artifacts.
+- Handles triggers: `on_round_start`, `on_score`, `on_shop_enter`.
+
+#### [NEW] [ShopManager.gd](file:///c:/Users/Lutfi/Desktop/Godot/Assets/simple-card-pile-ui-master/simple-card-pile-ui-master/web_of_fate/scripts/managers/ShopManager.gd)
+- Generates shop inventory (Cards, Artifacts).
+- Handles purchases and currency deduction.
+
+### UI
+
+#### [NEW] [ShopUI.tscn](file:///c:/Users/Lutfi/Desktop/Godot/Assets/simple-card-pile-ui-master/simple-card-pile-ui-master/web_of_fate/scenes/ui/ShopUI.tscn)
+- Interface for buying items.
+- Displays current Legacy (currency).
+
+## Verification Plan
+
+### Automated Tests
+- Create `test_combo_engine_5slot.gd` to verify new diagonal/center combos.
+- Create `test_artifact_triggers.gd` to ensure artifacts modify score.
+
+### Manual Verification
+1.  **Grid**: Verify 5 slots appear and accept cards.
+2.  **Combos**: Place cards in TL-C-BR and verify "Diagonal" combo detection.
+3.  **Flow**: Play a round -> Resolve -> Verify Shop opens -> Buy Item -> Next Round.

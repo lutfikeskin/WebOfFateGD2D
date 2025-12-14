@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="CardData" load_steps=2 format=3 uid="uid://ht6fayydlccr"]
+
+[ext_resource type="Script" uid="uid://bgfnixfvfwooy" path="res://WebOfFate/resources/card_data.gd" id="1_r8wgu"]
+
+[resource]
+script = ExtResource("1_r8wgu")
+id = "dark_assassin"
+display_name = "Dark Assassin"
+description = "Moves in shadows."
+rarity = 1
+tags = Array[String](["violence", "villain"])
+base_dp = 10
+base_chaos = 15

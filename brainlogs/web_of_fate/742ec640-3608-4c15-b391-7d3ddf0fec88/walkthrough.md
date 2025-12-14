@@ -1,0 +1,69 @@
+# Chronicle System - Complete Walkthrough
+
+## Summary
+
+~1,250 lines of emergent narrative system code across 8 resource/script files.
+
+---
+
+## Story Arcs (8 Types)
+
+| Arc            | Trigger                | Tags                |
+| -------------- | ---------------------- | ------------------- |
+| Heroic Journey | Heroic synergy         | `heroic`            |
+| Romance        | Two romance cards      | `romance` × 2       |
+| Corruption     | Heroic + cursed        | `heroic` + `cursed` |
+| Tragedy        | High chaos (≥20)       | `tragedy`           |
+| Revenge        | 2+ fails + violence    | dynamic             |
+| **Redemption** | Hope breaks corruption | `hope`              |
+| **Betrayal**   | Bond broken            | `betrayal`          |
+| **Sacrifice**  | Near death             | `sacrifice`         |
+| **Reunion**    | Family first meet      | `family`            |
+
+---
+
+## UI Enhancements
+
+| Feature                | Location                                         |
+| ---------------------- | ------------------------------------------------ |
+| **Title Badge**        | Card layout shows earned titles (gold text)      |
+| **Mood Indicator**     | Card shows emoji based on mood                   |
+| **Relationship Lines** | Pink (bond) / Dark red (grudge) overlays on Loom |
+| **Chronicle Panel**    | End-of-run summary on level complete/game over   |
+
+---
+
+## Dynamic Prophecies
+
+NarrativeManager now generates arc-aware prophecies:
+
+```
+"The fates whisper: The hero's path leads Novice Hero toward destiny..."
+"The fates whisper: Darkness creeps into the heart of Bloody Baron..."
+```
+
+---
+
+## Chronicle Export
+
+Call `NarrativeManager.export_chronicle_to_file()` to save story to `user://chronicle_[timestamp].txt`
+
+---
+
+## Files Modified
+
+| File                                                                                                                 | Changes                             |
+| -------------------------------------------------------------------------------------------------------------------- | ----------------------------------- |
+| [story_arc.gd](file:///c:/Users/Lutfi/Documents/WebOfFate/WebOfFate/resources/story_arc.gd)                          | +3 arc types, display names         |
+| [chronicle_manager.gd](file:///c:/Users/Lutfi/Documents/WebOfFate/WebOfFate/logic/chronicle_manager.gd)              | +4 arc triggers (~70 lines)         |
+| [narrative_manager.gd](file:///c:/Users/Lutfi/Documents/WebOfFate/WebOfFate/logic/narrative_manager.gd)              | Arc prophecies, export (~100 lines) |
+| [web_of_fate_card_layout.gd](file:///c:/Users/Lutfi/Documents/WebOfFate/card_layouts/web_of_fate_card_layout.gd)     | Title/mood display                  |
+| [web_of_fate_card_layout.tscn](file:///c:/Users/Lutfi/Documents/WebOfFate/card_layouts/web_of_fate_card_layout.tscn) | TitleBadge, MoodIndicator nodes     |
+| [thread_renderer.gd](file:///c:/Users/Lutfi/Documents/WebOfFate/WebOfFate/components/thread_renderer.gd)             | Relationship overlays (~70 lines)   |
+| [web_of_fate_comprehensive_gdd.md](file:///c:/Users/Lutfi/Documents/WebOfFate/web_of_fate_comprehensive_gdd.md)      | Chronicle System documentation      |
+
+---
+
+## TODO (Future)
+
+- [ ] Arc-specific ambient music (voice-over support)

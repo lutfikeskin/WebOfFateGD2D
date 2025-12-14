@@ -1,0 +1,77 @@
+# Implementation Plan - Custom Resource Architecture
+
+This plan outlines the steps to transition the "Web of Fate" card system to a robust Custom Resource architecture, enabling advanced features like tags, upgrades, and meta-progression.
+
+## Goal
+Replace the JSON-based card system with Godot Custom Resources (`CardData`, `ComboData`, `DeckData`) and implement autoload managers (`CardDB`, `ComboDB`) to handle data loading and logic.
+
+## User Review Required
+> [!IMPORTANT]
+> This is a major architectural change. While I will maintain compatibility with existing systems, the underlying data flow will change significantly.
+> I will create new resource files in `res://web_of_fate/data/cards/` and `res://web_of_fate/data/combos/`.
+
+## Proposed Changes
+
+### 1. Custom Resources
+
+#### [NEW] [CardData.gd](file:///c:/Users/Lutfi/Desktop/Godot/Assets/simple-card-pile-ui-master/simple-card-pile-ui-master/web_of_fate/scripts/resources/CardData.gd)
+- Extends `Resource`.
+- Exports: [id](file:///c:/Users/Lutfi/Desktop/Godot/Assets/simple-card-pile-ui-master/simple-card-pile-ui-master/slot.gdshader.uid), `display_name`, `type`, `tags`, `base_chance`, `legacy_gain`, `chaos_gain`, `multiplier`, `chaos_multiplier`, `upgrade_paths`, `special_effect`.
+
+#### [NEW] [ComboData.gd](file:///c:/Users/Lutfi/Desktop/Godot/Assets/simple-card-pile-ui-master/simple-card-pile-ui-master/web_of_fate/scripts/resources/ComboData.gd)
+- Extends `Resource`.
+- Exports: [id](file:///c:/Users/Lutfi/Desktop/Godot/Assets/simple-card-pile-ui-master/simple-card-pile-ui-master/slot.gdshader.uid), `required_tags`, `positions`, `sequence`, `legacy_multiplier`, `legacy_bonus`, `chaos_bonus`, `description`.
+
+#### [NEW] [DeckData.gd](file:///c:/Users/Lutfi/Desktop/Godot/Assets/simple-card-pile-ui-master/simple-card-pile-ui-master/web_of_fate/scripts/resources/DeckData.gd)
+- Extends `Resource`.
+- Exports: `card_ids` (Array[String]).
+
+### 2. Autoload Managers
+
+#### [NEW] [CardDB.gd](file:///c:/Users/Lutfi/Desktop/Godot/Assets/simple-card-pile-ui-master/simple-card-pile-ui-master/web_of_fate/scripts/autoloads/CardDB.gd)
+- Scans `res://web_of_fate/data/cards/` for `.tres` files.
+- Provides: `get_card(id)`, `get_random_card()`, `all_cards()`.
+
+#### [NEW] [ComboDB.gd](file:///c:/Users/Lutfi/Desktop/Godot/Assets/simple-card-pile-ui-master/simple-card-pile-ui-master/web_of_fate/scripts/autoloads/ComboDB.gd)
+- Scans `res://web_of_fate/data/combos/` for `.tres` files.
+- Provides: `get_position_combos(active_cards)`, `get_sequence_combos(history)`.
+
+### 3. System Updates
+
+#### [MODIFY] [Card.gd](file:///c:/Users/Lutfi/Desktop/Godot/Assets/simple-card-pile-ui-master/simple-card-pile-ui-master/web_of_fate/scripts/Card.gd)
+- Update `WebOfFateCard` to initialize from `CardData` resource instead of Dictionary.
+- Keep `from_dict` for backward compatibility if needed, but prioritize `from_resource`.
+
+#### [MODIFY] [DeckManager.gd](file:///c:/Users/Lutfi/Desktop/Godot/Assets/simple-card-pile-ui-master/simple-card-pile-ui-master/web_of_fate/scripts/DeckManager.gd)
+- Update to use `CardDB` to fetch card data.
+- Load deck from `DeckData` resource or list of IDs.
+
+#### [MODIFY] [ComboEngine.gd](file:///c:/Users/Lutfi/Desktop/Godot/Assets/simple-card-pile-ui-master/simple-card-pile-ui-master/web_of_fate/scripts/ComboEngine.gd)
+- Update to use `ComboDB` for combo definitions.
+- Adapt detection logic to work with `ComboData` resources.
+
+#### [MODIFY] [SpreadResolver.gd](file:///c:/Users/Lutfi/Desktop/Godot/Assets/simple-card-pile-ui-master/simple-card-pile-ui-master/web_of_fate/scripts/SpreadResolver.gd)
+- Update to read stats (`multiplier`, `chaos_multiplier`) from `CardData`.
+
+### 4. Content Generation
+
+#### [NEW] Example Cards
+- Create `.tres` files for the ~20 example cards (Faultline, Wandering Spirit, etc.) in `res://web_of_fate/data/cards/`.
+
+#### [NEW] Example Combos
+- Create `.tres` files for the ~12 example combos in `res://web_of_fate/data/combos/`.
+
+## Verification Plan
+
+### Automated Verification
+- I will create a test script `res://web_of_fate/scripts/tests/test_resources.gd` to:
+    1.  Load `CardDB` and verify it finds all cards.
+    2.  Load `ComboDB` and verify it finds all combos.
+    3.  Simulate a hand draw and verify card data is correct.
+    4.  Simulate a spread placement and verify combo detection works with the new resources.
+
+### Manual Verification
+- Run the game.
+- Verify cards appear correctly in hand.
+- Verify placing cards triggers correct highlights.
+- Verify resolving a spread calculates scores correctly using the new multipliers.

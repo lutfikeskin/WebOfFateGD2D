@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="CardDeck" load_steps=7 format=3]
+
+[ext_resource type="Script" path="res://addons/simple_cards/deck/card_deck.gd" id="1_script"]
+[ext_resource type="Resource" path="res://WebOfFate/data/cards/characters/novice_hero.tres" id="2_c1"]
+[ext_resource type="Resource" path="res://WebOfFate/data/cards/characters/blacksmith.tres" id="3_c2"]
+[ext_resource type="Resource" path="res://WebOfFate/data/cards/characters/bloody_baron.tres" id="4_c3"]
+[ext_resource type="Resource" path="res://WebOfFate/data/cards/items/legendary_sword.tres" id="5_i1"]
+[ext_resource type="Resource" path="res://WebOfFate/data/cards/items/broken_shield.tres" id="6_i2"]
+
+[resource]
+script = ExtResource("1_script")
+deck_name = "Valor Deck"
+cards = Array[Resource("res://addons/simple_cards/card/card_resource/card_resource.gd")]([
+	ExtResource("2_c1"), ExtResource("3_c2"), ExtResource("4_c3"), ExtResource("5_i1"), ExtResource("6_i2")
+])

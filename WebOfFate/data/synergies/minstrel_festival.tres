@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="SynergyData" load_steps=2 format=3 uid="uid://cejff4d0a8bjv"]
+
+[ext_resource type="Script" uid="uid://d4bvr1tbkere0" path="res://WebOfFate/resources/synergy_data.gd" id="1_fpn73"]
+
+[resource]
+script = ExtResource("1_fpn73")
+id = "minstrel_festival"
+card_id_1 = "wandering_minstrel"
+card_id_2 = "festival_of_lights"
+result_dp = 50
+log_message = "The Minstrel leads the celebration! Pure joy."

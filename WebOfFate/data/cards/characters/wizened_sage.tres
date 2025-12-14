@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="CardData" load_steps=2 format=3 uid="uid://8klmbtbk6sja"]
+
+[ext_resource type="Script" uid="uid://bgfnixfvfwooy" path="res://WebOfFate/resources/card_data.gd" id="1_hwrk0"]
+
+[resource]
+script = ExtResource("1_hwrk0")
+id = "wizened_sage"
+display_name = "Wizened Sage"
+description = "Knows the secrets of the threads."
+rarity = 1
+tags = Array[String](["mystic", "human"])
+base_dp = 12
+base_chaos = 1

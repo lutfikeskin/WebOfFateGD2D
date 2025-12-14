@@ -75,7 +75,7 @@ func record_synergy(
 	var memory := MemoryEntry.create_synergy_memory(
 		card1_id, card2_id,
 		GameManager.turn_count,
-		GameManager.current_chapter_index,
+		0, # Run phase / Chapter
 		thread_type,
 		dp, chaos,
 		narrative
@@ -88,7 +88,7 @@ func record_synergy(
 		var high_dp_memory := MemoryEntry.create_high_dp_memory(
 			[card1_id, card2_id],
 			GameManager.turn_count,
-			GameManager.current_chapter_index,
+			0, # Run phase
 			dp
 		)
 		high_dp_memory.narrative_fragment = "A legendary moment! %s and %s wove destiny worth %d points!" % [
@@ -130,7 +130,7 @@ func record_near_death(current_chaos: int, max_chaos: int) -> void:
 	if current_chaos >= max_chaos - 10:
 		var memory := MemoryEntry.create_near_death_memory(
 			GameManager.turn_count,
-			GameManager.current_chapter_index,
+			0, # Run phase
 			current_chaos,
 			max_chaos
 		)
@@ -141,31 +141,13 @@ func record_near_death(current_chaos: int, max_chaos: int) -> void:
 		
 		memory_created.emit(memory)
 
-## Record chapter completion
-func record_chapter_complete(dp: int, chaos: int, turns: int) -> void:
-	var memory := MemoryEntry.new()
-	memory.type = MemoryEntry.MemoryType.CHAPTER_VICTORY
-	memory.chapter = GameManager.current_chapter_index
-	memory.turn = turns
-	memory.dp_result = dp
-	memory.chaos_result = chaos
-	memory.narrative_fragment = "Chapter %d conquered! %d destiny points woven across %d turns." % [
-		GameManager.current_chapter_index + 1, dp, turns
-	]
-	memory.timestamp = int(Time.get_unix_time_from_system())
-	chronicle.add_memory(memory)
-	
-	# Resolve any active arcs positively
-	for arc in chronicle.active_arcs:
-		arc.advance(0.2)
-	
-	memory_created.emit(memory)
+# record_chapter_complete removed
 
 ## Record run end (victory or defeat)
 func record_run_end(is_victory: bool, reason: String) -> void:
 	var memory := MemoryEntry.new()
 	memory.type = MemoryEntry.MemoryType.RUN_ENDED
-	memory.chapter = GameManager.current_chapter_index
+	memory.chapter = 0 # Single Run
 	memory.turn = chronicle.total_turns
 	memory.narrative_fragment = reason
 	memory.timestamp = int(Time.get_unix_time_from_system())
@@ -191,9 +173,8 @@ func get_chronicle_summary() -> String:
 	var summary := "# The Chronicle\n\n"
 	
 	# Opening
-	summary += "In the age of the Loom, a story unfolded across %d turns and %d chapters.\n\n" % [
-		chronicle.total_turns,
-		GameManager.current_chapter_index + 1
+	summary += "In the age of the Loom, a story unfolded across %d turns.\n\n" % [
+		chronicle.total_turns
 	]
 	
 	# Notable characters
@@ -359,7 +340,7 @@ func _check_arc_triggers(card1_id: String, card2_id: String, result: Dictionary,
 			arc.protagonist_id = hero_id
 			arc.supporting_ids.append(item_id)
 			arc.start_turn = GameManager.turn_count
-			arc.start_chapter = GameManager.current_chapter_index
+			arc.start_chapter = 0
 			chronicle.active_arcs.append(arc)
 			arc_started.emit(arc)
 			print("ChronicleManager: Started HEROIC_JOURNEY arc for %s" % hero_id)
@@ -380,7 +361,7 @@ func _check_arc_triggers(card1_id: String, card2_id: String, result: Dictionary,
 			arc.protagonist_id = card1_id
 			arc.antagonist_id = card2_id # In romance, "antagonist" is love interest
 			arc.start_turn = GameManager.turn_count
-			arc.start_chapter = GameManager.current_chapter_index
+			arc.start_chapter = 0
 			chronicle.active_arcs.append(arc)
 			arc_started.emit(arc)
 			print("ChronicleManager: Started ROMANCE arc for %s and %s" % [card1_id, card2_id])
@@ -412,7 +393,7 @@ func _check_arc_triggers(card1_id: String, card2_id: String, result: Dictionary,
 				arc.arc_type = StoryArc.ArcType.TRAGEDY
 				arc.protagonist_id = tragic_id
 				arc.start_turn = GameManager.turn_count
-				arc.start_chapter = GameManager.current_chapter_index
+				arc.start_chapter = 0
 				chronicle.active_arcs.append(arc)
 				arc_started.emit(arc)
 				print("ChronicleManager: Started TRAGEDY arc for %s" % tragic_id)
@@ -428,7 +409,7 @@ func _check_arc_triggers(card1_id: String, card2_id: String, result: Dictionary,
 				arc.protagonist_id = card1_id
 				arc.antagonist_id = card2_id
 				arc.start_turn = GameManager.turn_count
-				arc.start_chapter = GameManager.current_chapter_index
+				arc.start_chapter = 0
 				chronicle.active_arcs.append(arc)
 				arc_started.emit(arc)
 				print("ChronicleManager: Started REVENGE arc for %s against %s" % [card1_id, card2_id])
@@ -447,7 +428,7 @@ func _check_arc_triggers(card1_id: String, card2_id: String, result: Dictionary,
 			arc.arc_type = StoryArc.ArcType.REDEMPTION
 			arc.protagonist_id = redeemed_id
 			arc.start_turn = GameManager.turn_count
-			arc.start_chapter = GameManager.current_chapter_index
+			arc.start_chapter = 0
 			chronicle.active_arcs.append(arc)
 			arc_started.emit(arc)
 			print("ChronicleManager: Started REDEMPTION arc for %s" % redeemed_id)
@@ -463,7 +444,7 @@ func _check_arc_triggers(card1_id: String, card2_id: String, result: Dictionary,
 			arc.protagonist_id = victim_id # Victim is protagonist
 			arc.antagonist_id = betrayer_id
 			arc.start_turn = GameManager.turn_count
-			arc.start_chapter = GameManager.current_chapter_index
+			arc.start_chapter = 0
 			chronicle.active_arcs.append(arc)
 			arc_started.emit(arc)
 			# Damage the relationship
@@ -482,7 +463,7 @@ func _check_arc_triggers(card1_id: String, card2_id: String, result: Dictionary,
 				arc.protagonist_id = sacrificer_id
 				arc.supporting_ids.append(saved_id)
 				arc.start_turn = GameManager.turn_count
-				arc.start_chapter = GameManager.current_chapter_index
+				arc.start_chapter = 0
 				chronicle.active_arcs.append(arc)
 				arc_started.emit(arc)
 				print("ChronicleManager: Started SACRIFICE arc for %s" % sacrificer_id)
@@ -498,7 +479,7 @@ func _check_arc_triggers(card1_id: String, card2_id: String, result: Dictionary,
 			arc.protagonist_id = card1_id
 			arc.antagonist_id = card2_id # Second family member
 			arc.start_turn = GameManager.turn_count
-			arc.start_chapter = GameManager.current_chapter_index
+			arc.start_chapter = 0
 			chronicle.active_arcs.append(arc)
 			arc_started.emit(arc)
 			print("ChronicleManager: Started REUNION arc for %s and %s" % [card1_id, card2_id])

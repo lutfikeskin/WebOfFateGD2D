@@ -17,6 +17,13 @@ func load_game() -> bool:
 		# Restore Chronicle data if exists
 		if current_save.chronicle:
 			ChronicleManager.chronicle = current_save.chronicle
+			
+		# Restore Active Path
+		if current_save.active_path_type >= 0:
+			var paths = BidData.get_all_paths()
+			if current_save.active_path_type < paths.size():
+				GameManager.set_active_path(paths[current_save.active_path_type])
+				
 		print("SaveManager: Save loaded successfully.")
 		return true
 	else:
@@ -29,7 +36,7 @@ func save_game() -> void:
 		current_save = SaveGame.new()
 	
 	# Sync data from GameManagers
-	current_save.current_chapter_index = GameManager.current_chapter_index
+	# current_save.current_chapter_index removed (Chapter system deprecated)
 	
 	# Convert CardData objects to IDs for storage
 	var deck_ids: Array[String] = []
@@ -42,6 +49,12 @@ func save_game() -> void:
 	# Use duplicate(true) to ensure we save a snapshot and break references if needed
 	if ChronicleManager.chronicle:
 		current_save.chronicle = ChronicleManager.chronicle.duplicate(true)
+		
+	# Save Active Path
+	if GameManager.active_path:
+		current_save.active_path_type = GameManager.active_path.path_type
+	else:
+		current_save.active_path_type = -1
 	
 	# Save to disk
 	current_save.write_save()

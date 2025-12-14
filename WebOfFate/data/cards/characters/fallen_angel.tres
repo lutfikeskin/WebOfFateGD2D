@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="CardData" load_steps=2 format=3 uid="uid://cheenb6xpo08l"]
+
+[ext_resource type="Script" uid="uid://bgfnixfvfwooy" path="res://WebOfFate/resources/card_data.gd" id="1_mmuha"]
+
+[resource]
+script = ExtResource("1_mmuha")
+id = "fallen_angel"
+display_name = "Fallen Angel"
+description = "Cast out from the heavens."
+rarity = 3
+tags = Array[String](["mythic", "tragedy"])
+base_dp = 30
+base_chaos = 30

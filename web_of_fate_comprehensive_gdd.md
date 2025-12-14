@@ -224,9 +224,17 @@ Slots are connected by "Threads" (visual lines) that modify synergies:
 - Cards that remain after "Weave Fate" are locked
 - Locked cards:
   - Cannot be dragged
-  - Cannot be clicked
+  - Cannot be clicked normally
   - Can be hovered for information
   - May have passive effects (e.g., Cursed Ring: +5 Chaos/turn)
+
+**Sever Thread (Safety Valve):**
+
+- To prevent softlocks (Tangled Web), players can forcibly remove a locked card.
+- **Action:** Right-Click on a locked card.
+- **Cost:** +10 Chaos (The price of forcibly altering fate).
+- **Result:** Card is destroyed (discarded) and slot is freed.
+- **Strategic Use:** Sacrifice a card to break a deadlock or make room for a critical synergy.
 
 ### 3.5 Resource Management
 
@@ -536,7 +544,7 @@ enum EffectType {
 
 **Priority:** Medium
 
-**Status:** Partially Implemented
+**Status:** ✅ Fully Implemented
 
 **Feature:**
 
@@ -1615,6 +1623,21 @@ synergies/
 - Card collection viewer
 - Synergy reference guide
 
+### 13.5 Procedural Mechanics
+
+**Procedurally Generated Thread System:**
+
+- **Goal:** Increase replayability by varying the board topology.
+- **Mechanic:**
+  - Instead of fixed 0->1->2->3->4 path, threads are generated algorithmically at run/chapter start.
+  - Logic ensures all slots are connected (no isolated islands).
+  - **Variations:**
+    - **Linear:** A -> B -> C -> D -> E
+    - **Hub:** A -> B, A -> C, A -> D
+    - **Loop:** A -> B -> C -> A
+    - **Complex:** Multiple branching paths.
+  - Thread colors/types assigned randomly based on Path/Difficulty.
+
 ---
 
 ## 14. Development Roadmap
@@ -1628,12 +1651,12 @@ synergies/
 - ✅ Save/Load
 - ✅ Localization
 
-### Phase 2: Progression Systems (Next)
+### Phase 2: Progression Systems (Partially Complete)
 
-- ⏳ Bid System (Path Selection)
-- ⏳ Card Offer System
-- ⏳ Market System
-- ⏳ Relic System
+- ✅ Bid System (Path Selection)
+- ⏳ Card Offer System (Mid-Chapter Deckbuilding) - **TODO**
+- ⏳ Market System (Economy & Relics) - **TODO**
+- ⏳ Meta-Progression (Unlocks) - **TODO**
 
 ### Phase 3: Content Expansion
 
@@ -1644,11 +1667,19 @@ synergies/
 
 ### Phase 4: Polish & Enhancement
 
-- ⏳ Enhanced VFX
-- ⏳ Complete audio
-- ⏳ Shader effects
-- ⏳ UI/UX improvements
-- ⏳ Tutorial system
+- ✅ Sever Thread Mechanic
+- ✅ Toast Notifications
+- ✅ Intent Lines
+- ⏳ Tutorial System - **TODO**
+- ⏳ Enhanced VFX & Audio
+
+### Phase 5: Outstanding Implementation (High Priority TODOs)
+
+1. **Card Offer System:** Logic for mid-chapter deck modification (Turn 3/7).
+2. **Market & Economy:** Fate Threads currency, Shop UI, Relic purchase logic.
+3. **Relic System:** Permanent passive effect resources and logic.
+4. **Meta-Progression:** Persistent unlocks across runs (XP system).
+5. **Tutorial:** New player onboarding flow.
 
 ---
 

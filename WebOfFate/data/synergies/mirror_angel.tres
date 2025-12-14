@@ -1,0 +1,12 @@
+[gd_resource type="Resource" script_class="SynergyData" load_steps=2 format=3 uid="uid://cvonahni7c5n4"]
+
+[ext_resource type="Script" uid="uid://d4bvr1tbkere0" path="res://WebOfFate/resources/synergy_data.gd" id="1_da01m"]
+
+[resource]
+script = ExtResource("1_da01m")
+id = "mirror_angel"
+card_id_1 = "mirror_of_truth"
+card_id_2 = "fallen_angel"
+result_dp = 60
+result_chaos = 20
+log_message = "The Angel sees their fallen grace. A moment of sorrow."

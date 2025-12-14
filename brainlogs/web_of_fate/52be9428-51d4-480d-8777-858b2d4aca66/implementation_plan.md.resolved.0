@@ -1,0 +1,22 @@
+# Web of Fate Shader Implementation Plan
+
+## Goal
+Create a new Godot 4.5 shader `fate_background_web.gdshader` that implements the "Web of Fate" theme using the user-provided GLSL code as a base.
+
+## Proposed Changes
+
+### [web_of_fate/shaders]
+#### [NEW] [fate_background_web.gdshader](file:///c:/Users/Lutfi/Desktop/Godot/Assets/simple-card-pile-ui-master/simple-card-pile-ui-master/web_of_fate/shaders/fate_background_web.gdshader)
+- Port the provided GLSL code to Godot Shader Language.
+- Add uniforms for customization:
+    - `background_color`: Base background color.
+    - `web_color`: Color of the web lines and sparkles.
+    - `speed`: Animation speed multiplier.
+    - `density`: Controls the scale/density of the web.
+- Adapt the `fragment` function to use Godot's `TIME`, `SCREEN_PIXEL_SIZE`, and `FRAGCOORD`.
+- Enhance the visual aesthetic to match "Web of Fate" (mystical, interconnected).
+
+## Verification Plan
+### Manual Verification
+- The user will need to attach this shader to a `ColorRect` or `TextureRect` in Godot to verify it.
+- I will verify the syntax is correct by writing the file.

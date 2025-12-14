@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="CardData" load_steps=2 format=3 uid="uid://bvfec2whk67i4"]
+
+[ext_resource type="Script" uid="uid://bgfnixfvfwooy" path="res://WebOfFate/resources/card_data.gd" id="1_dbc4k"]
+
+[resource]
+script = ExtResource("1_dbc4k")
+id = "plague"
+display_name = "Plague"
+description = "Sickness spreads."
+category = 4
+rarity = 1
+tags = Array[String](["tragedy", "sickness"])
+base_chaos = 40

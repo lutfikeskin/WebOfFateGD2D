@@ -1,0 +1,12 @@
+[gd_resource type="Resource" script_class="CardData" load_steps=2 format=3 uid="uid://3axstg1ja8ua"]
+
+[ext_resource type="Script" uid="uid://bgfnixfvfwooy" path="res://WebOfFate/resources/card_data.gd" id="1_5cct2"]
+
+[resource]
+script = ExtResource("1_5cct2")
+id = "forest_witch"
+display_name = "Forest Witch"
+description = "brews potions in the deep woods."
+tags = Array[String](["mystic", "nature"])
+base_dp = 12
+base_chaos = 12

@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="CardData" load_steps=2 format=3 uid="uid://cl5mrus1gbsvk"]
+
+[ext_resource type="Script" uid="uid://bgfnixfvfwooy" path="res://WebOfFate/resources/card_data.gd" id="1_ajp78"]
+
+[resource]
+script = ExtResource("1_ajp78")
+id = "dragon_attack"
+display_name = "Dragon Attack"
+description = "Fire from above."
+category = 4
+rarity = 2
+tags = Array[String](["violence", "monster"])
+base_dp = 10
+base_chaos = 50

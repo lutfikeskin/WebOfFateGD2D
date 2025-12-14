@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="CardData" load_steps=2 format=3 uid="uid://lnck16btcr4r"]
+
+[ext_resource type="Script" uid="uid://bgfnixfvfwooy" path="res://WebOfFate/resources/card_data.gd" id="1_0osrg"]
+
+[resource]
+script = ExtResource("1_0osrg")
+id = "temple_of_fate"
+display_name = "Temple of Fate"
+description = "Where the loom resides."
+category = 3
+rarity = 3
+tags = Array[String](["holy", "structure"])
+base_dp = 40

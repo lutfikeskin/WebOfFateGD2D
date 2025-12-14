@@ -1,0 +1,58 @@
+# Implementation Plan - Phase 3: Unify Progression
+
+## Goal Description
+Implement the Shop System and Meta-Progression (Grimoire). This phase focuses on giving the player ways to spend their currency (Legacy) and track their long-term progress.
+
+## User Review Required
+> [!NOTE]
+> I will be creating a new `GrimoireUI` scene to visualize unlocked cards and artifacts.
+
+## Proposed Changes
+
+### `web_of_fate/scripts/ui`
+
+#### [NEW] [GrimoireUI.gd](file:///c:/Users/Lutfi/Desktop/Godot/Assets/simple-card-pile-ui-master/simple-card-pile-ui-master/web_of_fate/scripts/ui/GrimoireUI.gd)
+-   **Purpose:** Manage the UI for viewing the collection (Grimoire).
+-   **Features:**
+    -   Grid view of all discovered cards.
+    -   List view of discovered artifacts.
+    -   Stats display (total runs, max chaos, etc.).
+
+#### [MODIFY] [ShopUI.gd](file:///c:/Users/Lutfi/Desktop/Godot/Assets/simple-card-pile-ui-master/simple-card-pile-ui-master/web_of_fate/scripts/ui/ShopUI.gd)
+-   **Enhancements:**
+    -   Connect to `ShopManager` signals.
+    -   Implement purchase buttons and visual feedback (using `JuiceManager`).
+    -   Add tooltips for items.
+
+### `web_of_fate/scenes/ui`
+
+#### [NEW] [GrimoireUI.tscn](file:///c:/Users/Lutfi/Desktop/Godot/Assets/simple-card-pile-ui-master/simple-card-pile-ui-master/web_of_fate/scenes/ui/GrimoireUI.tscn)
+-   **Structure:**
+    -   `Control` (Root)
+    -   `TabContainer` (Cards, Artifacts, Stats)
+    -   `GridContainer` (For card display)
+
+#### [MODIFY] [ShopUI.tscn](file:///c:/Users/Lutfi/Desktop/Godot/Assets/simple-card-pile-ui-master/simple-card-pile-ui-master/web_of_fate/scenes/ui/ShopUI.tscn)
+-   **Updates:**
+    -   Ensure layout supports cards and artifacts.
+    -   Add "Reroll" button.
+    -   Add "Leave Shop" button.
+
+### `web_of_fate/scripts`
+
+#### [MODIFY] [SimpleGameController.gd](file:///c:/Users/Lutfi/Desktop/Godot/Assets/simple-card-pile-ui-master/simple-card-pile-ui-master/web_of_fate/scripts/SimpleGameController.gd)
+-   **Integration:**
+    -   Add "Shop" button to main UI (visible between rounds or via menu).
+    -   Add "Grimoire" button to main menu/pause menu.
+
+#### [MODIFY] [GameManager.gd](file:///c:/Users/Lutfi/Desktop/Godot/Assets/simple-card-pile-ui-master/simple-card-pile-ui-master/web_of_fate/scripts/GameManager.gd)
+-   **State:**
+    -   Add `State.SHOPPING`.
+    -   Handle transition to/from Shop.
+
+## Verification Plan
+
+### Manual Verification
+1.  **Shop Test:** Open Shop -> Buy Item -> Verify Currency Deducted -> Verify Item Added.
+2.  **Reroll Test:** Click Reroll -> Verify Inventory Refreshes -> Verify Cost Increases.
+3.  **Grimoire Test:** Open Grimoire -> Verify unlocked items are shown.

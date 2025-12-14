@@ -14,6 +14,7 @@ enum PathType {
 @export var path_name: String = ""
 @export_multiline var description: String = ""
 @export var icon: Texture2D
+@export var starting_deck: CardDeck = null
 
 @export_group("Modifiers")
 ## Multiplier for DP gains (1.0 = normal)
@@ -42,6 +43,8 @@ static func create_path_of_valor() -> BidData:
 	path.bonus_goal_type = "high_dp"
 	path.bonus_goal_value = 2000
 	path.bonus_reward_dp = 500
+	if ResourceLoader.exists("res://WebOfFate/data/decks/deck_valor.tres"):
+		path.starting_deck = load("res://WebOfFate/data/decks/deck_valor.tres")
 	return path
 
 static func create_path_of_harmony() -> BidData:
@@ -54,6 +57,8 @@ static func create_path_of_harmony() -> BidData:
 	path.bonus_goal_type = "low_chaos"
 	path.bonus_goal_value = 30
 	path.bonus_reward_dp = 300
+	if ResourceLoader.exists("res://WebOfFate/data/decks/deck_harmony.tres"):
+		path.starting_deck = load("res://WebOfFate/data/decks/deck_harmony.tres")
 	return path
 
 static func create_path_of_mystery() -> BidData:
@@ -67,6 +72,8 @@ static func create_path_of_mystery() -> BidData:
 	path.bonus_goal_type = "events_survived"
 	path.bonus_goal_value = 10
 	path.bonus_reward_dp = 400
+	if ResourceLoader.exists("res://WebOfFate/data/decks/deck_mystery.tres"):
+		path.starting_deck = load("res://WebOfFate/data/decks/deck_mystery.tres")
 	return path
 
 static func create_path_of_legend() -> BidData:
@@ -80,6 +87,8 @@ static func create_path_of_legend() -> BidData:
 	path.bonus_goal_type = "legendary_synergies"
 	path.bonus_goal_value = 5
 	path.bonus_reward_dp = 600
+	if ResourceLoader.exists("res://WebOfFate/data/decks/deck_legend.tres"):
+		path.starting_deck = load("res://WebOfFate/data/decks/deck_legend.tres")
 	return path
 
 ## Get all default paths

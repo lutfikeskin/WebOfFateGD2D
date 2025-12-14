@@ -1,0 +1,52 @@
+# Implementation Plan - Simple Prototype Scene
+
+## Goal
+Create a new, simplified game scene (`simple_prototype.tscn`) that demonstrates the core "Web of Fate" mechanics (Draw, Place, Resolve) without the complexity of meta-progression, shops, or advanced UI overlays.
+
+## User Review Required
+> [!NOTE]
+> This will create a new scene and script independent of the main game flow. It is intended for testing and verifying core mechanics.
+
+## Proposed Changes
+
+### New Files
+
+#### [NEW] [SimplePrototypeController.gd](file:///C:/Users/Lutfi/Desktop/Godot/Assets/simple-card-pile-ui-master/simple-card-pile-ui-master/simple-card-pile-ui-master/web_of_fate/scripts/SimplePrototypeController.gd)
+- A stripped-down version of [SimpleGameController.gd](file:///C:/Users/Lutfi/Desktop/Godot/Assets/simple-card-pile-ui-master/simple-card-pile-ui-master/simple-card-pile-ui-master/web_of_fate/scripts/SimpleGameController.gd).
+- **Features:**
+    - Initialize 5 slots (TL, TR, BL, BR, Center).
+    - Manage Deck and Hand (Draw 8 cards).
+    - Handle Card Placement (Click-to-select).
+    - Handle Spread Resolution (Trigger `GameManager.resolve_spread`).
+    - Basic UI updates (Chaos, Legacy labels).
+- **Omitted:**
+    - Shop System.
+    - Grimoire/Collection UI.
+    - Progression/Unlocks.
+    - Complex Juice effects (kept minimal).
+
+#### [NEW] [simple_prototype.tscn](file:///C:/Users/Lutfi/Desktop/Godot/Assets/simple-card-pile-ui-master/simple-card-pile-ui-master/simple-card-pile-ui-master/web_of_fate/scenes/simple_prototype.tscn)
+- **Structure:**
+    - `Control` (Root, Script: `SimplePrototypeController`)
+    - `Managers` (GameManager, DeckManager, ComboEngine, SpreadResolver)
+    - `CanvasLayer` (Background)
+    - `Table` (Panel)
+        - `WebGrid` (5 Slots: TL, TR, BL, BR, Center)
+        - `HandArea` (CardPileUI)
+        - `DeckArea` (DrawPileUI)
+        - `Controls` (Draw Button, Resolve Button, Labels)
+
+## Verification Plan
+
+### Automated Tests
+- None (Visual/Interactive scene).
+
+### Manual Verification
+1.  **Open Scene**: Open `res://web_of_fate/scenes/simple_prototype.tscn`.
+2.  **Run Scene**: Press F6.
+3.  **Test Draw**: Click "Draw Cards". Verify 8 cards appear in hand.
+4.  **Test Placement**: Click a card, then click a slot (e.g., Center). Verify card moves to slot.
+5.  **Test Resolution**: Click "Resolve Spread". Verify:
+    - Cards resolve in order.
+    - Legacy/Chaos values update.
+    - Cards move to discard (or disappear).

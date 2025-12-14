@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="CardData" load_steps=2 format=3 uid="uid://cl7v4pihjm0xn"]
+
+[ext_resource type="Script" uid="uid://bgfnixfvfwooy" path="res://WebOfFate/resources/card_data.gd" id="1_vdo1j"]
+
+[resource]
+script = ExtResource("1_vdo1j")
+id = "festival_of_lights"
+display_name = "Festival of Lights"
+description = "Celebration fills the streets."
+category = 2
+rarity = 1
+tags = Array[String](["social", "joy"])
+base_dp = 25
+base_chaos = 2

@@ -1,0 +1,90 @@
+# Chronicle System Implementation Walkthrough
+
+## Summary
+
+Successfully implemented a **Dwarf Fortress-inspired emergent narrative system** for Web of Fate, adding ~950 lines of new GDScript code.
+
+---
+
+## Phase 1: Core System (Files Created)
+
+| File | Purpose | Lines |
+|------|---------|-------|
+| [entity_state.gd](file:///c:/Users/Lutfi/Documents/WebOfFate/WebOfFate/resources/entity_state.gd) | Card memory, mood, titles | ~70 |
+| [memory_entry.gd](file:///c:/Users/Lutfi/Documents/WebOfFate/WebOfFate/resources/memory_entry.gd) | Event recording | ~100 |
+| [relationship_data.gd](file:///c:/Users/Lutfi/Documents/WebOfFate/WebOfFate/resources/relationship_data.gd) | Card affinity tracking | ~85 |
+| [story_arc.gd](file:///c:/Users/Lutfi/Documents/WebOfFate/WebOfFate/resources/story_arc.gd) | Emergent plot arcs | ~120 |
+| [chronicle_data.gd](file:///c:/Users/Lutfi/Documents/WebOfFate/WebOfFate/resources/chronicle_data.gd) | Master container | ~105 |
+| [chronicle_manager.gd](file:///c:/Users/Lutfi/Documents/WebOfFate/WebOfFate/logic/chronicle_manager.gd) | Central orchestrator | ~450 |
+
+---
+
+## Phase 2: UI & Enhancements
+
+| File | Purpose |
+|------|---------|
+| [chronicle_panel.gd](file:///c:/Users/Lutfi/Documents/WebOfFate/WebOfFate/ui/chronicle_panel.gd) | Chronicle UI logic (~175 lines) |
+| [chronicle_panel.tscn](file:///c:/Users/Lutfi/Documents/WebOfFate/WebOfFate/ui/chronicle_panel.tscn) | Chronicle UI scene |
+
+---
+
+## Key Features
+
+### 🧠 Entity Memory
+Cards track: times played, synergies, partners, mood, earned titles
+
+### 💞 Relationship Graph  
+Card pairs develop affinity (-1 to +1) with status: Strangers → Acquaintances → Allies → Bonded
+
+### 📜 Story Arcs (5 Types)
+- **Heroic Journey** - Triggered by `heroic` tag
+- **Romance** - Two `romance` tagged cards
+- **Corruption** - `heroic` card meets `cursed` card 
+- **Tragedy** - `tragedy` tag + high chaos (20+)
+- **Revenge** - Failed synergies + violence thread
+
+### 📖 Chronicle Panel
+Shows on level complete/game over with:
+- Heroes of the Loom (notable entities)
+- Bonds Forged (strong relationships)
+- Key Moments (high DP, near death, victories)
+- Active/Completed Story Arcs
+- Run Statistics
+
+---
+
+## Modified Files
+
+| File | Change |
+|------|--------|
+| [project.godot](file:///c:/Users/Lutfi/Documents/WebOfFate/project.godot) | Added `ChronicleManager` autoload |
+| [save_game.gd](file:///c:/Users/Lutfi/Documents/WebOfFate/WebOfFate/resources/save_game.gd) | Added `chronicle` field |
+| [save_manager.gd](file:///c:/Users/Lutfi/Documents/WebOfFate/WebOfFate/logic/save_manager.gd) | Chronicle save/load sync |
+| [game_manager.gd](file:///c:/Users/Lutfi/Documents/WebOfFate/WebOfFate/logic/game_manager.gd) | Chronicle init on new run |
+| [synergy_calculator.gd](file:///c:/Users/Lutfi/Documents/WebOfFate/WebOfFate/logic/synergy_calculator.gd) | Records synergies |
+| [web_of_fate_controller.gd](file:///c:/Users/Lutfi/Documents/WebOfFate/WebOfFate/web_of_fate_controller.gd) | ChroniclePanel integration |
+| [translations.csv](file:///c:/Users/Lutfi/Documents/WebOfFate/translations/translations.csv) | Chronicle UI translations |
+
+---
+
+## Setup Required
+
+> [!IMPORTANT]
+> **Add ChroniclePanel to Scene**: Add [chronicle_panel.tscn](file:///c:/Users/Lutfi/Documents/WebOfFate/WebOfFate/ui/chronicle_panel.tscn) as child of `WebOfFate.tscn` root CanvasLayer.
+
+```
+WebOfFate (CanvasLayer)
+├── ... existing nodes ...
+├── CardRewardPanel
+└── ChroniclePanel  ← Add this
+```
+
+Then **reload project** in Godot to resolve type errors.
+
+---
+
+## Testing
+
+1. **Run game** → Check Output for `ChronicleManager: New chronicle started.`
+2. **Form synergies** → Check `ChronicleManager: Recorded synergy...`
+3. **Complete level or lose** → Chronicle Panel should appear with summary

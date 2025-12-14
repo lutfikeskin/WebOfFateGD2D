@@ -1,0 +1,12 @@
+[gd_resource type="Resource" script_class="CardData" load_steps=2 format=3 uid="uid://dmsd6e74awmuu"]
+
+[ext_resource type="Script" uid="uid://bgfnixfvfwooy" path="res://WebOfFate/resources/card_data.gd" id="1_sxgdo"]
+
+[resource]
+script = ExtResource("1_sxgdo")
+id = "lost_traveler"
+display_name = "Lost Traveler"
+description = "Wanders the paths of fate."
+tags = Array[String](["human", "tragedy"])
+base_dp = 5
+base_chaos = 5

@@ -1,0 +1,41 @@
+# Progression Overhaul - Complete ✅
+
+## Phase 1-5 (Complete) ✅
+
+- [x] Card Rarity System
+- [x] Multiple Endings System (11 endings)
+- [x] Negative Synergies
+- [x] Fate Events System (10 events)
+
+## Phase 6-7 (Complete) ✅
+
+- [x] Hand Management (Mulligan) - `hand_selection_panel.gd/.tscn`
+- [x] Fate Event UI - `fate_event_popup.gd/.tscn`
+- [x] Bid/Path System - [bid_data.gd](file:///c:/Users/Lutfi/Documents/WebOfFate/WebOfFate/resources/bid_data.gd), `path_selection_panel.gd/.tscn`
+
+## Phase 8 - Refinement (Complete) ✅
+
+- [x] Arc Progression Feedback (Toast Notifications) - [ui/toast_notifications.gd](file:///c:/Users/Lutfi/Documents/WebOfFate/WebOfFate/ui/toast_notifications.gd)
+- [x] Negative Relationship Consequences (Dynamic Modifiers) - [logic/synergy_calculator.gd](file:///c:/Users/Lutfi/Documents/WebOfFate/WebOfFate/logic/synergy_calculator.gd)
+- [x] Chronicle Save Persistence Validation - [logic/save_manager.gd](file:///c:/Users/Lutfi/Documents/WebOfFate/WebOfFate/logic/save_manager.gd)
+
+## Phase 9 - Quality of Life (In Progress) 🛠️
+
+- [x] Implement Sever Thread (Right-Click Sacrifice) - [components/game_slot.gd](file:///c:/Users/Lutfi/Documents/WebOfFate/WebOfFate/components/game_slot.gd), [game_table.gd](file:///c:/Users/Lutfi/Documents/WebOfFate/WebOfFate/game_table.gd)
+- [x] Update GDD with Sever Thread mechanic (Complete)
+
+## Phase 10 - Outstanding Features (TODO) 🔮
+
+- [ ] Card Offer System (Mid-Chapter Deckbuilding) - GDD 5.3
+- [ ] Market & Economy System (Fate Threads) - GDD 5.3
+- [ ] Relic System - GDD 5.3
+- [ ] Meta-Progression (Unlocks) - GDD 13.2
+- [ ] Tutorial System - GDD 13.4
+
+- [x] Add `PathSelectionPanel` to MainMenu scene
+- [x] Add `FateEventPopup` to WebOfFate.tscn
+- [x] Add `HandSelectionPanel` to WebOfFate.tscn
+
+## Phase 11 - Path System Expansion (New)
+
+- [x] Implement Path-specific Starting Decks (Refactor BidData and GameManager)

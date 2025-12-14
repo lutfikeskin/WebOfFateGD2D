@@ -3,12 +3,13 @@ class_name GameSlot extends Control
 signal card_placed(card: Card, slot_id: int)
 signal card_removed(card: Card, slot_id: int)
 signal slot_clicked(slot_id: int)
+signal slot_right_clicked(slot_id: int)
 signal slot_hovered(slot_id: int, state: bool)
 
 @export var slot_id: int = -1
 
 # Slot state management
-enum SlotState { EMPTY, FILLED, LOCKED }
+enum SlotState {EMPTY, FILLED, LOCKED}
 var state: SlotState = SlotState.EMPTY
 
 # Track which turn the card was placed (for removal restriction)
@@ -38,8 +39,11 @@ func _gui_input(event: InputEvent) -> void:
 		else:
 			set_highlight_state(true, false)
 
-	if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
-		slot_clicked.emit(slot_id)
+	if event is InputEventMouseButton and event.pressed:
+		if event.button_index == MOUSE_BUTTON_LEFT:
+			slot_clicked.emit(slot_id)
+		elif event.button_index == MOUSE_BUTTON_RIGHT:
+			slot_right_clicked.emit(slot_id)
 
 func _notification(what: int) -> void:
 	if what == NOTIFICATION_MOUSE_ENTER:
@@ -104,7 +108,7 @@ func place_card(card: Card, turn_number: int = -1) -> void:
 	# Set mouse filter to PASS so clicks can go through to the slot
 	# This allows slot clicks to work, but card can still be interacted with this turn
 	card.mouse_filter = Control.MOUSE_FILTER_PASS
-	card.disabled = false  # Enable interaction for this turn
+	card.disabled = false # Enable interaction for this turn
 	
 	# Track which turn this card was placed (for removal restriction)
 	if turn_number >= 0:
@@ -175,11 +179,11 @@ func lock_card() -> void:
 		return
 	
 	# Disable all interaction - card becomes non-interactive
-	card.mouse_filter = Control.MOUSE_FILTER_IGNORE  # Ignore all mouse events
-	card.disabled = true  # Disable button functionality
-	card.undraggable = true  # Prevent dragging (Card class has this property)
-	card.holding = false  # Stop any ongoing drag
-	card._released = true  # Mark as released
+	card.mouse_filter = Control.MOUSE_FILTER_IGNORE # Ignore all mouse events
+	card.disabled = true # Disable button functionality
+	card.undraggable = true # Prevent dragging (Card class has this property)
+	card.holding = false # Stop any ongoing drag
+	card._released = true # Mark as released
 	
 	# Kill any active tweens
 	if card.has_method("kill_all_tweens"):

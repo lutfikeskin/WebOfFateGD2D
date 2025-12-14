@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="CardData" load_steps=2 format=3 uid="uid://bao5flxrk0db8"]
+
+[ext_resource type="Script" uid="uid://bgfnixfvfwooy" path="res://WebOfFate/resources/card_data.gd" id="1_8e0af"]
+
+[resource]
+script = ExtResource("1_8e0af")
+id = "dark_ritual"
+display_name = "Dark Ritual"
+description = "Shadows gather."
+category = 2
+rarity = 1
+tags = Array[String](["mystic", "cursed"])
+base_dp = 10
+base_chaos = 30

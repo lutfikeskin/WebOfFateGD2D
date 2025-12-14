@@ -1,0 +1,462 @@
+# Chronicle System: Emergent Narrative Architecture for Web of Fate
+
+This document outlines the complete data architecture and implementation plan for adding an emergent narrative system inspired by Dwarf Fortress to Web of Fate.
+
+---
+
+## Overview
+
+The **Chronicle System** transforms Web of Fate from a game with static narrative snippets into one where stories emerge organically from player actions. Cards develop history, relationships form between entities, and each run generates a unique narrative chronicle.
+
+```mermaid
+graph TD
+    A[Player Weaves Cards] --> B[SynergyCalculator]
+    B --> C[ChronicleManager]
+    C --> D[EntityStateManager]
+    C --> E[RelationshipGraph]
+    C --> F[MemoryBank]
+    D --> G[NarrativeEngine]
+    E --> G
+    F --> G
+    G --> H[Story Panel / Chronicle UI]
+```
+
+---
+
+## Data Architecture
+
+### Core Resource Classes
+
+> [!IMPORTANT]
+> All new resources extend Godot's `Resource` class for easy serialization and inspector editing.
+
+---
+
+#### [NEW] [entity_state.gd](file:///c:/Users/Lutfi/Documents/WebOfFate/WebOfFate/resources/entity_state.gd)
+
+Tracks persistent state for each card across a run:
+
+```gdscript
+class_name EntityState extends Resource
+
+## Unique instance ID for this card in the current run
+@export var instance_id: String
+## Reference card ID
+@export var card_id: String
+
+@export_group("Experience")
+@export var times_played: int = 0
+@export var synergies_formed: int = 0
+@export var synergy_partners: Array[String] = []  # Card IDs synergized with
+@export var tragic_encounters: int = 0  # Failed synergy attempts
+@export var highest_dp_contribution: int = 0
+
+@export_group("Emotional State")
+## -1.0 (despair) to 1.0 (exalted)
+@export_range(-1.0, 1.0) var mood: float = 0.0
+## Titles earned through actions
+@export var earned_titles: Array[String] = []
+
+@export_group("Relationships")
+## Card IDs this entity has positive affinity with
+@export var bonds: Array[String] = []
+## Card IDs this entity has negative affinity with
+@export var grudges: Array[String] = []
+```
+
+---
+
+#### [NEW] [memory_entry.gd](file:///c:/Users/Lutfi/Documents/WebOfFate/WebOfFate/resources/memory_entry.gd)
+
+Records a single narrative-significant event:
+
+```gdscript
+class_name MemoryEntry extends Resource
+
+enum MemoryType {
+    SYNERGY_FORMED,
+    SYNERGY_FAILED,
+    HIGH_DP_MOMENT,      # DP > 50
+    CHAOS_SPIKE,         # Chaos increased > 20
+    SACRIFICE,           # Card removed for benefit
+    NEAR_DEATH,          # Chaos within 10 of max
+    CHAPTER_VICTORY,
+    RUN_ENDED
+}
+
+@export var type: MemoryType
+@export var turn: int
+@export var chapter: int
+@export var involved_cards: Array[String]  # Card IDs
+@export var thread_type: int  # 0=white, 1=red, 2=gold, 3=purple
+@export var dp_result: int
+@export var chaos_result: int
+@export var narrative_fragment: String  # Generated prose
+@export var timestamp: int  # Unix timestamp for ordering
+```
+
+---
+
+#### [NEW] [relationship_data.gd](file:///c:/Users/Lutfi/Documents/WebOfFate/WebOfFate/resources/relationship_data.gd)
+
+Tracks the relationship between two specific cards:
+
+```gdscript
+class_name RelationshipData extends Resource
+
+@export var card_id_a: String
+@export var card_id_b: String
+## -1.0 (enemies) to 1.0 (allies)
+@export_range(-1.0, 1.0) var affinity: float = 0.0
+@export var interaction_count: int = 0
+@export var shared_synergies: int = 0
+@export var failed_synergies: int = 0
+## History of interactions
+@export var history: Array[String] = []
+## Most common thread type used between them
+@export var dominant_thread: int = 0
+```
+
+---
+
+#### [NEW] [story_arc.gd](file:///c:/Users/Lutfi/Documents/WebOfFate/WebOfFate/resources/story_arc.gd)
+
+Represents an emergent narrative arc:
+
+```gdscript
+class_name StoryArc extends Resource
+
+enum ArcType {
+    HEROIC_JOURNEY,
+    CORRUPTION,
+    REDEMPTION,
+    REVENGE,
+    ROMANCE,
+    TRAGEDY,
+    MYSTERY
+}
+
+@export var arc_type: ArcType
+@export var protagonist_id: String
+@export var antagonist_id: String  # Optional
+@export var supporting_ids: Array[String] = []
+## 0.0 to 1.0 (complete)
+@export_range(0.0, 1.0) var progress: float = 0.0
+@export var key_memories: Array[MemoryEntry] = []
+@export var is_resolved: bool = false
+@export var resolution_type: String = ""  # "triumph", "tragedy", "abandoned"
+```
+
+---
+
+#### [NEW] [chronicle_data.gd](file:///c:/Users/Lutfi/Documents/WebOfFate/WebOfFate/resources/chronicle_data.gd)
+
+Master container for all narrative data in a run:
+
+```gdscript
+class_name ChronicleData extends Resource
+
+## All entity states indexed by instance_id
+@export var entity_states: Dictionary = {}  # instance_id -> EntityState
+## All memories in chronological order
+@export var memories: Array[MemoryEntry] = []
+## All relationships indexed by sorted card pair key
+@export var relationships: Dictionary = {}  # "cardA_cardB" -> RelationshipData
+## Active story arcs
+@export var active_arcs: Array[StoryArc] = []
+## Completed story arcs
+@export var completed_arcs: Array[StoryArc] = []
+## Run-level statistics
+@export var total_synergies: int = 0
+@export var total_turns: int = 0
+@export var run_start_time: int = 0
+```
+
+---
+
+### Manager Classes
+
+---
+
+#### [NEW] [chronicle_manager.gd](file:///c:/Users/Lutfi/Documents/WebOfFate/WebOfFate/logic/chronicle_manager.gd)
+
+Central autoload that orchestrates the Chronicle System:
+
+```gdscript
+extends Node
+# Autoload: ChronicleManager
+
+signal memory_created(memory: MemoryEntry)
+signal arc_started(arc: StoryArc)
+signal arc_progressed(arc: StoryArc)
+signal arc_resolved(arc: StoryArc)
+signal entity_title_earned(entity: EntityState, title: String)
+
+var chronicle: ChronicleData
+
+func _ready() -> void:
+    chronicle = ChronicleData.new()
+
+func start_new_chronicle() -> void
+func get_or_create_entity(card_id: String) -> EntityState
+func record_synergy(card1_id: String, card2_id: String, result: Dictionary, thread_type: int) -> void
+func record_failure(card_id: String) -> void
+func update_relationship(card1_id: String, card2_id: String, synergy_formed: bool, thread_type: int) -> void
+func check_arc_triggers() -> void
+func get_chronicle_summary() -> String
+func save_chronicle() -> void
+func load_chronicle() -> void
+```
+
+---
+
+#### [MODIFY] [narrative_manager.gd](file:///c:/Users/Lutfi/Documents/WebOfFate/WebOfFate/logic/narrative_manager.gd)
+
+Enhance with context-aware generation using Chronicle data:
+
+**Changes:**
+- Add `generate_memory_narrative(memory: MemoryEntry, context: Dictionary) -> String`
+- Add `generate_arc_narrative(arc: StoryArc, phase: String) -> String`
+- Add `generate_chronicle_summary(chronicle: ChronicleData) -> String`
+- Expand template dictionary with arc-specific and relationship-aware templates
+- Add title generation based on entity achievements
+
+---
+
+#### [MODIFY] [synergy_calculator.gd](file:///c:/Users/Lutfi/Documents/WebOfFate/WebOfFate/logic/synergy_calculator.gd)
+
+Add hooks into Chronicle System after synergy resolution:
+
+**Changes (lines ~54-68):**
+```diff
+ if combo_result.valid:
+     total_dp += combo_result.dp_bonus
+     total_chaos += combo_result.chaos_change
+     if combo_result.log != "":
+         log_entries.append(combo_result.log)
+     
++    # Chronicle System Integration
++    ChronicleManager.record_synergy(
++        d1.id, d2.id,
++        combo_result,
++        thread_type
++    )
+     
+     if combo_result.remove_cards:
+         if not cards_to_remove.has(card): cards_to_remove.append(card)
+         if not cards_to_remove.has(target_card): cards_to_remove.append(target_card)
+```
+
+---
+
+#### [MODIFY] [save_game.gd](file:///c:/Users/Lutfi/Documents/WebOfFate/WebOfFate/resources/save_game.gd)
+
+Add chronicle persistence:
+
+**Changes:**
+```diff
+ @export var current_chapter_index: int = 0
+ @export var unlocked_cards: Array[String] = []
+ @export var player_deck_ids: Array[String] = []
+ @export var high_score_dp: int = 0
++@export var chronicle: ChronicleData = null
+```
+
+---
+
+#### [MODIFY] [save_manager.gd](file:///c:/Users/Lutfi/Documents/WebOfFate/WebOfFate/logic/save_manager.gd)
+
+Sync chronicle data on save/load:
+
+**Changes in `save_game()` (~line 28):**
+```diff
+ current_save.current_chapter_index = GameManager.current_chapter_index
++current_save.chronicle = ChronicleManager.chronicle
+```
+
+**Changes in `load_game()` (~line 14):**
+```diff
+ current_save = SaveGame.load_save()
+ if current_save:
++    if current_save.chronicle:
++        ChronicleManager.chronicle = current_save.chronicle
+     print("SaveManager: Save loaded successfully.")
+```
+
+---
+
+#### [MODIFY] [game_manager.gd](file:///c:/Users/Lutfi/Documents/WebOfFate/WebOfFate/logic/game_manager.gd)
+
+Initialize chronicle on new run:
+
+**Changes in `start_new_run()` (~line 40):**
+```diff
+ func start_new_run() -> void:
+     reset_progress()
++    ChronicleManager.start_new_chronicle()
+     
+     # Load Chapter 1
+     var chapter1 = load(chapter_paths[0])
+```
+
+---
+
+### Narrative Templates Expansion
+
+Expand the existing `templates` dictionary in [narrative_manager.gd](file:///c:/Users/Lutfi/Documents/WebOfFate/WebOfFate/logic/narrative_manager.gd):
+
+```gdscript
+# Arc Phase Templates
+var arc_templates = {
+    StoryArc.ArcType.HEROIC_JOURNEY: {
+        "intro": [
+            "A hero's path began when {protagonist} first stirred upon the Loom.",
+            "{protagonist} awakened to a destiny written in threads of fate."
+        ],
+        "rising": [
+            "{protagonist}'s legend grew with each thread woven into the tapestry.",
+            "The trials of {protagonist} shaped them into something greater."
+        ],
+        "climax": [
+            "The moment of truth arrived for {protagonist}.",
+            "{protagonist} stood at the crossroads of destiny."
+        ],
+        "triumph": [
+            "{protagonist} emerged victorious, their name etched in the eternal weave.",
+            "Thus {protagonist} became legend, their story complete."
+        ],
+        "tragedy": [
+            "{protagonist}'s journey ended not with glory, but with silence.",
+            "The hero's thread was cut short. {protagonist} was no more."
+        ]
+    },
+    StoryArc.ArcType.CORRUPTION: {
+        # Similar structure...
+    }
+}
+
+# Relationship-aware templates
+var relationship_templates = {
+    "strong_bond": [
+        "{card1} and {card2}, bound by fate, wove power together.",
+        "The legendary partnership of {card1} and {card2} struck again."
+    ],
+    "grudge": [
+        "Despite their history, {card1} and {card2} were forced together.",
+        "Old wounds reopened as {card1} faced {card2} upon the Loom."
+    ],
+    "first_meeting": [
+        "For the first time, the threads of {card1} and {card2} intertwined.",
+        "Fate introduced {card1} to {card2}. What story would they write?"
+    ]
+}
+
+# Title templates
+var title_templates = {
+    "synergy_master": ["the Weaver", "Threadbinder", "of Many Bonds"],
+    "chaos_survivor": ["the Unbroken", "Defiant", "Storm-Touched"],
+    "high_dp": ["the Legendary", "of Great Renown", "the Fabled"]
+}
+```
+
+---
+
+## File Structure Summary
+
+```
+WebOfFate/
+├── resources/
+│   ├── [NEW] entity_state.gd
+│   ├── [NEW] memory_entry.gd
+│   ├── [NEW] relationship_data.gd
+│   ├── [NEW] story_arc.gd
+│   ├── [NEW] chronicle_data.gd
+│   ├── [MODIFY] save_game.gd        (+1 field)
+│   └── ...existing...
+├── logic/
+│   ├── [NEW] chronicle_manager.gd   (Autoload)
+│   ├── [MODIFY] narrative_manager.gd (+150 lines)
+│   ├── [MODIFY] synergy_calculator.gd (+10 lines)
+│   ├── [MODIFY] save_manager.gd      (+5 lines)
+│   ├── [MODIFY] game_manager.gd      (+2 lines)
+│   └── ...existing...
+└── project.godot                    (+1 autoload)
+```
+
+---
+
+## Verification Plan
+
+### Manual Testing (Primary Method)
+
+Since this is a Godot 4.5 game without existing automated tests, verification will be manual. Here are the explicit steps:
+
+#### Test 1: Entity State Persistence
+1. **Run the game** via Godot Editor (F5)
+2. **Start a new run** from the main menu
+3. **Play for 3 turns**, placing the same card (e.g., Novice Hero) multiple times
+4. **Open the Debugger** (F12 or Debug menu)
+5. **Inspect** `ChronicleManager.chronicle.entity_states`
+6. **Verify**: The `times_played` counter for Novice Hero should be ≥ 3
+
+#### Test 2: Synergy Recording
+1. **Continue from Test 1** or start fresh
+2. **Create a synergy** by placing two cards with matching tags
+3. **Check console output** for `ChronicleManager: Recorded synergy...` log
+4. **Inspect** `ChronicleManager.chronicle.memories`
+5. **Verify**: A new `MemoryEntry` with type `SYNERGY_FORMED` exists
+
+#### Test 3: Relationship Building
+1. **Create the same synergy** (same two cards) **3 times** across turns
+2. **Inspect** `ChronicleManager.chronicle.relationships`
+3. **Verify**: The relationship between those cards has `interaction_count >= 3` and positive `affinity`
+
+#### Test 4: Narrative Generation
+1. **After creating synergies**, observe the **Story Panel** in-game
+2. **Verify**: Narrative text mentions card names and uses relationship context
+
+#### Test 5: Save/Load Persistence
+1. **Create multiple synergies** and complete Chapter 1
+2. **Exit to main menu** (or Alt+F4)
+3. **Start the game again** and click **Continue**
+4. **Inspect** `ChronicleManager.chronicle`
+5. **Verify**: All memories and entity states from before are present
+
+#### Test 6: Chronicle Summary
+1. **Complete a run** (reach game over or finish all chapters)
+2. **Observe the end screen** or debug the return value of `ChronicleManager.get_chronicle_summary()`
+3. **Verify**: The summary references key events and cards from the run
+
+---
+
+### Debug Commands (Optional Enhancement)
+
+If desired, I can add debug console commands to help verify:
+- `chronicle_dump` - Prints full chronicle state
+- `test_memory` - Creates a test memory entry
+- `test_arc` - Triggers a story arc
+
+---
+
+## Implementation Phases
+
+| Phase | Files | Estimated Changes |
+|-------|-------|------------------|
+| **1** | `entity_state.gd`, `chronicle_manager.gd` (basic) | ~150 lines new |
+| **2** | `memory_entry.gd`, `chronicle_data.gd` | ~100 lines new |
+| **3** | [narrative_manager.gd](file:///c:/Users/Lutfi/Documents/WebOfFate/WebOfFate/logic/narrative_manager.gd) (enhancement) | ~150 lines added |
+| **4** | `relationship_data.gd`, relationship tracking | ~80 lines new |
+| **5** | `story_arc.gd`, arc detection logic | ~200 lines new |
+| **6** | Save/load integration, UI hooks | ~50 lines modified |
+
+**Total Estimated**: ~730 new/modified lines of GDScript
+
+---
+
+## User Review Required
+
+> [!IMPORTANT]
+> Before proceeding, please confirm:
+> 1. **Autoload registration**: I will add `ChronicleManager` to [project.godot](file:///c:/Users/Lutfi/Documents/WebOfFate/project.godot) as an autoload. Is that acceptable?
+> 2. **Phased implementation**: Shall I implement all phases at once, or pause for review after each phase?
+> 3. **UI integration scope**: Do you want a Chronicle UI panel now, or just the backend systems first?

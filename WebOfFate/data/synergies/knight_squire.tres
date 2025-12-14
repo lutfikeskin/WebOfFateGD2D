@@ -1,0 +1,12 @@
+[gd_resource type="Resource" script_class="SynergyData" load_steps=2 format=3 uid="uid://648ya62r8kb6"]
+
+[ext_resource type="Script" uid="uid://d4bvr1tbkere0" path="res://WebOfFate/resources/synergy_data.gd" id="1_g7o1a"]
+
+[resource]
+script = ExtResource("1_g7o1a")
+id = "knight_squire"
+card_id_1 = "noble_knight"
+card_id_2 = "brave_squire"
+result_dp = 40
+result_chaos = -5
+log_message = "The Knight mentors the Squire! A legacy begins."

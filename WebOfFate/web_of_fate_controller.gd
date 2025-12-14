@@ -21,7 +21,8 @@ class_name WebOfFateController
 # Panels
 @onready var level_complete_panel: PanelContainer = $LevelCompletePanel
 @onready var game_over_panel: PanelContainer = $GameOverPanel
-@onready var chapter_start_panel: PanelContainer = $ChapterStartPanel
+# ChapterStartPanel removed
+@onready var path_selection_panel: PanelContainer = $PathSelectionPanel
 @onready var card_reward_panel: PanelContainer = $CardRewardPanel # New reference
 @onready var chronicle_panel: PanelContainer = $ChroniclePanel # Chronicle System UI
 @onready var next_level_button: Button = %NextLevelButton
@@ -40,8 +41,9 @@ func _ready() -> void:
 	weave_fate_button.pressed.connect(_on_weave_fate_pressed)
 	next_level_button.pressed.connect(_on_next_level_pressed)
 	restart_button.pressed.connect(_on_restart_pressed)
-	start_chapter_button.pressed.connect(_on_start_chapter_pressed)
+	# start_chapter_button removed
 	
+	path_selection_panel.path_selected.connect(_on_path_selected)
 	card_reward_panel.card_selected.connect(_on_reward_card_selected)
 	card_reward_panel.skipped.connect(_on_reward_skipped)
 	
@@ -57,7 +59,7 @@ func _ready() -> void:
 	# Connect GameManager signals
 	GameManager.progress_updated.connect(_on_progress_updated)
 	GameManager.level_complete.connect(_on_level_complete)
-	GameManager.chapter_loaded.connect(_on_chapter_loaded)
+	# GameManager.chapter_loaded removed
 	# TurnManager now handles Game Over triggering and events
 	TurnManager.game_over.connect(_on_tm_game_over)
 	TurnManager.turn_ended.connect(_on_turn_ended)
@@ -68,35 +70,26 @@ func _ready() -> void:
 	
 	card_deck_manager.setup()
 	
-	# If launched directly, load chapter 1 manually
-	if not GameManager.current_chapter:
-		var chapter1 = load("res://WebOfFate/data/chapters/chapter_1_awakening.tres")
-		if chapter1:
-			GameManager.load_chapter(chapter1)
-	else:
-		_on_chapter_loaded(GameManager.current_chapter)
 	
-	deal()
+	# If launched directly (and no active run/path), show path selection
+	if not GameManager.active_path:
+		path_selection_panel.show_paths()
+	else:
+		# Resume play
+		deal() # Instant deal on resume
+		weave_fate_button.disabled = false
 	
 	# Initialize UI
 	_update_resource_ui()
 
-func _on_chapter_loaded(chapter: ChapterData) -> void:
-	# Show start popup
-	start_title_label.text = chapter.chapter_name
-	start_desc_label.text = chapter.narrative_intro
-	chapter_start_panel.visible = true
-	weave_fate_button.disabled = true
-
-func _on_start_chapter_pressed() -> void:
-	chapter_start_panel.visible = false
-	weave_fate_button.disabled = false
-	# Call TurnManager instance via autoload name
-	TurnManager.start_game()
+# _on_chapter_loaded and _on_start_chapter_pressed removed
 
 func _on_progress_updated(current_dp: int, target_dp: int, turns: int, max_turns: int) -> void:
 	if chapter_label:
-		chapter_label.text = GameManager.current_chapter.chapter_name
+		if GameManager.active_path:
+			chapter_label.text = GameManager.active_path.path_name
+		else:
+			chapter_label.text = "Web of Fate"
 	if progress_label:
 		progress_label.text = tr("GAME_PROGRESS_LABEL") + ": %d / %d DP" % [current_dp, target_dp]
 	if turn_label:
@@ -139,6 +132,43 @@ func _on_chronicle_dismissed() -> void:
 	# Chronicle panel was dismissed, nothing else to do
 	pass
 
+func _on_path_selected(path: BidData) -> void:
+	# Start new run (resets progress)
+	GameManager.start_new_run()
+	# Set active path AFTER reset (since reset clears it)
+	GameManager.set_active_path(path)
+	
+	# Start game logic
+	TurnManager.start_game()
+	
+	# Trigger Animation
+	_animate_initial_draw()
+
+func _animate_initial_draw() -> void:
+	weave_fate_button.disabled = true
+	# Small delay before drawing starts
+	await get_tree().create_timer(0.5).timeout
+	
+	# Calculate how many cards we need (full hand)
+	var cards_to_draw = hand_size
+	
+	# Use DeckManager to shuffle first if needed (start_new_run does init but verify)
+	if card_deck_manager.get_draw_pile_size() == 0:
+		card_deck_manager.reshuffle_discard_and_shuffle()
+		
+	for i in range(cards_to_draw):
+		if card_deck_manager.get_draw_pile_size() > 0:
+			var drawn = card_deck_manager.draw_cards(1)
+			player_hand.add_cards(drawn)
+			# Assuming PlayerHand.add_cards handles single card array fine
+			AudioManager.play_sfx(AudioManager.Sound.CARD_DRAW) # Will fallback if enum missing/different
+			
+			# Wait for visual
+			await get_tree().create_timer(0.2).timeout
+	
+	player_hand.sort_by_value()
+	weave_fate_button.disabled = false
+
 func _proceed_to_next_level() -> void:
 	GameManager.next_level()
 	# TODO: Implement actual loading of next chapter resource
@@ -164,7 +194,7 @@ func _reset_game_state() -> void:
 	# Clear table
 	for slot in game_table.slots:
 		if slot.has_card():
-			var c = slot.remove_card()
+			var c = slot.remove_card(null, null, true) # Force remove even if locked
 			if c:
 				c.queue_free()
 			

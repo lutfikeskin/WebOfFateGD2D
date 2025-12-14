@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="CardData" load_steps=2 format=3 uid="uid://7uy55olw4wsu"]
+
+[ext_resource type="Script" uid="uid://bgfnixfvfwooy" path="res://WebOfFate/resources/card_data.gd" id="1_wx70i"]
+
+[resource]
+script = ExtResource("1_wx70i")
+id = "grand_bazaar"
+display_name = "Grand Bazaar"
+description = "Everything plays a price."
+category = 3
+rarity = 1
+tags = Array[String](["wealth", "place"])
+base_dp = 18
+base_chaos = 8

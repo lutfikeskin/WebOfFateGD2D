@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="CardData" load_steps=2 format=3 uid="uid://b0krbroohllhq"]
+
+[ext_resource type="Script" uid="uid://bgfnixfvfwooy" path="res://WebOfFate/resources/card_data.gd" id="1_gynx7"]
+
+[resource]
+script = ExtResource("1_gynx7")
+id = "battlefield"
+display_name = "Battlefield"
+description = "Soaked in blood."
+category = 3
+rarity = 1
+tags = Array[String](["violence", "place"])
+base_dp = 10
+base_chaos = 30

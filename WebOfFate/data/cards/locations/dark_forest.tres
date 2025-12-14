@@ -1,16 +1,13 @@
-[gd_resource type="Resource" script_class="CardData" load_steps=2 format=3]
+[gd_resource type="Resource" script_class="CardData" load_steps=2 format=3 uid="uid://bsslkv1vg3dvh"]
 
-[ext_resource type="Script" path="res://WebOfFate/resources/card_data.gd" id="1_script"]
+[ext_resource type="Script" uid="uid://bgfnixfvfwooy" path="res://WebOfFate/resources/card_data.gd" id="1_script"]
 
 [resource]
 script = ExtResource("1_script")
 id = "dark_forest"
-display_name = "CARD_NAME_dark_forest"
+display_name = "Dark Forest"
+description = "Many enter, few return."
 category = 3
-tags = Array[String](["nature", "dark"])
-base_dp = 0
-base_chaos = 0
-texture_path = ""
-card_suit = 0
-value = 0
-
+tags = Array[String](["nature", "danger"])
+base_dp = 10
+base_chaos = 15

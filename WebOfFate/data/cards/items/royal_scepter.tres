@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="CardData" load_steps=2 format=3 uid="uid://c23uksva2pogv"]
+
+[ext_resource type="Script" uid="uid://bgfnixfvfwooy" path="res://WebOfFate/resources/card_data.gd" id="1_5k8bq"]
+
+[resource]
+script = ExtResource("1_5k8bq")
+id = "royal_scepter"
+display_name = "Royal Scepter"
+description = "Symbol of authority."
+category = 1
+rarity = 2
+tags = Array[String](["wealth", "royalty"])
+base_dp = 22
+base_chaos = 5

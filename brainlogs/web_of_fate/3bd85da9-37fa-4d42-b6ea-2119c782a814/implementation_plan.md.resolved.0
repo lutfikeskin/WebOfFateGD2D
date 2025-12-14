@@ -1,0 +1,42 @@
+# Implementation Plan - Main Menu
+
+This plan outlines the steps to create a functional Main Menu for the "Web of Fate" project.
+
+## Goal
+Create a `MainMenu` scene with "Start Game", "Settings", and "Quit" buttons that are fully functional.
+
+## User Review Required
+> [!IMPORTANT]
+> I will assume the main game scene is `res://web_of_fate/scenes/simple_web_of_fate.tscn` based on previous exploration. If this is incorrect, please let me know.
+
+## Proposed Changes
+
+### New Scenes & Scripts
+
+#### [NEW] [main_menu.tscn](file:///c:/Users/Lutfi/Desktop/Godot/Assets/simple-card-pile-ui-master/simple-card-pile-ui-master/web_of_fate/scenes/main_menu.tscn)
+- A `Control` node based scene.
+- **Background**: A `ColorRect` with the existing [bg.gdshader](file:///c:/Users/Lutfi/Desktop/Godot/Assets/simple-card-pile-ui-master/simple-card-pile-ui-master/web_of_fate/scenes/bg.gdshader) for visual consistency.
+- **Title**: A `Label` with the game title "Web of Fate".
+- **Buttons**: A `VBoxContainer` with:
+    - `StartButton`: Changes scene to the main game.
+    - `SettingsButton`: Opens the settings menu (or prints a placeholder for now).
+    - `QuitButton`: Quits the application.
+
+#### [NEW] [MainMenu.gd](file:///c:/Users/Lutfi/Desktop/Godot/Assets/simple-card-pile-ui-master/simple-card-pile-ui-master/web_of_fate/scripts/MainMenu.gd)
+- Script attached to `main_menu.tscn`.
+- Handles `pressed` signals from the buttons.
+- `_on_start_pressed()`: `get_tree().change_scene_to_file(...)`
+- `_on_settings_pressed()`: Toggles visibility of a settings panel (or navigates to settings scene).
+- `_on_quit_pressed()`: `get_tree().quit()`
+
+#### [NEW] [settings_menu.tscn](file:///c:/Users/Lutfi/Desktop/Godot/Assets/simple-card-pile-ui-master/simple-card-pile-ui-master/web_of_fate/scenes/settings_menu.tscn)
+- A simple placeholder popup for settings.
+- Contains a "Back" button to return to the main menu.
+
+## Verification Plan
+
+### Manual Verification
+1.  **Run the Scene**: Open and run `main_menu.tscn`.
+2.  **Test Start**: Click "Start Game" and verify it loads [simple_web_of_fate.tscn](file:///c:/Users/Lutfi/Desktop/Godot/Assets/simple-card-pile-ui-master/simple-card-pile-ui-master/web_of_fate/scenes/simple_web_of_fate.tscn).
+3.  **Test Settings**: Click "Settings" and verify it shows the settings panel/scene.
+4.  **Test Quit**: Click "Quit" and verify the game closes (note: in editor this just stops the scene).

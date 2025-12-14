@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="CardData" load_steps=2 format=3 uid="uid://cge36ny2b7g3g"]
+
+[ext_resource type="Script" uid="uid://bgfnixfvfwooy" path="res://WebOfFate/resources/card_data.gd" id="1_brwly"]
+
+[resource]
+script = ExtResource("1_brwly")
+id = "star_child"
+display_name = "Star Child"
+description = "Born from a falling star."
+rarity = 2
+tags = Array[String](["mystic", "alien"])
+base_dp = 25
+base_chaos = 5

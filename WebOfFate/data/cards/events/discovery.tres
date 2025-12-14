@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="CardData" load_steps=2 format=3 uid="uid://dhvqygi0lgyds"]
+
+[ext_resource type="Script" uid="uid://bgfnixfvfwooy" path="res://WebOfFate/resources/card_data.gd" id="1_7q67c"]
+
+[resource]
+script = ExtResource("1_7q67c")
+id = "discovery"
+display_name = "Great Discovery"
+description = "New lands found."
+category = 2
+rarity = 1
+tags = Array[String](["knowledge", "hope"])
+base_dp = 30
+base_chaos = 5

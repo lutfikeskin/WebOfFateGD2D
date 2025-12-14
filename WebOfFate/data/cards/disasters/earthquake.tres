@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="CardData" load_steps=2 format=3 uid="uid://bh7mito6gnw1b"]
+
+[ext_resource type="Script" uid="uid://bgfnixfvfwooy" path="res://WebOfFate/resources/card_data.gd" id="1_sgebc"]
+
+[resource]
+script = ExtResource("1_sgebc")
+id = "earthquake"
+display_name = "Earthquake"
+description = "The ground shakes."
+category = 4
+tags = Array[String](["nature", "disaster"])
+base_dp = 5
+base_chaos = 35

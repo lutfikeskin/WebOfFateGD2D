@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="CardData" load_steps=2 format=3 uid="uid://c14xa4qgei2gs"]
+
+[ext_resource type="Script" uid="uid://bgfnixfvfwooy" path="res://WebOfFate/resources/card_data.gd" id="1_n4hff"]
+
+[resource]
+script = ExtResource("1_n4hff")
+id = "famine"
+display_name = "Famine"
+description = "Crops fail."
+category = 2
+tags = Array[String](["tragedy", "nature"])
+base_dp = 5
+base_chaos = 20

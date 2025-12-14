@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="CardData" load_steps=2 format=3 uid="uid://2kjccpjvvm1r"]
+
+[ext_resource type="Script" uid="uid://bgfnixfvfwooy" path="res://WebOfFate/resources/card_data.gd" id="1_518pw"]
+
+[resource]
+script = ExtResource("1_518pw")
+id = "dragons_tooth"
+display_name = "Dragon's Tooth"
+description = "A sharp trophy from a beast."
+category = 1
+rarity = 1
+tags = Array[String](["trophy", "violence"])
+base_dp = 12
+base_chaos = 8

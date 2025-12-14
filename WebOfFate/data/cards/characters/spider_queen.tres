@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="CardData" load_steps=2 format=3 uid="uid://i4kh0e4khip"]
+
+[ext_resource type="Script" uid="uid://bgfnixfvfwooy" path="res://WebOfFate/resources/card_data.gd" id="1_5olkr"]
+
+[resource]
+script = ExtResource("1_5olkr")
+id = "spider_queen"
+display_name = "Spider Queen"
+description = "Weaves webs of deception."
+rarity = 1
+tags = Array[String](["villain", "monster"])
+base_dp = 15
+base_chaos = 20

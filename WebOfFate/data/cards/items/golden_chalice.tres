@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="CardData" load_steps=2 format=3 uid="uid://bnetgsdj7ofay"]
+
+[ext_resource type="Script" uid="uid://bgfnixfvfwooy" path="res://WebOfFate/resources/card_data.gd" id="1_ynopi"]
+
+[resource]
+script = ExtResource("1_ynopi")
+id = "golden_chalice"
+display_name = "Golden Chalice"
+description = "A cup fit for kings."
+category = 1
+rarity = 1
+tags = Array[String](["wealth", "holy"])
+base_dp = 20

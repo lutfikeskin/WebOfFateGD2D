@@ -1,0 +1,17 @@
+# Progression Overhaul - Complete ✅
+
+## Phase 1-5 (Complete) ✅
+- [x] Card Rarity System
+- [x] Multiple Endings System (11 endings)
+- [x] Negative Synergies
+- [x] Fate Events System (10 events)
+
+## Phase 6-7 (Complete) ✅
+- [x] Hand Management (Mulligan) - `hand_selection_panel.gd/.tscn`
+- [x] Fate Event UI - `fate_event_popup.gd/.tscn`
+- [x] Bid/Path System - [bid_data.gd](file:///c:/Users/Lutfi/Documents/WebOfFate/WebOfFate/resources/bid_data.gd), `path_selection_panel.gd/.tscn`
+
+## Manual Integration Required
+- [ ] Add `PathSelectionPanel` to MainMenu scene
+- [ ] Add `FateEventPopup` to WebOfFate.tscn
+- [ ] Add `HandSelectionPanel` to WebOfFate.tscn

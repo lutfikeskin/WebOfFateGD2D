@@ -2,10 +2,11 @@ class_name SaveGame extends Resource
 
 const SAVE_PATH = "user://savegame.tres"
 
-@export var current_chapter_index: int = 0
+# current_chapter_index removed
 @export var unlocked_cards: Array[String] = [] # List of Card IDs
 @export var player_deck_ids: Array[String] = [] # IDs of cards in current deck
 @export var high_score_dp: int = 0
+@export var active_path_type: int = -1 # -1 means none
 @export var chronicle: ChronicleData = null # Chronicle System data
 
 func write_save() -> void:

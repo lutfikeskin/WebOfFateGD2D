@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="CardData" load_steps=2 format=3 uid="uid://bksykb2homdtt"]
+
+[ext_resource type="Script" uid="uid://bgfnixfvfwooy" path="res://WebOfFate/resources/card_data.gd" id="1_v70u6"]
+
+[resource]
+script = ExtResource("1_v70u6")
+id = "celestial_alignment"
+display_name = "Celestial Alignment"
+description = "The stars align in favor."
+category = 2
+rarity = 2
+tags = Array[String](["mystic", "fate"])
+base_dp = 35
