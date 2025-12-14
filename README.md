@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Web of Fate
 A Godot 4.5 narrative deckbuilder about weaving destiny on a 5-slot loom. Built with a data-driven architecture, emergent Chronicle system, and fully localized (EN/TR).
 
@@ -67,3 +68,6 @@ A Godot 4.5 narrative deckbuilder about weaving destiny on a 5-slot loom. Built 
 ## Credits
 - Built on top of the **Simple Cards** addon (included in `addons/simple_cards`).
 - Game design and code: Web of Fate team.
+=======
+
+>>>>>>> 309e45f0ee7b1416ae683ae57691273bd61edccb
